@@ -66,7 +66,7 @@ app.use('/api', require('./routes/api.router'));
 
 // Start the app by listening on <port>
 // ===========================================================================================
-app.listen(config.app.port);
+//app.listen(config.app.port);
 
 // Logging initialization
-logger.info(config.app.name + ' listening on port: ' + config.app.port);
+//logger.info(config.app.name + ' listening on port: ' + config.app.port);
