@@ -9,6 +9,7 @@ logger.info('Starting: ' + config.app.name + '....');
 logger.info('Connecting to MongoDB Instance: ' + config.db);
 
 let db = mongoose.connection;
+let port = process.env.PORT || config.app.port;
 
 let options = {
   keepAlive: 300000,
@@ -66,7 +67,7 @@ app.use('/api', require('./routes/api.router'));
 
 // Start the app by listening on <port>
 // ===========================================================================================
-//app.listen(config.app.port);
+app.listen(port);
 
 // Logging initialization
-//logger.info(config.app.name + ' listening on port: ' + config.app.port);
+logger.info(config.app.name + ' listening on port: ' + port);
