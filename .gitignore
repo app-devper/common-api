@@ -1,0 +1,8 @@
+# Ignore the production build folder
+build
+npm-debug.log
+.idea/
+uploads
+node_modules/*
+
+/node_modules.zip
