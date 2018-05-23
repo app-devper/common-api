@@ -47,7 +47,6 @@ db.on('reconnected', function () {
 db.on('disconnected', function () {
   logger.info('MongoDB disconnected!');
 });
-
 //	Create the app
 // ============================================================================================
 let app = express(db);
