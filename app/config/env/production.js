@@ -10,10 +10,10 @@ module.exports = {
 
   logPathConfig: {
     isLocal: true,
-    appLog: '/AppLog/',
-    accessLog: '/Access_Log/',
-    infoLog: '/Info_Log/',
-    serviceLog: '/Service_Log/',
-    otherLog: '/Other_Log/',
+    appLog: '/tmp/AppLog/',
+    accessLog: '/tmp/Access_Log/',
+    infoLog: '/tmp/Info_Log/',
+    serviceLog: '/tmp/Service_Log/',
+    otherLog: '/tmp/Other_Log/',
   },
 };
