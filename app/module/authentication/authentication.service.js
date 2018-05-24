@@ -33,8 +33,8 @@ export const authenticationApi = (rcvReq, callback) => {
                 callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4010003', 'Session has expired.', undefined))
               }
             } else {
-              logger.info("unAuthorized");
-              callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4010001', 'unAuthorized', undefined))
+              logger.info("Unauthorized");
+              callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4010001', 'Unauthorized', undefined))
             }
           } else {
             logger.info("Session is invalid");
