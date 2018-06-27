@@ -5,6 +5,9 @@ import cors from 'cors'; // Load cors
 import logger from './utils/logger'; // Load logger
 import config from './config/config'; // Load config (environment)
 
+import router from'./routes/web.router' // Load root router
+import apiRouter from'./routes/api.router' // Load api router
+
 logger.info('Starting: ' + config.app.name + '....');
 logger.info('Connecting to MongoDB Instance: ' + config.db);
 
@@ -32,7 +35,6 @@ db.on('connected', function () {
   if (db.client.s.url.startsWith('mongodb+srv')) {
     db.db = db.client.db('common');
   }
-
   logger.info('MongoDB connected!');
 });
 
@@ -61,8 +63,8 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(cors());
 
 // Configure app routes
-app.use('/', require('./routes/web.router'));
-app.use('/api', require('./routes/api.router'));
+app.use('/', router);
+app.use('/api', apiRouter);
 
 // Start the app by listening on <port>
 // ===========================================================================================

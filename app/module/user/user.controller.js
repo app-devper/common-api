@@ -19,7 +19,7 @@ export const addUser = (req, res) => {
     });
   } catch (err) {
     logger.error('getUser Unhandled Exception: ' + err);
-    let response = applicationUtils.genResponseObj(req.get('dc-language'), 'DC5000000', err, undefined);
+    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err, undefined);
     logModel.setResponse(response);
     loggerInfo.info(logModel.getInfoLog());
     return res.status(response.httpCode).send(response);
@@ -39,7 +39,7 @@ export const getUser = (req, res) => {
     });
   } catch (err) {
     logger.error('getUser Unhandled Exception: ' + err);
-    let response = applicationUtils.genResponseObj(req.get('dc-language'), 'DC5000000', err, undefined);
+    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err, undefined);
     logModel.setResponse(response);
     loggerInfo.info(logModel.getInfoLog());
     return res.status(response.httpCode).send(response);
@@ -59,7 +59,7 @@ export const getUserById = (req, res) => {
     });
   } catch (err) {
     logger.error('getUserById Unhandled Exception: ' + err);
-    let response = applicationUtils.genResponseObj(req.get('dc-language'), 'DC5000000', err, undefined);
+    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err, undefined);
     logModel.setResponse(response);
     loggerInfo.info(logModel.getInfoLog());
     return res.status(response.httpCode).send(response);

@@ -20,7 +20,7 @@ export const login = (req, res) => {
     });
   } catch (err) {
     logger.error('login Unhandled Exception: ' + err);
-    let response = applicationUtils.genResponseObj(req.get('dc-language'), 'DC5000000', err, undefined);
+    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err, undefined);
     logModel.setResponse(response);
     loggerInfo.info(logModel.getInfoLog());
     return res.status(response.httpCode).send(response);
@@ -44,7 +44,7 @@ export const logout = (req, res) => {
     });
   } catch (err) {
     logger.error('logout Unhandled Exception: ' + err);
-    let response = applicationUtils.genResponseObj(req.get('dc-language'), 'DC5000000', err, undefined);
+    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err, undefined);
     logModel.setResponse(response);
     loggerInfo.info(logModel.getInfoLog());
     return res.status(response.httpCode).send(response);

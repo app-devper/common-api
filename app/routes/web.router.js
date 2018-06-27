@@ -14,4 +14,4 @@ router.use('/info', express.static(config.logPathConfig.infoLog));
 
 logger.info('web.routes loaded');
 
-module.exports = router;
+export default router;

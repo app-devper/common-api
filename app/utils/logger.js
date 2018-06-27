@@ -47,4 +47,4 @@ if (!config.logPathConfig.isLocal) {
   logger.remove(winston.transports.Console);
 }
 
-module.exports = logger;
+export default logger;

@@ -1,19 +1,18 @@
 import logger from './logger'; //     Load logger
-import * as config from '../config/config'; // Load config (environment)
-import * as constants from '../common/constants.js'; // Load config (environment)
-import {MainResponse} from '../response/main.response.js';
+import {resCode} from '../common/constants'; // Load config (environment)
+import {MainResponse} from '../response/main.response';
+import {resMessage} from '../common/message.properties';
 
-export const genResponseObj = (_language = 'en', _resCode, _devMessage, _data) => {
+export const genResponse = (_language = 'en', _resCode, _devMessage, _data) => {
   let responseObj;
   try {
-    let messageCode = eval('constants.resCode.' + _resCode);
-    let resMessage = eval('config.' + messageCode + '.' + _language);
-    let resHttpCode = eval('config.' + messageCode + '.httpCode');
-
-    responseObj = new MainResponse(_resCode, resMessage, _devMessage, _data, resHttpCode);
+    let messageCode = resCode[_resCode];
+    let messageRes = messageCode[_language];
+    let resHttpCode = messageCode.httpCode;
+    responseObj = new MainResponse(_resCode, messageRes, _devMessage, _data, resHttpCode);
   } catch (error) {
     logger.error('app utils Unhandled Exception: ' + error);
-    responseObj = new MainResponse('CM5000000', config.resMessage.general.error.en, error.message, undefined, 500);
+    responseObj = new MainResponse('CM5000000', resMessage.general.error.en, error.message, undefined, 500);
   }
   return responseObj;
 };

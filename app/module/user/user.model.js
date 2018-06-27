@@ -24,4 +24,4 @@ let UsersSchema = new Schema({
 });
 
 // Build the users Model:
-module.exports = mongoose.model('users', UsersSchema);
+export default mongoose.model('users', UsersSchema);

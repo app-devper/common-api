@@ -17,5 +17,5 @@ let AuthenticationSchema = new Schema({
 }, {collection: 'authentications'});
 
 // Build the authentication Model:
-module.exports = mongoose.model('authentications', AuthenticationSchema);
+export default mongoose.model('authentications', AuthenticationSchema);
 

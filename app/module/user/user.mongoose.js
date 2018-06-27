@@ -38,12 +38,12 @@ export const getUserById = (req, _id, callback) => {
 export const getUser = (req, callback) => {
   try {
     UsersSchema.find({}, '-password -__v')
-      .exec(function (err, user) {
+      .exec(function (err, users) {
         if (err) {
           logger.warn('Users.find Failed!' + err);
           callback(err);
         } else {
-          callback(null, user);
+          callback(null, users);
         }
       });
   } catch (err) {
@@ -136,5 +136,3 @@ export const getUserByCriteria = (req, criteria, callback) => {
     callback(err)
   }
 };
-
-

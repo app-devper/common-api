@@ -10,11 +10,11 @@ export const authenticationApi = (rcvReq, callback) => {
   let req = rcvReq;
   try {
     if (appUtils.isBlank(req.get('dc-access-token')) || appUtils.isBlank(req.get('dc-user-id'))) {
-      callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4090000', 'Invalid header'))
+      callback(appUtils.genResponse(req.get('dc-language'), 'CM4090000', 'Invalid header'))
     } else {
       authenticationMongoose.getAuthentication(req, req.get('dc-access-token'), (err, result) => {
         if (err) {
-          callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err.message))
+          callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message))
         } else {
           let dateNow = Date.now();
           if (result !== null) {
@@ -22,7 +22,7 @@ export const authenticationApi = (rcvReq, callback) => {
               if (dateNow - result.accessTime.getTime() < config.timeout) {
                 authenticationMongoose.updateLogin(req, result._id, (err) => {
                   if (err) {
-                    callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err.message))
+                    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message))
                   } else {
                     logger.info("Authorize success");
                     callback(null)
@@ -30,15 +30,15 @@ export const authenticationApi = (rcvReq, callback) => {
                 });
               } else {
                 logger.info("Session has expired");
-                callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4010003', 'Session has expired.', undefined))
+                callback(appUtils.genResponse(req.get('dc-language'), 'CM4010003', 'Session has expired.', undefined))
               }
             } else {
               logger.info("Unauthorized");
-              callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4010001', 'Unauthorized', undefined))
+              callback(appUtils.genResponse(req.get('dc-language'), 'CM4010001', 'Unauthorized', undefined))
             }
           } else {
             logger.info("Session is invalid");
-            callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4010007', 'Session is invalid.', undefined))
+            callback(appUtils.genResponse(req.get('dc-language'), 'CM4010007', 'Session is invalid.', undefined))
           }
         }
       });
@@ -46,7 +46,7 @@ export const authenticationApi = (rcvReq, callback) => {
 
   } catch (err) {
     logger.error('service login Unhandled Exception: ', err);
-    callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err))
+    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err))
   }
 };
 
@@ -60,7 +60,7 @@ export const login = (req, callback) => {
 
     // validate username & password : res user
     if (rcvBody === undefined || appUtils.isBlank(rcvBody.username) || appUtils.isBlank(rcvBody.pwd) || appUtils.isBlank(rcvBody.channel)) {
-      callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4090000', 'invalidData', undefined))
+      callback(appUtils.genResponse(req.get('dc-language'), 'CM4090000', 'invalidData', undefined))
     } else {
       // next step get user Info
       getUserAndValidateLogin(req, rcvBody, function (res) {
@@ -69,7 +69,7 @@ export const login = (req, callback) => {
     }
   } catch (err) {
     logger.error('service login Unhandled Exception: ' + err);
-    callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err, undefined))
+    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
   }
 };
 
@@ -79,10 +79,10 @@ const getUserAndValidateLogin = (req, rcvBody, callback) => {
     //get user
     userMongoose.getUserByUsername(req, rcvBody.username, (err, user) => {
       if (err) {
-        callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err.message, undefined))
+        callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
       } else {
         if (user === null) {
-          callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4090006', 'User Not found', undefined))
+          callback(appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'User Not found', undefined))
         } else {
           //user is not null
           let isLoginSuccess = false;
@@ -104,7 +104,7 @@ const getUserAndValidateLogin = (req, rcvBody, callback) => {
               //update status
               userMongoose.updateLoginStatus(req, reqParam, (err) => {
                 if (err) {
-                  callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err.message, undefined))
+                  callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
                 }
               });
 
@@ -119,7 +119,7 @@ const getUserAndValidateLogin = (req, rcvBody, callback) => {
 
           if (user.password === rcvBody.pwd) {
             if (isLocked) {
-              callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4090005', 'User Locked', undefined))
+              callback(appUtils.genResponse(req.get('dc-language'), 'CM4090005', 'User Locked', undefined))
             } else {
               // If login fail > 0, clear ...
               if (user.countLoginFailed && user.countLoginFailed > 0) {
@@ -131,7 +131,7 @@ const getUserAndValidateLogin = (req, rcvBody, callback) => {
 
                 userMongoose.updateLoginStatus(req, reqParam, (err) => {
                   if (err) {
-                    callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err.message, undefined))
+                    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
                   }
                 });
               }
@@ -152,9 +152,9 @@ const getUserAndValidateLogin = (req, rcvBody, callback) => {
 
               userMongoose.updateLoginStatus(req, reqParam, (err) => {
                 if (err) {
-                  callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err.message, undefined))
+                  callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
                 } else {
-                  callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4090005', 'User Locked', undefined))
+                  callback(appUtils.genResponse(req.get('dc-language'), 'CM4090005', 'User Locked', undefined))
                 }
               });
 
@@ -180,9 +180,9 @@ const getUserAndValidateLogin = (req, rcvBody, callback) => {
 
                   userMongoose.updateLoginStatus(req, reqParam, (err) => {
                     if (err) {
-                      callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err.message, undefined))
+                      callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
                     } else {
-                      callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4090006', 'Incorrect password', undefined))
+                      callback(appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'Incorrect password', undefined))
                     }
                   });
 
@@ -196,9 +196,9 @@ const getUserAndValidateLogin = (req, rcvBody, callback) => {
 
                   userMongoose.updateLoginStatus(req, reqParam, (err) => {
                     if (err) {
-                      callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err.message, undefined))
+                      callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
                     } else {
-                      callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4090006', 'Incorrect password', undefined))
+                      callback(appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'Incorrect password', undefined))
                     }
                   });
                 }
@@ -211,9 +211,9 @@ const getUserAndValidateLogin = (req, rcvBody, callback) => {
 
                 userMongoose.updateLoginStatus(req, reqParam, (err) => {
                   if (err) {
-                    callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err.message, undefined))
+                    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
                   } else {
-                    callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4090006', 'Incorrect password', undefined))
+                    callback(appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'Incorrect password', undefined))
                   }
                 });
               }
@@ -232,7 +232,7 @@ const getUserAndValidateLogin = (req, rcvBody, callback) => {
     });
   } catch (err) {
     logger.error('service getUserAndValidateLogin Unhandled Exception: ' + err);
-    callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err, undefined))
+    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
   }
 };
 
@@ -242,7 +242,7 @@ const checkDuplicateLogin = (req, rcvBody, user, callback) => {
     //check duplicate login
     authenticationMongoose.findDuplicateLogin(req, user._id, rcvBody.channel, function (err, authen) {
       if (err) {
-        callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err.message, undefined))
+        callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
       } else {
         if (authen === null) {
           //new login gen token & insert authentication
@@ -255,7 +255,7 @@ const checkDuplicateLogin = (req, rcvBody, user, callback) => {
           let dateNow = Date.now();
           if (dateNow - authen.accessTime.getTime() < config.timeout) {
             logger.debug('DUPLICATE LOGIN');
-            callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4010004', "Duplicate Login", undefined))
+            callback(appUtils.genResponse(req.get('dc-language'), 'CM4010004', "Duplicate Login", undefined))
           } else {
             logger.debug('NEW LOGIN AGAIN');
             removeAuthentication(req, authen._id, rcvBody, user, function (res) {
@@ -267,7 +267,7 @@ const checkDuplicateLogin = (req, rcvBody, user, callback) => {
     });
   } catch (err) {
     logger.error('service checkDuplicateLogin Unhandled Exception: ' + err);
-    callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err, undefined))
+    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
   }
 };
 
@@ -276,7 +276,7 @@ const removeAuthentication = (req, _id, rcvBody, user, callback) => {
     // update access time
     authenticationMongoose.removeAuthentication(req, user._id, function (err) {
       if (err) {
-        callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err, undefined))
+        callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
       } else {
         authentication(req, rcvBody, user, function (res) {
           callback(res)
@@ -285,7 +285,7 @@ const removeAuthentication = (req, _id, rcvBody, user, callback) => {
     });
   } catch (err) {
     logger.error('service removeAuthentication Unhandled Exception: ' + err);
-    callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err, undefined))
+    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
   }
 };
 
@@ -304,15 +304,15 @@ const authentication = (req, rcvBody, user, callback) => {
 
     authenticationMongoose.addAuthentication(req, authenData, function (err) {
       if (err) {
-        callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err, undefined))
+        callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
       } else {
         let result = {user, accessToken: authenData.token};
-        callback(appUtils.genResponseObj(req.get('dc-language'), 'CM2000000', 'success', result))
+        callback(appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'success', result))
       }
     });
   } catch (err) {
     logger.error('service authentication Unhandled Exception: ' + err);
-    callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err, undefined))
+    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
   }
 };
 
@@ -320,28 +320,28 @@ export const logout = (req, callback) => {
   let accessToken = req.get('dc-access-token');
   try {
     if (appUtils.isBlank(accessToken)) {
-      callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4090000', 'invalidData', undefined))
+      callback(appUtils.genResponse(req.get('dc-language'), 'CM4090000', 'invalidData', undefined))
     } else {
       authenticationMongoose.getAuthentication(req, accessToken, (err, res) => {
         if (err) {
-          callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err, undefined))
+          callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
         } else {
           if (res !== null) {
             authenticationMongoose.removeAuthentication(req, req.get('dc-user-id'), (err, res) => {
               if (err) {
-                callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err, undefined))
+                callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
               } else {
-                callback(appUtils.genResponseObj(req.get('dc-language'), 'CM2000000', 'logout success', undefined))
+                callback(appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'logout success', undefined))
               }
             });
           } else {
-            callback(appUtils.genResponseObj(req.get('dc-language'), 'CM4010000', 'unknownToken', undefined))
+            callback(appUtils.genResponse(req.get('dc-language'), 'CM4010000', 'unknownToken', undefined))
           }
         }
       });
     }
   } catch (err) {
     logger.error('service logout Unhandled Exception: ' + err);
-    callback(appUtils.genResponseObj(req.get('dc-language'), 'CM5000000', err, undefined))
+    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
   }
 };

@@ -22,4 +22,5 @@ let log_info = new (winston.Logger)({
   ],
   exitOnError: false
 });
-module.exports = log_info;
+
+export default log_info;

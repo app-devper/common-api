@@ -15,8 +15,8 @@ export const api = (req, res, next) => {
 
   let bypass = ((req.url === '/authen' && req.method === 'POST')
     || (req.url === '/authen/logout' && req.method === 'GET')
-    // || (req.url === '/user' && req.method === 'GET')
-    // || (req.url === '/user' && req.method === 'POST')
+    || (req.url === '/user' && req.method === 'GET')
+    || (req.url === '/user' && req.method === 'POST')
   );
 
   let authentication = () => {
@@ -44,7 +44,7 @@ export const api = (req, res, next) => {
       if (err) {
         logger.error('Failed to reconnect to MongoDB');
         logger.error(err.message);
-        let response = applicationUtils.genResponseObj(req.get('dc-language'), 'CM5000036', err.message, undefined);
+        let response = applicationUtils.genResponse(req.get('dc-language'), 'CM5000036', err.message, undefined);
         res.status(response.httpCode).send(response);
       } else {
         logger.info('Reconnected to MongoDb Successfully....');
@@ -61,7 +61,7 @@ export const authorize = (req, res, next) => {
   let logModel = new LogModel();
   logModel.setRequest(req);
   loggerAccess.info(logModel.getAccessLog());
-  let response = applicationUtils.genResponseObj(req.get('dc-language'), 'CM4040000', 'Not found', undefined);
+  let response = applicationUtils.genResponse(req.get('dc-language'), 'CM4040000', 'Not found', undefined);
   logModel.setResponse(response);
   loggerInfo.info(logModel.getInfoLog());
   return res.status(response.httpCode).send(response);
