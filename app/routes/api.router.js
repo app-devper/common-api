@@ -2,8 +2,8 @@ import * as express from 'express'; // Load express
 import logger from '../utils/logger' // Load logger
 import * as controller from '../module/api/api.controller'; // Load controller
 import * as appUtils from '../utils/app-utils';
-import userRouter from './user.routes'
-import authenRouter from './authentication.routes'
+import userRouter from '../module/user/user.routes'
+import authenRouter from '../module/authentication/authentication.routes'
 logger.info('Loading server api routes');
 
 let apiRouter = express.Router();   // Load router

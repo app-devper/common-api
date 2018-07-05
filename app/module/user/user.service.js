@@ -3,11 +3,57 @@ import * as applicationUtils from "../../utils/app-utils";
 import * as userMongoose from './user.mongoose';
 
 export const addUser = (req, callback) => {
+  try {
+    let reqBody = req.body;
+    userMongoose.getUserByUsername(req, reqBody.username, (err, user) => {
+      if (err) {
+        callback(applicationUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
+      } else {
+        if (user) {
+          callback(applicationUtils.genResponse(req.get('dc-language'), 'CM4010101', "user duplicate", undefined))
+        } else {
+          reqBody.updatedDate = new Date();
+          reqBody.createdDate = new Date();
+          reqBody.createdBy = req.get('dc-user-id');
+          reqBody.updatedBy = req.get('dc-user-id');
+          userMongoose.addUser(req, reqBody, (err, result) => {
+            if (err) {
+              callback(applicationUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
+            } else {
+              callback(applicationUtils.genResponse(req.get('dc-language'), 'CM2000000', 'success', result))
+            }
+          })
+        }
+      }
+    })
+
+  } catch (err) {
+    logger.error('service addUser Unhandled Exception: ' + err);
+    callback(applicationUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
+  }
+};
+
+export const updateUser = (req, callback) => {
   let reqBody = req.body;
   reqBody.updatedDate = new Date();
-  reqBody.createdDate = new Date();
+  reqBody.updatedBy = req.get('dc-user-id')
   try {
-    userMongoose.addUser(req, reqBody, (err, result) => {
+    userMongoose.updateUser(req, req.params.userId, reqBody, (err, result) => {
+      if (err) {
+        callback(applicationUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
+      } else {
+        callback(applicationUtils.genResponse(req.get('dc-language'), 'CM2000000', 'success', result))
+      }
+    })
+  } catch (err) {
+    logger.error('service addUser Unhandled Exception: ' + err);
+    callback(applicationUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
+  }
+};
+
+export const removeUser = (req, callback) => {
+  try {
+    userMongoose.removeUser(req, req.params.userId, (err, result) => {
       if (err) {
         callback(applicationUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
       } else {

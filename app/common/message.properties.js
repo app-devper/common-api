@@ -69,6 +69,11 @@ export const resMessage = {
       th: 'ไม่พบข้อมูล',
       httpCode: 409
     },
+    duplicate: {
+      en: 'Username is duplicate',
+      th: 'Username มีอยู่แล้ว กรุณาตรวจสอบ',
+      httpCode: 401
+    },
   },
   db: {
     connectionFail: {

@@ -15,8 +15,6 @@ export const api = (req, res, next) => {
 
   let bypass = ((req.url === '/authen' && req.method === 'POST')
     || (req.url === '/authen/logout' && req.method === 'GET')
-    || (req.url === '/user' && req.method === 'GET')
-    || (req.url === '/user' && req.method === 'POST')
   );
 
   let authentication = () => {

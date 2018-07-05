@@ -4,7 +4,7 @@ import logger from '../../utils/logger'; // 	Load logger
 import * as appUtils from '../../utils/app-utils';
 import * as authenticationMongoose from '../authentication/authentication.mongoose';
 import * as userMongoose from '../user/user.mongoose';
-import * as config from '../../config/config';
+import config from '../../config/config';
 
 export const authenticationApi = (rcvReq, callback) => {
   let req = rcvReq;
@@ -17,7 +17,7 @@ export const authenticationApi = (rcvReq, callback) => {
           callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message))
         } else {
           let dateNow = Date.now();
-          if (result !== null) {
+          if (result !== null && result.userId !== null) {
             if (result.userId.status === 'ACTIVE') {
               if (dateNow - result.accessTime.getTime() < config.timeout) {
                 authenticationMongoose.updateLogin(req, result._id, (err) => {
@@ -244,25 +244,29 @@ const checkDuplicateLogin = (req, rcvBody, user, callback) => {
       if (err) {
         callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
       } else {
-        if (authen === null) {
-          //new login gen token & insert authentication
-          logger.debug('NEW LOGIN');
-          authentication(req, rcvBody, user, function (res) {
-            callback(res)
-          });
-        } else {
-          //check duplicate login
-          let dateNow = Date.now();
-          if (dateNow - authen.accessTime.getTime() < config.timeout) {
-            logger.debug('DUPLICATE LOGIN');
-            callback(appUtils.genResponse(req.get('dc-language'), 'CM4010004', "Duplicate Login", undefined))
-          } else {
-            logger.debug('NEW LOGIN AGAIN');
-            removeAuthentication(req, authen._id, rcvBody, user, function (res) {
-              callback(res)
-            });
-          }
-        }
+        logger.debug('NEW LOGIN');
+        authentication(req, rcvBody, user, function (res) {
+          callback(res)
+        });
+        // if (authen === null) {
+        //   //new login gen token & insert authentication
+        //   logger.debug('NEW LOGIN');
+        //   authentication(req, rcvBody, user, function (res) {
+        //     callback(res)
+        //   });
+        // } else {
+        //   //check duplicate login
+        //   let dateNow = Date.now();
+        //   if (dateNow - authen.accessTime.getTime() < config.timeout) {
+        //     logger.debug('DUPLICATE LOGIN');
+        //     callback(appUtils.genResponse(req.get('dc-language'), 'CM4010004', "Duplicate Login", undefined))
+        //   } else {
+        //     logger.debug('NEW LOGIN AGAIN');
+        //     removeAuthentication(req, authen._id, rcvBody, user, function (res) {
+        //       callback(res)
+        //     });
+        //   }
+        // }
       }
     });
   } catch (err) {
@@ -306,7 +310,7 @@ const authentication = (req, rcvBody, user, callback) => {
       if (err) {
         callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
       } else {
-        let result = {user, accessToken: authenData.token};
+        let result = { user, accessToken: authenData.token };
         callback(appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'success', result))
       }
     });

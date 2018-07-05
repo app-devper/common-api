@@ -12,3 +12,11 @@ export const logPathConfig = {
   serviceLog: '/Service_Log/',
   otherLog: '/Other_Log/',
 };
+
+export const activateTime = 12;//12 hours
+export const email = 'support@common.com';
+
+export const timeout = 86400000; //2 min
+
+export const userLockTime = 900; //second
+export const userLoginAttempt = 3;

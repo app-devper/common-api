@@ -13,5 +13,6 @@ export const resCode = {
   CM4090006: resMessage.authentication.incorrectUserPass,
   CM4010007: resMessage.authentication.tokenInvalid,
   CM4090100: resMessage.user.notFound,
+  CM4010101: resMessage.user.duplicate,
   CM5000036: resMessage.db.connectionFail,
 };

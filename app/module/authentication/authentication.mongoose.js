@@ -9,6 +9,7 @@ export const addAuthentication = (req, data, callback) => {
         logger.warn('addAuthentication Failed!' + err);
         callback(err);
       } else {
+        logger.info('addAuthentication success!');
         callback(null);
       }
     });
@@ -25,6 +26,7 @@ export const findDuplicateLogin = (req, _id, channel, callback) => {
         logger.warn('findDuplicateLogin Failed!' + err);
         callback(err);
       } else {
+        logger.info('findDuplicateLogin success!');
         callback(null, authen);
       }
     });
@@ -47,6 +49,7 @@ export const updateLogin = (req, _id, callback) => {
             logger.warn('updateLogin Failed!' + err);
             callback(err);
           } else {
+            logger.info('updateLogin success!');
             callback(null, authen);
           }
         });
@@ -98,6 +101,7 @@ export const removeAuthentication = (req, userId, callback) => {
           logger.warn('removeAuthentication Failed!' + err);
           callback(err)
         } else {
+          logger.info('removeAuthentication success!');
           callback(null)
         }
       }
@@ -146,7 +150,6 @@ export const getAuthentication = (req, accessToken, callback) => {
     callback(err);
   }
 };
-
 
 export const getAuthenticationByDeviceToken = (req, _deviceToken, callback) => {
   try {

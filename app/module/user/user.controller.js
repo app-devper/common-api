@@ -26,7 +26,44 @@ export const addUser = (req, res) => {
   }
 };
 
-// login
+export const updateUser = (req, res) => {
+  let logModel = new LogModel();
+  logModel.setRequest(req);
+  loggerAccess.info(logModel.getAccessLog());
+  try {
+    service.updateUser(req, (response) => {
+      logModel.setResponse(response);
+      loggerInfo.info(logModel.getInfoLog());
+      return res.status(response.httpCode).send(response);
+    });
+  } catch (err) {
+    logger.error('updateUser Unhandled Exception: ' + err);
+    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err, undefined);
+    logModel.setResponse(response);
+    loggerInfo.info(logModel.getInfoLog());
+    return res.status(response.httpCode).send(response);
+  }
+};
+
+export const removeUser = (req, res) => {
+  let logModel = new LogModel();
+  logModel.setRequest(req);
+  loggerAccess.info(logModel.getAccessLog());
+  try {
+    service.removeUser(req, (response) => {
+      logModel.setResponse(response);
+      loggerInfo.info(logModel.getInfoLog());
+      return res.status(response.httpCode).send(response);
+    });
+  } catch (err) {
+    logger.error('removeUser Unhandled Exception: ' + err);
+    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err, undefined);
+    logModel.setResponse(response);
+    loggerInfo.info(logModel.getInfoLog());
+    return res.status(response.httpCode).send(response);
+  }
+};
+
 export const getUser = (req, res) => {
   let logModel = new LogModel();
   logModel.setRequest(req);

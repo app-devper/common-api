@@ -1,6 +1,6 @@
 import express from 'express';
-import * as controller from '../module/authentication/authentication.controller'; // Load controller
-import logger from '../utils/logger'; // Load logger
+import * as controller from './authentication.controller'; // Load controller
+import logger from '../../utils/logger'; // Load logger
 
 let authenRouter = express.Router();
 
