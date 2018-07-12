@@ -42,10 +42,10 @@ export const api = (req, res, next) => {
       if (err) {
         logger.error('Failed to reconnect to MongoDB');
         logger.error(err.message);
-        let response = applicationUtils.genResponse(req.get('dc-language'), 'CM5000036', err.message, undefined);
+        let response = applicationUtils.genResponse(req.get('dc-language'), 'CM5000036', err.message);
         res.status(response.httpCode).send(response);
       } else {
-        logger.info('Reconnected to MongoDb Successfully....');
+        logger.info('Reconnected to MongoDB Successfully....');
         authentication()
       }
     });
@@ -59,7 +59,7 @@ export const authorize = (req, res, next) => {
   let logModel = new LogModel();
   logModel.setRequest(req);
   loggerAccess.info(logModel.getAccessLog());
-  let response = applicationUtils.genResponse(req.get('dc-language'), 'CM4040000', 'Not found', undefined);
+  let response = applicationUtils.genResponse(req.get('dc-language'), 'CM4040000', 'Not found');
   logModel.setResponse(response);
   loggerInfo.info(logModel.getInfoLog());
   return res.status(response.httpCode).send(response);

@@ -3,10 +3,11 @@ import UsersSchema from './user.model';
 
 export const addUser = (req, user, callback) => {
   try {
+    logger.info('mongoose addUser');
     let usersData = new UsersSchema(user);
     usersData.save((err, user) => {
       if (err) {
-        logger.warn('addUser Failed!' + err);
+        logger.error('addUser Failed!' + err);
         callback(err);
       } else {
         logger.info('addUser Success');
@@ -22,7 +23,7 @@ export const addUser = (req, user, callback) => {
 export const updateUser = (req, userId, user, callback) => {
   try {
     logger.info('mongoose updateUser');
-    UsersSchema.findByIdAndUpdate({ _id: userId }, {
+    UsersSchema.findByIdAndUpdate({_id: userId}, {
       $set: user
     }).exec(function (err, user) {
       if (err) {
@@ -41,10 +42,11 @@ export const updateUser = (req, userId, user, callback) => {
 
 export const getUserById = (req, _id, callback) => {
   try {
+    logger.info('mongoose getUserById');
     UsersSchema.findById(_id, '-password -__v')
       .exec(function (err, user) {
         if (err) {
-          logger.warn('getUserById Failed!' + err);
+          logger.error('getUserById Failed!' + err);
           callback(err);
         } else {
           logger.info('getUserById Success');
@@ -59,10 +61,11 @@ export const getUserById = (req, _id, callback) => {
 
 export const removeUser = (req, userId, callback) => {
   try {
-    UsersSchema.remove({ _id: userId })
+    logger.info('mongoose removeUser');
+    UsersSchema.remove({_id: userId})
       .exec(function (err, user) {
         if (err) {
-          logger.warn('removeUser Failed!' + err);
+          logger.error('removeUser Failed!' + err);
           callback(err);
         } else {
           logger.info('removeUser Success');
@@ -77,10 +80,11 @@ export const removeUser = (req, userId, callback) => {
 
 export const getUser = (req, callback) => {
   try {
+    logger.info('mongoose getUser');
     UsersSchema.find({}, '-password -__v')
       .exec(function (err, users) {
         if (err) {
-          logger.warn('getUser Failed!' + err);
+          logger.error('getUser Failed!' + err);
           callback(err);
         } else {
           logger.info('getUser Success');
@@ -96,7 +100,7 @@ export const getUser = (req, callback) => {
 export const updateLoginStatus = (req, param, callback) => {
   try {
     logger.info('mongoose updateLoginStatus');
-    UsersSchema.update({ _id: param._id }, {
+    UsersSchema.update({_id: param._id}, {
       $set: {
         countLoginFailed: param.countLoginFailed,
         timeToUnlock: param.timeToUnlock,
@@ -120,7 +124,7 @@ export const updateLoginStatus = (req, param, callback) => {
 export const unlockLoginStatus = (req, username, callback) => {
   try {
     logger.info('mongoose unlockLoginStatus');
-    UsersSchema.update({ username: username }, {
+    UsersSchema.update({username: username}, {
       $set: {
         countLoginFailed: 0,
         timeToUnlock: null,
@@ -145,7 +149,7 @@ export const getUserByUsername = (req, username, callback) => {
   try {
     logger.info('mongoose getUserByUsername');
     logger.info('username : ' + username);
-    UsersSchema.findOne({ username: username.toLowerCase() })
+    UsersSchema.findOne({username: username.toLowerCase()})
       .exec(function (err, user) {
         if (err) {
           logger.error('getUserByUsername  Failed!' + err);

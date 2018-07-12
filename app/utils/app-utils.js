@@ -3,7 +3,7 @@ import {resCode} from '../common/constants'; // Load config (environment)
 import {MainResponse} from '../response/main.response';
 import {resMessage} from '../common/message.properties';
 
-export const genResponse = (_language = 'en', _resCode, _devMessage, _data) => {
+export const genResponse = (_language = 'en', _resCode, _devMessage, _data = undefined) => {
   let responseObj;
   try {
     let messageCode = resCode[_resCode];
@@ -11,7 +11,7 @@ export const genResponse = (_language = 'en', _resCode, _devMessage, _data) => {
     let resHttpCode = messageCode.httpCode;
     responseObj = new MainResponse(_resCode, messageRes, _devMessage, _data, resHttpCode);
   } catch (error) {
-    logger.error('app utils Unhandled Exception: ' + error);
+    logger.error('AppUtils Unhandled Exception: ' + error);
     responseObj = new MainResponse('CM5000000', resMessage.general.error.en, error.message, undefined, 500);
   }
   return responseObj;

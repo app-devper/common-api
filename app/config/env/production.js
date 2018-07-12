@@ -1,9 +1,9 @@
-export const db = 'mongodb+srv://common:f9mWPxwVEGGkYnca@cluster0-iuolm.mongodb.net';
+export const db = 'mongodb+srv://common:f9mWPxwVEGGkYnca@common-syu9e.mongodb.net';
 
 export const app = {
   name: 'Common',
   port: 8089,
-  api_endpoint: 'https://common-api-app.herokuapp.com/',
+  apiEndpoint: 'https://common-api-app.herokuapp.com/',
 };
 
 export const logPathConfig = {
@@ -15,10 +15,10 @@ export const logPathConfig = {
   otherLog: '/tmp/Other_Log/',
 };
 
-export const activateTime = 12;//12 hours
+export const activateTime = 12;
 export const email = 'support@common.com';
 
-export const timeout = 90000; //2 min
+export const timeout = 86400000;
 
-export const userLockTime = 900; //second
+export const userLockTime = 900;
 export const userLoginAttempt = 3;

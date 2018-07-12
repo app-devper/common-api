@@ -30,7 +30,7 @@ export const authenticationApi = (rcvReq, callback) => {
                 });
               } else {
                 logger.info("Session has expired");
-                callback(appUtils.genResponse(req.get('dc-language'), 'CM4010003', 'Session has expired.', undefined))
+                callback(appUtils.genResponse(req.get('dc-language'), 'CM4010003', 'Session has expired', undefined))
               }
             } else {
               logger.info("Unauthorized");
@@ -38,7 +38,7 @@ export const authenticationApi = (rcvReq, callback) => {
             }
           } else {
             logger.info("Session is invalid");
-            callback(appUtils.genResponse(req.get('dc-language'), 'CM4010007', 'Session is invalid.', undefined))
+            callback(appUtils.genResponse(req.get('dc-language'), 'CM4010007', 'Session is invalid', undefined))
           }
         }
       });
@@ -60,7 +60,7 @@ export const login = (req, callback) => {
 
     // validate username & password : res user
     if (rcvBody === undefined || appUtils.isBlank(rcvBody.username) || appUtils.isBlank(rcvBody.pwd) || appUtils.isBlank(rcvBody.channel)) {
-      callback(appUtils.genResponse(req.get('dc-language'), 'CM4090000', 'invalidData', undefined))
+      callback(appUtils.genResponse(req.get('dc-language'), 'CM4090000', 'Invalid data', undefined))
     } else {
       // next step get user Info
       getUserAndValidateLogin(req, rcvBody, function (res) {
@@ -82,7 +82,7 @@ const getUserAndValidateLogin = (req, rcvBody, callback) => {
         callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
       } else {
         if (user === null) {
-          callback(appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'User Not found', undefined))
+          callback(appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'User not found', undefined))
         } else {
           //user is not null
           let isLoginSuccess = false;
@@ -139,7 +139,7 @@ const getUserAndValidateLogin = (req, rcvBody, callback) => {
             }
           } else {
             if (isLocked) {
-              //update timetounlock
+              //update time to unlock
               let vDateUnlock = user.timeToUnlock;
 
               vDateUnlock.setSeconds(user.timeToUnlock.getSeconds() + config.userLockTime);
@@ -259,7 +259,7 @@ const checkDuplicateLogin = (req, rcvBody, user, callback) => {
         //   let dateNow = Date.now();
         //   if (dateNow - authen.accessTime.getTime() < config.timeout) {
         //     logger.debug('DUPLICATE LOGIN');
-        //     callback(appUtils.genResponse(req.get('dc-language'), 'CM4010004', "Duplicate Login", undefined))
+        //     callback(appUtils.genResponse(req.get('dc-language'), 'CM4010004', "Duplicate login", undefined))
         //   } else {
         //     logger.debug('NEW LOGIN AGAIN');
         //     removeAuthentication(req, authen._id, rcvBody, user, function (res) {
@@ -311,7 +311,7 @@ const authentication = (req, rcvBody, user, callback) => {
         callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
       } else {
         let result = { user, accessToken: authenData.token };
-        callback(appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'success', result))
+        callback(appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'Login success', result))
       }
     });
   } catch (err) {
@@ -335,11 +335,11 @@ export const logout = (req, callback) => {
               if (err) {
                 callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
               } else {
-                callback(appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'logout success', undefined))
+                callback(appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'Logout success', undefined))
               }
             });
           } else {
-            callback(appUtils.genResponse(req.get('dc-language'), 'CM4010000', 'unknownToken', undefined))
+            callback(appUtils.genResponse(req.get('dc-language'), 'CM4010000', 'Unknown token', undefined))
           }
         }
       });

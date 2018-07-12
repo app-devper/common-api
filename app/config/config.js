@@ -4,11 +4,11 @@
 import * as production from './env/production';
 import * as local from './env/local';
 
-let enviroment = {
+let environment = {
   production,
   default: local
 };
 
-const config = enviroment[process.env.NODE_ENV] || enviroment.default;
+const config = environment[process.env.NODE_ENV] || environment.default;
 
 export default config;

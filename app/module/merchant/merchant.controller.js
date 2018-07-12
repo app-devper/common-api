@@ -1,5 +1,5 @@
-import * as applicationUtils from '../../utils/app-utils';
-import * as service from './user.service';
+import * as appUtils from '../../utils/app-utils';
+import * as service from './merchant.service';
 
 import logger from '../../utils/logger'; // 	Load logger
 import loggerAccess from '../../utils/logger-access';
@@ -7,95 +7,95 @@ import loggerInfo from '../../utils/logger-info';
 
 import {LogModel} from '../../config/log/log.model.js';
 
-export const addUser = (req, res) => {
+export const addMerchant = (req, res) => {
   let logModel = new LogModel();
   logModel.setRequest(req);
   loggerAccess.info(logModel.getAccessLog());
   try {
-    service.addUser(req, (response) => {
+    service.addMerchant(req, (response) => {
       logModel.setResponse(response);
       loggerInfo.info(logModel.getInfoLog());
       return res.status(response.httpCode).send(response);
     });
   } catch (err) {
-    logger.error('addUser Unhandled Exception: ' + err);
-    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err, undefined);
+    logger.error('addMerchant Unhandled Exception: ' + err);
+    let response = appUtils.genResponse(req.get('dc-language'), 'DC5000000', err);
     logModel.setResponse(response);
     loggerInfo.info(logModel.getInfoLog());
     return res.status(response.httpCode).send(response);
   }
 };
 
-export const updateUser = (req, res) => {
+export const updateMerchant = (req, res) => {
   let logModel = new LogModel();
   logModel.setRequest(req);
   loggerAccess.info(logModel.getAccessLog());
   try {
-    service.updateUser(req, (response) => {
+    service.updateMerchant(req, (response) => {
       logModel.setResponse(response);
       loggerInfo.info(logModel.getInfoLog());
       return res.status(response.httpCode).send(response);
     });
   } catch (err) {
-    logger.error('updateUser Unhandled Exception: ' + err);
-    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err, undefined);
+    logger.error('updateMerchant Unhandled Exception: ' + err);
+    let response = appUtils.genResponse(req.get('dc-language'), 'DC5000000', err);
     logModel.setResponse(response);
     loggerInfo.info(logModel.getInfoLog());
     return res.status(response.httpCode).send(response);
   }
 };
 
-export const removeUser = (req, res) => {
+export const removeMerchant = (req, res) => {
   let logModel = new LogModel();
   logModel.setRequest(req);
   loggerAccess.info(logModel.getAccessLog());
   try {
-    service.removeUser(req, (response) => {
+    service.removeMerchant(req, (response) => {
       logModel.setResponse(response);
       loggerInfo.info(logModel.getInfoLog());
       return res.status(response.httpCode).send(response);
     });
   } catch (err) {
-    logger.error('removeUser Unhandled Exception: ' + err);
-    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err, undefined);
+    logger.error('removeMerchant Unhandled Exception: ' + err);
+    let response = appUtils.genResponse(req.get('dc-language'), 'DC5000000', err);
     logModel.setResponse(response);
     loggerInfo.info(logModel.getInfoLog());
     return res.status(response.httpCode).send(response);
   }
 };
 
-export const getUser = (req, res) => {
+export const getMerchant = (req, res) => {
   let logModel = new LogModel();
   logModel.setRequest(req);
   loggerAccess.info(logModel.getAccessLog());
   try {
-    service.getUser(req, (response) => {
+    service.getMerchant(req, (response) => {
       logModel.setResponse(response);
       loggerInfo.info(logModel.getInfoLog());
       return res.status(response.httpCode).send(response);
     });
   } catch (err) {
-    logger.error('getUser Unhandled Exception: ' + err);
-    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err, undefined);
+    logger.error('getMerchant Unhandled Exception: ' + err);
+    let response = appUtils.genResponse(req.get('dc-language'), 'DC5000000', err);
     logModel.setResponse(response);
     loggerInfo.info(logModel.getInfoLog());
     return res.status(response.httpCode).send(response);
   }
 };
 
-export const getUserById = (req, res) => {
+export const getMerchantById = (req, res) => {
   let logModel = new LogModel();
   logModel.setRequest(req);
   loggerAccess.info(logModel.getAccessLog());
   try {
-    service.getUserById(req, (response) => {
+    service.getMerchantById(req, (response) => {
       logModel.setResponse(response);
       loggerInfo.info(logModel.getInfoLog());
       return res.status(response.httpCode).send(response);
     });
   } catch (err) {
-    logger.error('getUserById Unhandled Exception: ' + err);
-    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err, undefined);
+    logger.error('getMerchantById Unhandled Exception: ' + err);
+    let response = appUtils.genResponse(req.get('dc-language'), 'DC5000000', err);
     logModel.setResponse(response);
     loggerInfo.info(logModel.getInfoLog());
     return res.status(response.httpCode).send(response);
