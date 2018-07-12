@@ -63,8 +63,8 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(cors());
 
 // Configure app routes
-app.use('/', router);
 app.use('/api', apiRouter);
+app.use('/', router);
 
 // Start the app by listening on <port>
 // ===========================================================================================

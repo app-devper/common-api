@@ -2,8 +2,9 @@ import express from 'express'; // Load express
 import logger from '../utils/logger'; // Load logger
 import serveIndex from 'serve-index';
 import config from '../config/config';
-const path = require('path');
-const appDir = path.dirname(require.main.filename);
+import path from 'path';
+const appDir = path.join(__dirname, '../../dist/index.html');
+const webDir = path.join(__dirname, '../../dist');
 
 let router = express.Router(); // Load router
 
@@ -14,8 +15,10 @@ router.use('/access', express.static(config.logPathConfig.accessLog));
 router.use('/info', serveIndex(config.logPathConfig.infoLog, {'icons': true}));
 router.use('/info', express.static(config.logPathConfig.infoLog));
 
-router.use('*', function (req, res) {
-  res.sendFile(`${appDir}/dist/index.html`);
+router.use('/', express.static(webDir));
+
+router.get('*', function (req, res) {
+  res.sendFile(appDir);
 });
 
 logger.info('web.routes loaded');
