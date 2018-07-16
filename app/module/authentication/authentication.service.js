@@ -1,351 +1,228 @@
 // authentication service
 
-import logger from '../../utils/logger'; // 	Load logger
-import * as appUtils from '../../utils/app-utils';
-import * as authenticationMongoose from '../authentication/authentication.mongoose';
-import * as userMongoose from '../user/user.mongoose';
-import config from '../../config/config';
+import logger from '../../utils/logger'// Load logger
+import * as appUtils from '../../utils/app-utils'
+import * as authenMongoose from './authentication.mongoose'
+import * as usersMongoose from '../user/users.mongoose'
+import config from '../../config/config'
 
-export const authenticationApi = (rcvReq, callback) => {
-  let req = rcvReq;
+export const authenticationApi = async (rcvReq, callback) => {
+  let req = rcvReq
   try {
     if (appUtils.isBlank(req.get('dc-access-token')) || appUtils.isBlank(req.get('dc-user-id'))) {
       callback(appUtils.genResponse(req.get('dc-language'), 'CM4090000', 'Invalid header'))
     } else {
-      authenticationMongoose.getAuthentication(req, req.get('dc-access-token'), (err, result) => {
-        if (err) {
-          callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message))
-        } else {
-          let dateNow = Date.now();
-          if (result !== null && result.userId !== null) {
-            if (result.userId.status === 'ACTIVE') {
-              if (dateNow - result.accessTime.getTime() < config.timeout) {
-                authenticationMongoose.updateLogin(req, result._id, (err) => {
-                  if (err) {
-                    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message))
-                  } else {
-                    logger.info("Authorize success");
-                    callback(null)
-                  }
-                });
-              } else {
-                logger.info("Session has expired");
-                callback(appUtils.genResponse(req.get('dc-language'), 'CM4010003', 'Session has expired', undefined))
-              }
-            } else {
-              logger.info("Unauthorized");
-              callback(appUtils.genResponse(req.get('dc-language'), 'CM4010001', 'Unauthorized', undefined))
-            }
+      const result = await authenMongoose.getAuthentication(req, req.get('dc-access-token'))
+      let dateNow = Date.now()
+      if (result !== null && result.userId !== null) {
+        if (result.userId.status === 'ACTIVE') {
+          if (dateNow - result.accessTime.getTime() < config.timeout) {
+            await authenMongoose.updateLogin(req, result._id)
+            logger.info('Authorize success')
+            callback(null)
           } else {
-            logger.info("Session is invalid");
-            callback(appUtils.genResponse(req.get('dc-language'), 'CM4010007', 'Session is invalid', undefined))
+            logger.info('Session has expired')
+            callback(appUtils.genResponse(req.get('dc-language'), 'CM4010003', 'Session has expired'))
           }
+        } else {
+          logger.info('Unauthorized')
+          callback(appUtils.genResponse(req.get('dc-language'), 'CM4010001', 'Unauthorized'))
         }
-      });
+      } else {
+        logger.info('Session is invalid')
+        callback(appUtils.genResponse(req.get('dc-language'), 'CM4010007', 'Session is invalid'))
+      }
     }
-
   } catch (err) {
-    logger.error('service login Unhandled Exception: ', err);
+    logger.error('service login Unhandled Exception: ', err)
     callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err))
   }
-};
+}
 
 // login step : 0
-export const login = (req, callback) => {
-  let rcvBody = req.body;
+export const login = async (req, callback) => {
+  let rcvBody = req.body
   try {
-    logger.info('rcvBody.username ==>', rcvBody.username);
-    logger.info('rcvBody.pwd ==> ', rcvBody.pwd);
-    logger.info('rcvBody.channel ==> ', rcvBody.channel);
+    logger.info('rcvBody.username ==>', rcvBody.username)
+    logger.info('rcvBody.pwd ==> ', rcvBody.pwd)
+    logger.info('rcvBody.channel ==> ', rcvBody.channel)
 
     // validate username & password : res user
     if (rcvBody === undefined || appUtils.isBlank(rcvBody.username) || appUtils.isBlank(rcvBody.pwd) || appUtils.isBlank(rcvBody.channel)) {
-      callback(appUtils.genResponse(req.get('dc-language'), 'CM4090000', 'Invalid data', undefined))
+      callback(appUtils.genResponse(req.get('dc-language'), 'CM4090000', 'Invalid data'))
     } else {
       // next step get user Info
-      getUserAndValidateLogin(req, rcvBody, function (res) {
-        callback(res)
-      });
+      let res = await getUserAndValidateLogin(req, rcvBody)
+      callback(res)
     }
   } catch (err) {
-    logger.error('service login Unhandled Exception: ' + err);
-    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
+    logger.error('service login Unhandled Exception: ' + err)
+    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err))
   }
-};
+}
 
-//step : 1
-const getUserAndValidateLogin = (req, rcvBody, callback) => {
+// step : 1
+const getUserAndValidateLogin = async (req, rcvBody) => {
   try {
-    //get user
-    userMongoose.getUserByUsername(req, rcvBody.username, (err, user) => {
-      if (err) {
-        callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
+    // get user
+    const user = await usersMongoose.getUserByUsername(req, rcvBody.username)
+    if (user === null) {
+      // user is not found
+      return appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'User not found')
+    } else {
+      // user is not null
+      let isLoginSuccess = false
+      let isLocked = true
+
+      // case user lock
+      if (user.timeToUnlock !== undefined && user.timeToUnlock !== null) {
+        let nowDT = new Date()
+
+        // unlock
+        if (nowDT >= new Date(user.timeToUnlock)) {
+          let reqParam = {
+            '_id': user._id,
+            countLoginFailed: 0,
+            timeToUnlock: null
+          }
+
+          // update status
+          await usersMongoose.updateLoginStatus(req, reqParam)
+          user.countLoginFailed = 0
+          isLocked = false
+        }
       } else {
-        if (user === null) {
-          callback(appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'User not found', undefined))
+        isLocked = false
+      }
+
+      logger.debug('IS ACCOUNT LOCKED >>>> ' + isLocked)
+
+      if (user.password === rcvBody.pwd) {
+        if (isLocked) {
+          return appUtils.genResponse(req.get('dc-language'), 'CM4090005', 'User Locked')
         } else {
-          //user is not null
-          let isLoginSuccess = false;
-          let isLocked = true;
+          // If login fail > 0, clear ...
+          if (user.countLoginFailed && user.countLoginFailed > 0) {
+            let reqParam = {
+              '_id': user._id,
+              'countLoginFailed': 0,
+              'timeToUnlock': null
+            }
 
-          //case user lock
-          if (user.timeToUnlock !== undefined && user.timeToUnlock !== null) {
-            let nowDT = new Date();
+            await usersMongoose.updateLoginStatus(req, reqParam)
+          }
+          isLoginSuccess = true
+        }
+      } else {
+        if (isLocked) {
+          // update time to unlock
+          let vDateUnlock = user.timeToUnlock
 
-            //unlock
-            if (nowDT >= new Date(user.timeToUnlock)) {
+          vDateUnlock.setSeconds(user.timeToUnlock.getSeconds() + config.userLockTime)
+
+          let reqParam = {
+            '_id': user._id,
+            'countLoginFailed': user.countLoginFailed,
+            'timeToUnlock': vDateUnlock
+          }
+
+          await usersMongoose.updateLoginStatus(req, reqParam)
+          return appUtils.genResponse(req.get('dc-language'), 'CM4090005', 'User Locked')
+        } else {
+          let vCount = 0
+          let vDateUnlock = null
+
+          if (user.countLoginFailed) { // failed to login not first time
+            if (user.countLoginFailed < config.userLoginAttempt) {
+              vCount = user.countLoginFailed + 1
+
+              if (vCount === config.userLoginAttempt) {
+                vDateUnlock = new Date()
+                vDateUnlock.setSeconds(vDateUnlock.getSeconds() + config.userLockTime)
+              }
 
               let reqParam = {
-                "_id": user._id,
-                countLoginFailed: 0,
-                timeToUnlock: null,
-              };
-
-              //update status
-              userMongoose.updateLoginStatus(req, reqParam, (err) => {
-                if (err) {
-                  callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
-                }
-              });
-
-              user.countLoginFailed = 0;
-              isLocked = false;
-            }
-          } else {
-            isLocked = false;
-          }
-
-          logger.debug('IS ACCOUNT LOCKED >>>> ' + isLocked);
-
-          if (user.password === rcvBody.pwd) {
-            if (isLocked) {
-              callback(appUtils.genResponse(req.get('dc-language'), 'CM4090005', 'User Locked', undefined))
-            } else {
-              // If login fail > 0, clear ...
-              if (user.countLoginFailed && user.countLoginFailed > 0) {
-                let reqParam = {
-                  "_id": user._id,
-                  "countLoginFailed": 0,
-                  "timeToUnlock": null,
-                };
-
-                userMongoose.updateLoginStatus(req, reqParam, (err) => {
-                  if (err) {
-                    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
-                  }
-                });
+                '_id': user._id,
+                'countLoginFailed': vCount,
+                'timeToUnlock': vDateUnlock
               }
-              isLoginSuccess = true;
-            }
-          } else {
-            if (isLocked) {
-              //update time to unlock
-              let vDateUnlock = user.timeToUnlock;
 
-              vDateUnlock.setSeconds(user.timeToUnlock.getSeconds() + config.userLockTime);
-
+              await usersMongoose.updateLoginStatus(req, reqParam)
+              return appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'Incorrect password')
+            } else { // failed to login on reset
               let reqParam = {
-                "_id": user._id,
-                "countLoginFailed": user.countLoginFailed,
-                "timeToUnlock": vDateUnlock,
-              };
-
-              userMongoose.updateLoginStatus(req, reqParam, (err) => {
-                if (err) {
-                  callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
-                } else {
-                  callback(appUtils.genResponse(req.get('dc-language'), 'CM4090005', 'User Locked', undefined))
-                }
-              });
-
-            } else {
-              let vCount = 0;
-              let vDateUnlock = null;
-              // failed to login not first time
-              if (user.countLoginFailed) {
-
-                if (user.countLoginFailed < config.userLoginAttempt) {
-                  vCount = user.countLoginFailed + 1;
-
-                  if (vCount === config.userLoginAttempt) {
-                    vDateUnlock = new Date();
-                    vDateUnlock.setSeconds(vDateUnlock.getSeconds() + config.userLockTime);
-                  }
-
-                  let reqParam = {
-                    "_id": user._id,
-                    "countLoginFailed": vCount,
-                    "timeToUnlock": vDateUnlock,
-                  };
-
-                  userMongoose.updateLoginStatus(req, reqParam, (err) => {
-                    if (err) {
-                      callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
-                    } else {
-                      callback(appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'Incorrect password', undefined))
-                    }
-                  });
-
-                  // failed to login on first time
-                } else {
-                  let reqParam = {
-                    _id: user._id,
-                    "countLoginFailed": 1,
-                    "timeToUnlock": null,
-                  };
-
-                  userMongoose.updateLoginStatus(req, reqParam, (err) => {
-                    if (err) {
-                      callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
-                    } else {
-                      callback(appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'Incorrect password', undefined))
-                    }
-                  });
-                }
-              } else {
-                let reqParam = {
-                  _id: user._id,
-                  "countLoginFailed": 1,
-                  "timeToUnlock": null,
-                };
-
-                userMongoose.updateLoginStatus(req, reqParam, (err) => {
-                  if (err) {
-                    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
-                  } else {
-                    callback(appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'Incorrect password', undefined))
-                  }
-                });
+                _id: user._id,
+                'countLoginFailed': 1,
+                'timeToUnlock': null
               }
+
+              await usersMongoose.updateLoginStatus(req, reqParam)
+              return appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'Incorrect password')
             }
-          }
+          } else { // failed to login on first time
+            let reqParam = {
+              _id: user._id,
+              'countLoginFailed': 1,
+              'timeToUnlock': null
+            }
 
-          if (isLoginSuccess) {
-            //set capabilities for user
-            checkDuplicateLogin(req, rcvBody, user, (res) => {
-              callback(res)
-            })
+            await usersMongoose.updateLoginStatus(req, reqParam)
+            return appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'Incorrect password')
           }
-
         }
       }
-    });
+
+      if (isLoginSuccess) {
+        // set capabilities for user;
+        return await checkDuplicateLogin(req, rcvBody, user)
+      }
+    }
   } catch (err) {
-    logger.error('service getUserAndValidateLogin Unhandled Exception: ' + err);
-    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
+    logger.error('service getUserAndValidateLogin Unhandled Exception: ' + err)
+    return appUtils.genResponse(req.get('dc-language'), 'CM5000000', err)
   }
-};
+}
 
 // step : 2
-const checkDuplicateLogin = (req, rcvBody, user, callback) => {
+const checkDuplicateLogin = async (req, rcvBody, user) => {
   try {
-    //check duplicate login
-    authenticationMongoose.findDuplicateLogin(req, user._id, rcvBody.channel, function (err, authen) {
-      if (err) {
-        callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err.message, undefined))
-      } else {
-        logger.debug('NEW LOGIN');
-        authentication(req, rcvBody, user, function (res) {
-          callback(res)
-        });
-        // if (authen === null) {
-        //   //new login gen token & insert authentication
-        //   logger.debug('NEW LOGIN');
-        //   authentication(req, rcvBody, user, function (res) {
-        //     callback(res)
-        //   });
-        // } else {
-        //   //check duplicate login
-        //   let dateNow = Date.now();
-        //   if (dateNow - authen.accessTime.getTime() < config.timeout) {
-        //     logger.debug('DUPLICATE LOGIN');
-        //     callback(appUtils.genResponse(req.get('dc-language'), 'CM4010004', "Duplicate login", undefined))
-        //   } else {
-        //     logger.debug('NEW LOGIN AGAIN');
-        //     removeAuthentication(req, authen._id, rcvBody, user, function (res) {
-        //       callback(res)
-        //     });
-        //   }
-        // }
-      }
-    });
+    // check duplicate login
+    // const result = await authenMongoose.findDuplicateLogin(req, user._id, rcvBody.channel);
+
+    let authenData = {}
+    authenData.userId = user._id
+    authenData.username = rcvBody.username
+    authenData.token = appUtils.genToken()
+    authenData.channel = rcvBody.channel
+    authenData.valid = true
+    authenData.deviceToken = (rcvBody.deviceToken === undefined ? undefined : rcvBody.deviceToken)
+    authenData.deviceType = (rcvBody.deviceType === undefined ? undefined : rcvBody.deviceType)
+    authenData.deviceId = (rcvBody.deviceId === undefined ? undefined : rcvBody.deviceId)
+
+    const authen = await authenMongoose.addAuthentication(req, authenData)
+    return appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'Login success', {user, accessToken: authen.token})
   } catch (err) {
-    logger.error('service checkDuplicateLogin Unhandled Exception: ' + err);
-    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
+    logger.error('service checkDuplicateLogin Unhandled Exception: ' + err)
+    return appUtils.genResponse(req.get('dc-language'), 'CM5000000', err)
   }
-};
+}
 
-const removeAuthentication = (req, _id, rcvBody, user, callback) => {
-  try {
-    // update access time
-    authenticationMongoose.removeAuthentication(req, user._id, function (err) {
-      if (err) {
-        callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
-      } else {
-        authentication(req, rcvBody, user, function (res) {
-          callback(res)
-        });
-      }
-    });
-  } catch (err) {
-    logger.error('service removeAuthentication Unhandled Exception: ' + err);
-    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
-  }
-};
-
-const authentication = (req, rcvBody, user, callback) => {
-  try {
-    // gen token & insert token
-    let authenData = {};
-    authenData.userId = user._id;
-    authenData.username = rcvBody.username;
-    authenData.token = appUtils.genToken();
-    authenData.channel = rcvBody.channel;
-    authenData.valid = true;
-    authenData.deviceToken = (rcvBody.deviceToken === undefined ? undefined : rcvBody.deviceToken);
-    authenData.deviceType = (rcvBody.deviceType === undefined ? undefined : rcvBody.deviceType);
-    authenData.deviceId = (rcvBody.deviceId === undefined ? undefined : rcvBody.deviceId);
-
-    authenticationMongoose.addAuthentication(req, authenData, function (err) {
-      if (err) {
-        callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
-      } else {
-        let result = { user, accessToken: authenData.token };
-        callback(appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'Login success', result))
-      }
-    });
-  } catch (err) {
-    logger.error('service authentication Unhandled Exception: ' + err);
-    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
-  }
-};
-
-export const logout = (req, callback) => {
-  let accessToken = req.get('dc-access-token');
+export const logout = async (req, callback) => {
+  let accessToken = req.get('dc-access-token')
   try {
     if (appUtils.isBlank(accessToken)) {
-      callback(appUtils.genResponse(req.get('dc-language'), 'CM4090000', 'invalidData', undefined))
+      callback(appUtils.genResponse(req.get('dc-language'), 'CM4090000', 'invalidData'))
     } else {
-      authenticationMongoose.getAuthentication(req, accessToken, (err, res) => {
-        if (err) {
-          callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
-        } else {
-          if (res !== null) {
-            authenticationMongoose.removeAuthentication(req, req.get('dc-user-id'), (err, res) => {
-              if (err) {
-                callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
-              } else {
-                callback(appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'Logout success', undefined))
-              }
-            });
-          } else {
-            callback(appUtils.genResponse(req.get('dc-language'), 'CM4010000', 'Unknown token', undefined))
-          }
-        }
-      });
+      const res = await authenMongoose.getAuthentication(req, accessToken)
+      if (res !== null) {
+        await authenMongoose.removeAuthentication(req, req.get('dc-user-id'))
+        callback(appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'Logout success'))
+      } else {
+        callback(appUtils.genResponse(req.get('dc-language'), 'CM4010000', 'Unknown token'))
+      }
     }
   } catch (err) {
-    logger.error('service logout Unhandled Exception: ' + err);
-    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err, undefined))
+    logger.error('service logout Unhandled Exception: ' + err)
+    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err))
   }
-};
+}

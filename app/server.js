@@ -1,74 +1,75 @@
-import express from 'express'; // Load express
-import mongoose from 'mongoose'; // Load mongoose
-import bodyParser from 'body-parser'; // Load bodyParser
-import cors from 'cors'; // Load cors
-import logger from './utils/logger'; // Load logger
-import config from './config/config'; // Load config (environment)
+import express from 'express' // Load express
+import mongoose from 'mongoose' // Load mongoose
+import bodyParser from 'body-parser' // Load bodyParser
+import cors from 'cors' // Load cors
+import logger from './utils/logger' // Load logger
+import config from './config/config' // Load config (environment)
 
-import router from'./routes/web.router' // Load root router
-import apiRouter from'./routes/api.router' // Load api router
+import router from './routes/web.router' // Load root router
+import apiRouter from './routes/api.router' // Load api router
 
-logger.info('Starting: ' + config.app.name + '....');
-logger.info('Connecting to MongoDB Instance: ' + config.db);
+logger.info('Starting: ' + config.app.name + '....')
+logger.info('Connecting to MongoDB Instance: ' + config.db)
 
-let db = mongoose.connection;
-let port = process.env.PORT || config.app.port;
+let db = mongoose.connection
+let port = process.env.PORT || config.app.port
 
 let options = {
   keepAlive: 300000,
   connectTimeoutMS: 30000
-};
+}
 
-mongoose.connect(config.db, options);
+mongoose.connect(config.db, options)
 
 db.on('connecting', function () {
-  logger.log('connecting to MongoDB...');
-});
+  logger.log('connecting to MongoDB...')
+})
 
 db.on('error', function (error) {
-  logger.error('Could not connect to MongoDB!');
-  logger.error(error.message);
-  mongoose.disconnect();
-});
+  logger.error('Could not connect to MongoDB!')
+  logger.error(error.message)
+  mongoose.disconnect()
+})
 
 db.on('connected', function () {
   if (db.client.s.url.startsWith('mongodb+srv')) {
-    db.db = db.client.db('common');
+    db.db = db.client.db('common')
   }
-  logger.info('MongoDB connected!');
-});
+  logger.info('MongoDB connected!')
+})
 
 db.once('open', function () {
-  logger.info('MongoDB connection opened!');
-});
+  logger.info('MongoDB connection opened!')
+})
 
 db.on('reconnected', function () {
-  logger.info('MongoDB reconnected!');
-});
+  logger.info('MongoDB reconnected!')
+})
 
 db.on('disconnected', function () {
-  logger.info('MongoDB disconnected!');
-});
-//	Create the app
-// ============================================================================================
-let app = express(db);
+  logger.info('MongoDB disconnected!')
+})
 
-app.enable('trust proxy');
+// Create the app
+// ============================================================================================
+let app = express(db)
+
+app.enable('trust proxy')
 
 // configure app to use bodyParser()
-app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit: 50000}));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}))
+app.use(bodyParser.json({limit: '50mb'}))
 
 // Enable CORS on Express server instance
-app.use(cors());
+app.use(cors())
 
 // Configure app routes
-app.use('/api', apiRouter);
-app.use('/', router);
+app.use('/api', apiRouter)
+app.use('/', router)
 
 // Start the app by listening on <port>
 // ===========================================================================================
-app.listen(port);
+app.listen(port)
 
 // Logging initialization
-logger.info(config.app.name + ' listening on port: ' + port);
+logger.info(config.app.name + ' listening on port: ' + port)

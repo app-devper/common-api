@@ -20,8 +20,8 @@ let UsersSchema = new Schema({
   role: String,
   email: String,
   countLoginFailed: Number,
-  timeToUnlock: {type: Date},
-});
+  timeToUnlock: {type: Date}
+})
 
 // Build the users Model:
-export default mongoose.model('users', UsersSchema);
+export default mongoose.model('users', UsersSchema)

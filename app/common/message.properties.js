@@ -24,7 +24,7 @@ export const resMessage = {
       en: 'Service Missing / Not found. Please contact admin ',
       th: 'ไม่พบบริการที่คุณร้องขอ กรุณาติดต่อ ผู้ดูแลระบบ',
       httpCode: 404
-    },
+    }
   },
   authentication: {
     unAuthorized: {
@@ -73,7 +73,7 @@ export const resMessage = {
       en: 'Username is duplicate',
       th: 'Username มีอยู่แล้ว กรุณาตรวจสอบ',
       httpCode: 401
-    },
+    }
   },
   db: {
     connectionFail: {
@@ -81,5 +81,5 @@ export const resMessage = {
       th: 'Failed to establish a connection to the database. Please try again later.',
       httpCode: 599
     }
-  },
-};
+  }
+}

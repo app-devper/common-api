@@ -19,8 +19,8 @@ let MerchantsSchema = new Schema({
   createdBy: {type: Schema.Types.ObjectId, ref: 'users'},
   createdDate: {type: Date, default: Date.now},
   updatedBy: {type: Schema.Types.ObjectId, ref: 'users'},
-  updatedDate: {type: Date},
-});
+  updatedDate: {type: Date}
+})
 
 // Build the merchants Model:
-export default mongoose.model('merchants', MerchantsSchema);
+export default mongoose.model('merchants', MerchantsSchema)

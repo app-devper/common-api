@@ -1,34 +1,34 @@
-import express from 'express';
-import * as controller from './merchant.controller'; // Load controller
-import logger from '../../utils/logger'; // Load logger
+import express from 'express'
+import * as controller from './merchant.controller' // Load controller
+import logger from '../../utils/logger' // Load logger
 
-let merchantRouter = express.Router();
+let merchantRouter = express.Router()
 
-logger.info('merchant.routes loaded');
+logger.info('merchant.routes loaded')
 
 merchantRouter.post('/', (req, res) => {
-  logger.info('merchant router add merchant');
-  controller.addMerchant(req, res);
-});
+  logger.info('merchant router add merchant')
+  controller.addMerchant(req, res)
+})
 
 merchantRouter.get('/', (req, res) => {
-  logger.info('merchant router get merchant');
-  controller.getMerchant(req, res);
-});
+  logger.info('merchant router get merchant')
+  controller.getMerchant(req, res)
+})
 
 merchantRouter.get('/:merchantId', (req, res) => {
-  logger.info('merchant router get merchant');
-  controller.getMerchantById(req, res);
-});
+  logger.info('merchant router get merchant')
+  controller.getMerchantById(req, res)
+})
 
 merchantRouter.put('/:merchantId', (req, res) => {
-  logger.info('merchant router update merchant');
-  controller.updateMerchant(req, res);
-});
+  logger.info('merchant router update merchant')
+  controller.updateMerchant(req, res)
+})
 
 merchantRouter.delete('/:merchantId', (req, res) => {
-  logger.info('merchant router remove merchant');
-  controller.removeMerchant(req, res);
-});
+  logger.info('merchant router remove merchant')
+  controller.removeMerchant(req, res)
+})
 
-export default merchantRouter;
+export default merchantRouter
