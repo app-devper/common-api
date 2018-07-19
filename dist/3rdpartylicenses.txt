@@ -99,6 +99,14 @@ MIT
 MIT
 MIT
 
+@ngx-progressbar/core@5.0.1
+MIT
+MIT
+
+@ngx-progressbar/http@5.0.1
+MIT
+MIT
+
 chartist@0.9.4
 WTFPL
 DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE

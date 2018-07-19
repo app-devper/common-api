@@ -199,14 +199,27 @@ var ErrorInterceptor = /** @class */ (function () {
     ErrorInterceptor.prototype.intercept = function (request, next) {
         var _this = this;
         return next.handle(request).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["catchError"])(function (err) {
-            if (err.status === 401) {
+            if (err.status !== 200) {
                 // auto logout if 401 response returned from api
-                _this.authenticationService.logout();
-                location.reload(true);
+                // location.reload(true);
+                _this.showNotification('top', 'center', err.error.resMessage);
             }
-            var error = err.error.message || err.statusText;
+            var error = err.error.resMessage || err.statusText;
             return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["throwError"])(error);
         }));
+    };
+    ErrorInterceptor.prototype.showNotification = function (from, align, msg) {
+        $.notify({
+            icon: 'ti-info-alt',
+            message: msg
+        }, {
+            type: 'danger',
+            timer: 4000,
+            placement: {
+                from: from,
+                align: align
+            }
+        });
     };
     ErrorInterceptor = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
@@ -433,7 +446,7 @@ var AuthenticationService = /** @class */ (function () {
         }).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["map"])(function (res) {
             // login successful if there's a jwt token in the response
             if (res.data && res.data.accessToken) {
-                // store user details and jwt token in local storage to keep user logged in between page refreshes
+                // store user details and token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('currentUser', JSON.stringify(res.data));
             }
             return res.data;
@@ -493,6 +506,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var _environments_environment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var ts_md5__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ts-md5 */ "./node_modules/ts-md5/dist/md5.js");
+/* harmony import */ var ts_md5__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(ts_md5__WEBPACK_IMPORTED_MODULE_4__);
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -502,6 +517,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 
@@ -521,10 +537,13 @@ var UserService = /** @class */ (function () {
         }));
     };
     UserService.prototype.register = function (user) {
+        user.status = 'ACTIVE';
+        user.role = 'USER';
+        user.password = ts_md5__WEBPACK_IMPORTED_MODULE_4__["Md5"].hashStr(user.password).toString();
         return this.http.post(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + "/api/user", user);
     };
-    UserService.prototype.update = function (user) {
-        return this.http.put(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + "/api/user" + user._id, user);
+    UserService.prototype.update = function (id, user) {
+        return this.http.put(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + "/api/user/" + id, user);
     };
     UserService.prototype.delete = function (id) {
         return this.http.delete(_environments_environment__WEBPACK_IMPORTED_MODULE_3__["environment"].apiUrl + "/api/user/" + id);
@@ -540,6 +559,101 @@ var UserService = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/add-user/add-user.component.html":
+/*!**************************************************!*\
+  !*** ./src/app/add-user/add-user.component.html ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"sidebar\" data-background-color=\"white\" data-active-color=\"danger\">\n  <app-sidebar></app-sidebar>\n</div>\n<div class=\"main-panel\">\n  <app-navbar></app-navbar>\n  <div class=\"content\">\n\n    <div class=\"container-fluid\">\n      <div class=\"row\">\n        <div class=\"col-lg-8 col-md-7\">\n          <div class=\"card\">\n            <div class=\"header\">\n              <h4 class=\"title\">Add Profile</h4>\n            </div>\n            <div class=\"content\">\n              <form [formGroup]=\"userForm\" (ngSubmit)=\"onSubmit()\">\n                <div class=\"row\">\n                  <div class=\"col-md-6\">\n                    <div class=\"form-group\">\n                      <label>Username</label>\n                      <input type=\"text\" formControlName=\"username\" class=\"form-control border-input\"\n                             placeholder=\"Username\" [ngClass]=\"{ 'is-invalid': submitted && f.username.errors }\">\n                      <div *ngIf=\"submitted && f.username.errors\" class=\"invalid-feedback text-danger\">\n                        <div *ngIf=\"f.username.errors.required\">Username is required</div>\n                      </div>\n                    </div>\n                  </div>\n                  <div class=\"col-md-6\">\n                    <div class=\"form-group\">\n                      <label>Password</label>\n                      <input type=\"password\" formControlName=\"password\" maxlength=\"20\" class=\"form-control border-input\"\n                             placeholder=\"Password\" [ngClass]=\"{ 'is-invalid': submitted && f.password.errors }\">\n                      <div *ngIf=\"submitted && f.password.errors\" class=\"invalid-feedback text-danger\">\n                        <div *ngIf=\"f.password.errors.required\">Password is required</div>\n                        <div *ngIf=\"f.password.errors.minlength\">Password must be at least 8 characters</div>\n                      </div>\n                    </div>\n                  </div>\n                </div>\n\n\n                <div class=\"row\">\n                  <div class=\"col-md-6\">\n                    <div class=\"form-group\">\n                      <label>Email address</label>\n                      <input type=\"email\" formControlName=\"email\" class=\"form-control border-input\" placeholder=\"Email\">\n                    </div>\n                  </div>\n                  <div class=\"col-md-6\">\n                    <div class=\"form-group\">\n                      <label>Phone</label>\n                      <input type=\"text\" formControlName=\"phone\" class=\"form-control border-input\" placeholder=\"Phone\"\n                             maxlength=\"10\">\n                    </div>\n                  </div>\n                </div>\n\n\n                <div class=\"row\">\n                  <div class=\"col-md-6\">\n                    <div class=\"form-group\">\n                      <label>First Name</label>\n                      <input type=\"text\" formControlName=\"firstName\" class=\"form-control border-input\"\n                             placeholder=\"First Name\">\n                    </div>\n                  </div>\n                  <div class=\"col-md-6\">\n                    <div class=\"form-group\">\n                      <label>Last Name</label>\n                      <input type=\"text\" formControlName=\"lastName\" class=\"form-control border-input\"\n                             placeholder=\"Last Name\">\n                    </div>\n                  </div>\n                </div>\n\n                <div class=\"row\">\n                  <div class=\"col-md-12\">\n                    <div class=\"form-group\">\n                      <label>Address</label>\n                      <input type=\"text\" class=\"form-control border-input\" placeholder=\"Home Address\">\n                    </div>\n                  </div>\n                </div>\n\n                <div class=\"row\">\n                  <div class=\"col-md-4\">\n                    <div class=\"form-group\">\n                      <label>City</label>\n                      <input type=\"text\" class=\"form-control border-input\" placeholder=\"City\">\n                    </div>\n                  </div>\n                  <div class=\"col-md-4\">\n                    <div class=\"form-group\">\n                      <label>Country</label>\n                      <input type=\"text\" class=\"form-control border-input\" placeholder=\"Country\">\n                    </div>\n                  </div>\n                  <div class=\"col-md-4\">\n                    <div class=\"form-group\">\n                      <label>Postal Code</label>\n                      <input type=\"number\" class=\"form-control border-input\" placeholder=\"ZIP Code\">\n                    </div>\n                  </div>\n                </div>\n\n                <div class=\"row\">\n                  <div class=\"col-md-12\">\n                    <div class=\"form-group\">\n                      <label>About Me</label>\n                      <textarea rows=\"5\" class=\"form-control border-input\"\n                                placeholder=\"Here can be your description\"></textarea>\n                    </div>\n                  </div>\n                </div>\n                <div class=\"text-center\">\n                  <button type=\"submit\" class=\"btn btn-info btn-fill btn-wd\">Add User</button>\n                </div>\n                <div class=\"clearfix\"></div>\n              </form>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n\n  </div>\n  <footer-cmp></footer-cmp>\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/add-user/add-user.component.ts":
+/*!************************************************!*\
+  !*** ./src/app/add-user/add-user.component.ts ***!
+  \************************************************/
+/*! exports provided: AddUserComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AddUserComponent", function() { return AddUserComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../_services */ "./src/app/_services/index.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+
+
+var AddUserComponent = /** @class */ (function () {
+    function AddUserComponent(route, userService, router, formBuilder) {
+        this.route = route;
+        this.userService = userService;
+        this.router = router;
+        this.formBuilder = formBuilder;
+        this.submitted = false;
+        this.userForm = this.formBuilder.group({
+            firstName: [''],
+            lastName: [''],
+            username: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_4__["Validators"].required],
+            password: ['', [_angular_forms__WEBPACK_IMPORTED_MODULE_4__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_4__["Validators"].minLength(8)]],
+            email: [''],
+            phone: ['']
+        });
+    }
+    AddUserComponent.prototype.ngOnInit = function () {
+    };
+    Object.defineProperty(AddUserComponent.prototype, "f", {
+        get: function () {
+            return this.userForm.controls;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    AddUserComponent.prototype.onSubmit = function () {
+        var _this = this;
+        this.submitted = true;
+        // stop here if form is invalid
+        if (this.userForm.invalid) {
+            return;
+        }
+        this.userService.register(this.userForm.value)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["first"])())
+            .subscribe(function (data) {
+            _this.router.navigate(['/table']);
+        }, function (error) {
+        });
+    };
+    AddUserComponent = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
+            template: __webpack_require__(/*! ./add-user.component.html */ "./src/app/add-user/add-user.component.html")
+        }),
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_1__["ActivatedRoute"],
+            _services__WEBPACK_IMPORTED_MODULE_3__["UserService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"],
+            _angular_forms__WEBPACK_IMPORTED_MODULE_4__["FormBuilder"]])
+    ], AddUserComponent);
+    return AddUserComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/app.component.html":
 /*!************************************!*\
   !*** ./src/app/app.component.html ***!
@@ -547,7 +661,7 @@ var UserService = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!-- main app container -->\n<div class=\"wrapper\">\n  <router-outlet></router-outlet>\n</div>\n<!--<fixedplugin-cmp></fixedplugin-cmp>-->\n"
+module.exports = "<!-- main app container -->\n<ng-progress #progressBar></ng-progress>\n<div class=\"wrapper\">\n  <router-outlet></router-outlet>\n</div>\n"
 
 /***/ }),
 
@@ -623,18 +737,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _shared_fixedplugin_fixedplugin_module__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./shared/fixedplugin/fixedplugin.module */ "./src/app/shared/fixedplugin/fixedplugin.module.ts");
 /* harmony import */ var _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./dashboard/dashboard.component */ "./src/app/dashboard/dashboard.component.ts");
 /* harmony import */ var _user_user_component__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./user/user.component */ "./src/app/user/user.component.ts");
-/* harmony import */ var _table_table_component__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./table/table.component */ "./src/app/table/table.component.ts");
-/* harmony import */ var _typography_typography_component__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./typography/typography.component */ "./src/app/typography/typography.component.ts");
-/* harmony import */ var _icons_icons_component__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./icons/icons.component */ "./src/app/icons/icons.component.ts");
-/* harmony import */ var _maps_maps_component__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./maps/maps.component */ "./src/app/maps/maps.component.ts");
-/* harmony import */ var _notifications_notifications_component__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./notifications/notifications.component */ "./src/app/notifications/notifications.component.ts");
-/* harmony import */ var _ngui_map__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! @ngui/map */ "./node_modules/@ngui/map/esm5/ngui-map.js");
+/* harmony import */ var _add_user_add_user_component__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./add-user/add-user.component */ "./src/app/add-user/add-user.component.ts");
+/* harmony import */ var _table_table_component__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./table/table.component */ "./src/app/table/table.component.ts");
+/* harmony import */ var _typography_typography_component__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./typography/typography.component */ "./src/app/typography/typography.component.ts");
+/* harmony import */ var _icons_icons_component__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ./icons/icons.component */ "./src/app/icons/icons.component.ts");
+/* harmony import */ var _maps_maps_component__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./maps/maps.component */ "./src/app/maps/maps.component.ts");
+/* harmony import */ var _notifications_notifications_component__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ./notifications/notifications.component */ "./src/app/notifications/notifications.component.ts");
+/* harmony import */ var _ngui_map__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! @ngui/map */ "./node_modules/@ngui/map/esm5/ngui-map.js");
+/* harmony import */ var _ngx_progressbar_http__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! @ngx-progressbar/http */ "./node_modules/@ngx-progressbar/http/fesm5/ngx-progressbar-http.js");
+/* harmony import */ var _ngx_progressbar_core__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @ngx-progressbar/core */ "./node_modules/@ngx-progressbar/core/fesm5/ngx-progressbar-core.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
+
 
 
 
@@ -674,7 +794,12 @@ var AppModule = /** @class */ (function () {
                 _shared_footer_footer_module__WEBPACK_IMPORTED_MODULE_14__["FooterModule"],
                 _shared_fixedplugin_fixedplugin_module__WEBPACK_IMPORTED_MODULE_15__["FixedPluginModule"],
                 _app_routing__WEBPACK_IMPORTED_MODULE_6__["routing"],
-                _ngui_map__WEBPACK_IMPORTED_MODULE_23__["NguiMapModule"].forRoot({ apiUrl: 'https://maps.google.com/maps/api/js?key=AIzaSyAcieSFNf-cUF-nzgoQIBwxVWep-VrGE80' })
+                _ngx_progressbar_core__WEBPACK_IMPORTED_MODULE_26__["NgProgressModule"].forRoot({
+                    spinner: false,
+                    thick: true
+                }),
+                _ngx_progressbar_http__WEBPACK_IMPORTED_MODULE_25__["NgProgressHttpModule"],
+                _ngui_map__WEBPACK_IMPORTED_MODULE_24__["NguiMapModule"].forRoot({ apiUrl: 'https://maps.google.com/maps/api/js?key=AIzaSyAcieSFNf-cUF-nzgoQIBwxVWep-VrGE80' })
             ],
             declarations: [
                 _app_component__WEBPACK_IMPORTED_MODULE_5__["AppComponent"],
@@ -682,12 +807,13 @@ var AppModule = /** @class */ (function () {
                 _login__WEBPACK_IMPORTED_MODULE_10__["LoginComponent"],
                 _register__WEBPACK_IMPORTED_MODULE_11__["RegisterComponent"],
                 _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_16__["DashboardComponent"],
+                _add_user_add_user_component__WEBPACK_IMPORTED_MODULE_18__["AddUserComponent"],
                 _user_user_component__WEBPACK_IMPORTED_MODULE_17__["UserComponent"],
-                _table_table_component__WEBPACK_IMPORTED_MODULE_18__["TableComponent"],
-                _typography_typography_component__WEBPACK_IMPORTED_MODULE_19__["TypographyComponent"],
-                _icons_icons_component__WEBPACK_IMPORTED_MODULE_20__["IconsComponent"],
-                _maps_maps_component__WEBPACK_IMPORTED_MODULE_21__["MapsComponent"],
-                _notifications_notifications_component__WEBPACK_IMPORTED_MODULE_22__["NotificationsComponent"],
+                _table_table_component__WEBPACK_IMPORTED_MODULE_19__["TableComponent"],
+                _typography_typography_component__WEBPACK_IMPORTED_MODULE_20__["TypographyComponent"],
+                _icons_icons_component__WEBPACK_IMPORTED_MODULE_21__["IconsComponent"],
+                _maps_maps_component__WEBPACK_IMPORTED_MODULE_22__["MapsComponent"],
+                _notifications_notifications_component__WEBPACK_IMPORTED_MODULE_23__["NotificationsComponent"],
             ],
             providers: [
                 _guards__WEBPACK_IMPORTED_MODULE_8__["AuthGuard"],
@@ -728,6 +854,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _icons_icons_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./icons/icons.component */ "./src/app/icons/icons.component.ts");
 /* harmony import */ var _maps_maps_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./maps/maps.component */ "./src/app/maps/maps.component.ts");
 /* harmony import */ var _notifications_notifications_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./notifications/notifications.component */ "./src/app/notifications/notifications.component.ts");
+/* harmony import */ var _add_user_add_user_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./add-user/add-user.component */ "./src/app/add-user/add-user.component.ts");
+
 
 
 
@@ -744,6 +872,7 @@ var appRoutes = [
     { path: 'login', component: _login__WEBPACK_IMPORTED_MODULE_1__["LoginComponent"] },
     { path: 'register', component: _register__WEBPACK_IMPORTED_MODULE_2__["RegisterComponent"] },
     { path: 'dashboard', component: _dashboard_dashboard_component__WEBPACK_IMPORTED_MODULE_5__["DashboardComponent"], canActivate: [_guards__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]] },
+    { path: 'add-user', component: _add_user_add_user_component__WEBPACK_IMPORTED_MODULE_11__["AddUserComponent"], canActivate: [_guards__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]] },
     { path: 'user', component: _user_user_component__WEBPACK_IMPORTED_MODULE_4__["UserComponent"], canActivate: [_guards__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]] },
     { path: 'user/:userId', component: _user_user_component__WEBPACK_IMPORTED_MODULE_4__["UserComponent"], canActivate: [_guards__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]] },
     { path: 'table', component: _table_table_component__WEBPACK_IMPORTED_MODULE_6__["TableComponent"], canActivate: [_guards__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]] },
@@ -955,7 +1084,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"col-lg-4 col-md-3\">\n  <h2>Login</h2>\n  <form [formGroup]=\"loginForm\" (ngSubmit)=\"onSubmit()\">\n    <div class=\"form-group\">\n      <label for=\"username\">Username</label>\n      <input type=\"text\" formControlName=\"username\" class=\"form-control\"\n             [ngClass]=\"{ 'is-invalid': submitted && f.username.errors }\"/>\n      <div *ngIf=\"submitted && f.username.errors\" class=\"invalid-feedback\">\n        <div *ngIf=\"f.username.errors.required\">Username is required</div>\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <label for=\"password\">Password</label>\n      <input type=\"password\" formControlName=\"password\" class=\"form-control\"\n             [ngClass]=\"{ 'is-invalid': submitted && f.password.errors }\"/>\n      <div *ngIf=\"submitted && f.password.errors\" class=\"invalid-feedback\">\n        <div *ngIf=\"f.password.errors.required\">Password is required</div>\n      </div>\n    </div>\n    <div class=\"form-group\">\n      <button [disabled]=\"loading\" class=\"btn btn-primary\">Login</button>\n      <img *ngIf=\"loading\"\n           src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\"/>\n      <a [routerLink]=\"['/register']\" class=\"btn btn-link\">Register</a>\n    </div>\n  </form>\n</div>\n"
+module.exports = "<div class=\"row\">\n  <div class=\"card col-md-4 col-md-offset-4\">\n    <h2>Login</h2>\n    <form [formGroup]=\"loginForm\" (ngSubmit)=\"onSubmit()\">\n      <div class=\"form-group\">\n        <label for=\"username\">Username</label>\n        <input type=\"text\" formControlName=\"username\" class=\"form-control border-input\"\n               [ngClass]=\"{ 'is-invalid': submitted && f.username.errors }\"/>\n        <div *ngIf=\"submitted && f.username.errors\" class=\"invalid-feedback text-danger\">\n          <div *ngIf=\"f.username.errors.required\">Username is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"password\">Password</label>\n        <input type=\"password\" formControlName=\"password\" class=\"form-control border-input\"\n               [ngClass]=\"{ 'is-invalid': submitted && f.password.errors }\"/>\n        <div *ngIf=\"submitted && f.password.errors\" class=\"invalid-feedback text-danger\">\n          <div *ngIf=\"f.password.errors.required\">Password is required</div>\n        </div>\n      </div>\n      <div class=\"row\">\n        <div class=\"col-md-3\">\n          <div class=\"form-group\">\n            <button [disabled]=\"loading\" class=\"btn btn-primary\">Login</button>\n          </div>\n        </div>\n        <div class=\"col-md-4\">\n          <div class=\"form-group\">\n            <a [routerLink]=\"['/register']\" class=\"btn btn-link\">Register</a>\n          </div>\n        </div>\n      </div>\n    </form>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -1143,7 +1272,6 @@ var NotificationsComponent = /** @class */ (function () {
     };
     NotificationsComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
-            selector: 'notifications-cmp',
             template: __webpack_require__(/*! ./notifications.component.html */ "./src/app/notifications/notifications.component.html")
         })
     ], NotificationsComponent);
@@ -1178,7 +1306,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<h2>Register</h2>\n<form [formGroup]=\"registerForm\" (ngSubmit)=\"onSubmit()\">\n  <div class=\"form-group\">\n    <label for=\"firstName\">First Name</label>\n    <input type=\"text\" formControlName=\"firstName\" class=\"form-control\"\n           [ngClass]=\"{ 'is-invalid': submitted && f.firstName.errors }\"/>\n    <div *ngIf=\"submitted && f.firstName.errors\" class=\"invalid-feedback\">\n      <div *ngIf=\"f.firstName.errors.required\">First Name is required</div>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <label for=\"lastName\">Last Name</label>\n    <input type=\"text\" formControlName=\"lastName\" class=\"form-control\"\n           [ngClass]=\"{ 'is-invalid': submitted && f.lastName.errors }\"/>\n    <div *ngIf=\"submitted && f.lastName.errors\" class=\"invalid-feedback\">\n      <div *ngIf=\"f.lastName.errors.required\">Last Name is required</div>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <label for=\"username\">Username</label>\n    <input type=\"text\" formControlName=\"username\" class=\"form-control\"\n           [ngClass]=\"{ 'is-invalid': submitted && f.username.errors }\"/>\n    <div *ngIf=\"submitted && f.username.errors\" class=\"invalid-feedback\">\n      <div *ngIf=\"f.username.errors.required\">Username is required</div>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <label for=\"password\">Password</label>\n    <input type=\"password\" formControlName=\"password\" class=\"form-control\"\n           [ngClass]=\"{ 'is-invalid': submitted && f.password.errors }\"/>\n    <div *ngIf=\"submitted && f.password.errors\" class=\"invalid-feedback\">\n      <div *ngIf=\"f.password.errors.required\">Password is required</div>\n      <div *ngIf=\"f.password.errors.minlength\">Password must be at least 6 characters</div>\n    </div>\n  </div>\n  <div class=\"form-group\">\n    <button [disabled]=\"loading\" class=\"btn btn-primary\">Register</button>\n    <img *ngIf=\"loading\"\n         src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\"/>\n    <a [routerLink]=\"['/login']\" class=\"btn btn-link\">Cancel</a>\n  </div>\n</form>\n"
+module.exports = "<div class=\"row\">\n  <div class=\"card col-md-4 col-md-offset-4\">\n    <h2>Register</h2>\n    <form [formGroup]=\"registerForm\" (ngSubmit)=\"onSubmit()\">\n      <div class=\"form-group\">\n        <label for=\"firstName\">First Name</label>\n        <input type=\"text\" formControlName=\"firstName\" class=\"form-control border-input\"\n               [ngClass]=\"{ 'is-invalid': submitted && f.firstName.errors }\"/>\n        <div *ngIf=\"submitted && f.firstName.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.firstName.errors.required\">First Name is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"lastName\">Last Name</label>\n        <input type=\"text\" formControlName=\"lastName\" class=\"form-control border-input\"\n               [ngClass]=\"{ 'is-invalid': submitted && f.lastName.errors }\"/>\n        <div *ngIf=\"submitted && f.lastName.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.lastName.errors.required\">Last Name is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"username\">Username</label>\n        <input type=\"text\" formControlName=\"username\" class=\"form-control border-input\"\n               [ngClass]=\"{ 'is-invalid': submitted && f.username.errors }\"/>\n        <div *ngIf=\"submitted && f.username.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.username.errors.required\">Username is required</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label for=\"password\">Password</label>\n        <input type=\"password\" formControlName=\"password\" class=\"form-control border-input\"\n               [ngClass]=\"{ 'is-invalid': submitted && f.password.errors }\"/>\n        <div *ngIf=\"submitted && f.password.errors\" class=\"invalid-feedback\">\n          <div *ngIf=\"f.password.errors.required\">Password is required</div>\n          <div *ngIf=\"f.password.errors.minlength\">Password must be at least 8 characters</div>\n        </div>\n      </div>\n      <div class=\"row\">\n        <div class=\"col-md-3\">\n          <div class=\"form-group\">\n            <button [disabled]=\"loading\" class=\"btn btn-primary\">Register</button>\n          </div>\n        </div>\n        <div class=\"col-md-4\">\n          <div class=\"form-group\">\n            <a [routerLink]=\"['/login']\" class=\"btn btn-link\">Cancel</a>\n          </div>\n        </div>\n      </div>\n    </form>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -1324,10 +1452,10 @@ var FixedPluginComponent = /** @class */ (function () {
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
             var new_color = $(this).data('color');
-            if ($sidebar.length != 0) {
+            if ($sidebar.length !== 0) {
                 $sidebar.attr('data-background-color', new_color);
             }
-            if ($off_canvas_sidebar.length != 0) {
+            if ($off_canvas_sidebar.length !== 0) {
                 $off_canvas_sidebar.attr('data-background-color', new_color);
             }
         });
@@ -1335,10 +1463,10 @@ var FixedPluginComponent = /** @class */ (function () {
             $(this).siblings().removeClass('active');
             $(this).addClass('active');
             var new_color = $(this).data('color');
-            if ($sidebar.length != 0) {
+            if ($sidebar.length !== 0) {
                 $sidebar.attr('data-active-color', new_color);
             }
-            if ($off_canvas_sidebar.length != 0) {
+            if ($off_canvas_sidebar.length !== 0) {
                 $off_canvas_sidebar.attr('data-active-color', new_color);
             }
         });
@@ -1491,7 +1619,7 @@ var FooterModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-default\">\n  <div class=\"container-fluid\">\n    <div class=\"navbar-header\">\n      <button type=\"button\" class=\"navbar-toggle\" (click)=\"sidebarToggle()\">\n        <span class=\"sr-only\">Toggle navigation</span>\n        <span class=\"icon-bar bar1\"></span>\n        <span class=\"icon-bar bar2\"></span>\n        <span class=\"icon-bar bar3\"></span>\n      </button>\n      <a class=\"navbar-brand\" href=\"#\">{{getTitle()}}</a>\n    </div>\n    <div class=\"collapse navbar-collapse\">\n      <ul class=\"nav navbar-nav navbar-right\">\n        <li class=\"dropdown\">\n          <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">\n            <i class=\"ti-bell\"></i>\n            <p class=\"notification\">5</p>\n            <p>Notifications</p>\n            <b class=\"caret\"></b>\n          </a>\n          <ul class=\"dropdown-menu\">\n            <li><a href=\"#\">Notification 1</a></li>\n            <li><a href=\"#\">Notification 2</a></li>\n            <li><a href=\"#\">Notification 3</a></li>\n            <li><a href=\"#\">Notification 4</a></li>\n            <li><a href=\"#\">Another notification</a></li>\n          </ul>\n        </li>\n        <li>\n          <a href=\"#\">\n            <i class=\"ti-settings\"></i>\n            <p>Settings</p>\n          </a>\n        </li>\n      </ul>\n\n    </div>\n  </div>\n</nav>\n"
+module.exports = "<nav class=\"navbar navbar-default\">\n  <div class=\"container-fluid\">\n    <div class=\"navbar-header\">\n      <a class=\"navbar-brand\" href=\"#\">{{getTitle()}}</a>\n    </div>\n    <div class=\"collapse navbar-collapse\">\n      <ul class=\"nav navbar-nav navbar-right\">\n        <li class=\"dropdown\">\n          <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">\n            <i class=\"ti-bell\"></i>\n            <p class=\"notification\">5</p>\n            <p>Notifications</p>\n            <b class=\"caret\"></b>\n          </a>\n          <ul class=\"dropdown-menu\">\n            <li><a href=\"#\">Notification 1</a></li>\n            <li><a href=\"#\">Notification 2</a></li>\n            <li><a href=\"#\">Notification 3</a></li>\n            <li><a href=\"#\">Notification 4</a></li>\n            <li><a href=\"#\">Another notification</a></li>\n          </ul>\n        </li>\n        <li>\n          <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">\n            <i class=\"ti-settings\"></i>\n            <p>Settings</p>\n            <b class=\"caret\"></b>\n          </a>\n          <ul class=\"dropdown-menu\">\n            <li><a href=\"#\">Change Password</a></li>\n            <li><a href=\"#\">Settings</a></li>\n          </ul>\n        </li>\n      </ul>\n    </div>\n  </div>\n</nav>\n"
 
 /***/ }),
 
@@ -1521,8 +1649,7 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var NavbarComponent = /** @class */ (function () {
-    function NavbarComponent(location, renderer, element) {
-        this.renderer = renderer;
+    function NavbarComponent(location, element) {
         this.element = element;
         this.location = location;
         this.nativeElement = element.nativeElement;
@@ -1536,7 +1663,7 @@ var NavbarComponent = /** @class */ (function () {
     NavbarComponent.prototype.getTitle = function () {
         var titlee = window.location.pathname;
         for (var item = 0; item < this.listTitles.length; item++) {
-            if (this.listTitles[item].path === titlee) {
+            if (titlee === this.listTitles[item].path) {
                 return this.listTitles[item].title;
             }
         }
@@ -1567,7 +1694,7 @@ var NavbarComponent = /** @class */ (function () {
             selector: 'app-navbar',
             template: __webpack_require__(/*! ./navbar.component.html */ "./src/app/shared/navbar/navbar.component.html")
         }),
-        __metadata("design:paramtypes", [_angular_common__WEBPACK_IMPORTED_MODULE_2__["Location"], _angular_core__WEBPACK_IMPORTED_MODULE_0__["Renderer"], _angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"]])
+        __metadata("design:paramtypes", [_angular_common__WEBPACK_IMPORTED_MODULE_2__["Location"], _angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"]])
     ], NavbarComponent);
     return NavbarComponent;
 }());
@@ -1624,7 +1751,7 @@ var NavbarModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"sidebar-wrapper\" >\n  <div class=\"logo\">\n    <a href=\"https://www.creative-tim.com\" class=\"simple-text\">\n      <div class=\"logo-img\">\n        <img src=\"../../assets/img/angular2-logo.png\" alt=\"\">\n      </div>\n      Creative Tim\n    </a>\n  </div>\n  <ul class=\"nav\">\n    <li *ngIf=\"isNotMobileMenu()\">\n      <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">\n        <i class=\"ti-panel\"></i>\n        <p>Stats</p>\n      </a>\n    </li>\n    <li class=\"dropdown\" *ngIf=\"isNotMobileMenu()\">\n      <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">\n        <i class=\"ti-bell\"></i>\n        <p class=\"notification\">5</p>\n        <p>Notifications</p>\n        <b class=\"caret\"></b>\n      </a>\n      <ul class=\"dropdown-menu\">\n        <li><a href=\"#\">Notification 1</a></li>\n        <li><a href=\"#\">Notification 2</a></li>\n        <li><a href=\"#\">Notification 3</a></li>\n        <li><a href=\"#\">Notification 4</a></li>\n        <li><a href=\"#\">Another notification</a></li>\n      </ul>\n    </li>\n    <li *ngIf=\"isNotMobileMenu()\">\n      <a href=\"#\">\n        <i class=\"ti-settings\"></i>\n        <p>Settings</p>\n      </a>\n    </li>\n    <li class=\"divider\" *ngIf=\"isNotMobileMenu()\"></li>\n    <li *ngFor=\"let menuItem of menuItems\" routerLinkActive=\"active\" class=\"{{menuItem.class}}\">\n      <a [routerLink]=\"[menuItem.path]\">\n        <i class=\"{{menuItem.icon}}\"></i>\n        <p>{{menuItem.title}}</p>\n      </a>\n    </li>\n  </ul>\n</div>\n"
+module.exports = "<div class=\"sidebar-wrapper\" >\n  <div class=\"logo\">\n    <a href=\"#\" class=\"simple-text\">\n      <div class=\"logo-img\">\n        <img src=\"../../assets/img/angular2-logo.png\" alt=\"\">\n      </div>\n      Common App\n    </a>\n  </div>\n  <ul class=\"nav\">\n    <li *ngIf=\"isNotMobileMenu()\">\n      <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">\n        <i class=\"ti-panel\"></i>\n        <p>Stats</p>\n      </a>\n    </li>\n    <li class=\"dropdown\" *ngIf=\"isNotMobileMenu()\">\n      <a href=\"#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">\n        <i class=\"ti-bell\"></i>\n        <p class=\"notification\">5</p>\n        <p>Notifications</p>\n        <b class=\"caret\"></b>\n      </a>\n      <ul class=\"dropdown-menu\">\n        <li><a href=\"#\">Notification 1</a></li>\n        <li><a href=\"#\">Notification 2</a></li>\n        <li><a href=\"#\">Notification 3</a></li>\n        <li><a href=\"#\">Notification 4</a></li>\n        <li><a href=\"#\">Another notification</a></li>\n      </ul>\n    </li>\n    <li *ngIf=\"isNotMobileMenu()\">\n      <a href=\"#\">\n        <i class=\"ti-settings\"></i>\n        <p>Settings</p>\n      </a>\n    </li>\n    <li class=\"divider\" *ngIf=\"isNotMobileMenu()\"></li>\n    <li *ngFor=\"let menuItem of menuItems\" routerLinkActive=\"active\" class=\"{{menuItem.class}}\">\n      <a [routerLink]=\"[menuItem.path]\">\n        <i class=\"{{menuItem.icon}}\"></i>\n        <p>{{menuItem.title}}</p>\n      </a>\n    </li>\n  </ul>\n</div>\n"
 
 /***/ }),
 
@@ -1727,7 +1854,7 @@ var SidebarModule = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"sidebar\" data-background-color=\"white\" data-active-color=\"danger\">\n  <app-sidebar></app-sidebar>\n</div>\n<div class=\"main-panel\">\n  <app-navbar></app-navbar>\n  <div class=\"content\">\n\n    <div class=\"container-fluid\">\n      <div class=\"row\">\n\n        <div class=\"col-md-12\">\n          <div class=\"card\">\n            <div class=\"header\">\n              <h4 class=\"title\">User Table</h4>\n            </div>\n            <div class=\"content table-responsive table-full-width\">\n              <table class=\"table table-striped\">\n                <thead>\n                <tr>\n                  <th *ngFor=\"let cell of tableData1.headerRow\">{{ cell }}</th>\n                </tr>\n                </thead>\n                <tbody>\n                <tr *ngFor=\"let row of users\">\n                  <td>{{row.username}}</td>\n                  <td>{{row.firstName}} {{row.lastName}}</td>\n                  <td>{{row.email}}</td>\n                  <td>{{row.phone}}</td>\n                  <td>{{row.status}}</td>\n                  <td><a [routerLink]=\"['/user/'+row._id]\">\n                    <i class=\"\"></i>\n                    <p>Edit</p>\n                  </a></td>\n                </tr>\n                </tbody>\n              </table>\n\n            </div>\n          </div>\n        </div>\n\n      </div>\n    </div>\n\n  </div>\n  <footer-cmp></footer-cmp>\n</div>\n"
+module.exports = "<div class=\"sidebar\" data-background-color=\"white\" data-active-color=\"danger\">\n  <app-sidebar></app-sidebar>\n</div>\n<div class=\"main-panel\">\n  <app-navbar></app-navbar>\n  <div class=\"content\">\n\n    <div class=\"container-fluid\">\n      <div class=\"row\">\n\n        <div class=\"col-md-12\">\n          <div class=\"card\">\n            <div class=\"header\">\n              <div>\n                <h4 class=\"title pull-left\">User Table</h4>\n                <button class=\"btn btn-primary btn-fill btn-wd pull-right\" [routerLink]=\"['/add-user']\">Add</button>\n              </div>\n            </div>\n            <div class=\"content table-responsive table-full-width\">\n              <table class=\"table table-striped\">\n                <thead>\n                <tr>\n                  <th *ngFor=\"let cell of tableData1.headerRow\">{{ cell }}</th>\n                </tr>\n                </thead>\n                <tbody>\n                <tr *ngFor=\"let row of users\">\n                  <td>{{row.username}}</td>\n                  <td>{{row.firstName}} {{row.lastName}}</td>\n                  <td>{{row.email}}</td>\n                  <td>{{row.phone}}</td>\n                  <td>{{row.status}}</td>\n                  <td><a [routerLink]=\"['/user/'+row._id]\">\n                    <i class=\"\"></i>\n                    <p>Edit</p>\n                  </a></td>\n                </tr>\n                </tbody>\n              </table>\n\n            </div>\n          </div>\n        </div>\n\n      </div>\n    </div>\n\n  </div>\n  <footer-cmp></footer-cmp>\n</div>\n"
 
 /***/ }),
 
@@ -1763,7 +1890,7 @@ var TableComponent = /** @class */ (function () {
     }
     TableComponent.prototype.ngOnInit = function () {
         this.tableData1 = {
-            headerRow: ['Username', 'Name', 'Email', 'Phone', 'Status']
+            headerRow: ['Username', 'Name', 'Email', 'Phone', 'Status', 'Action']
         };
         this.loadAllUsers();
     };
@@ -1843,7 +1970,7 @@ var TypographyComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"sidebar\" data-background-color=\"white\" data-active-color=\"danger\">\n  <app-sidebar></app-sidebar>\n</div>\n<div class=\"main-panel\">\n  <app-navbar></app-navbar>\n  <div class=\"content\">\n\n    <div class=\"container-fluid\">\n      <div class=\"row\">\n        <div class=\"col-lg-4 col-md-5\">\n          <div class=\"card card-user\">\n            <div class=\"image\">\n              <img src=\"assets/img/background.jpg\" alt=\"...\"/>\n            </div>\n            <div class=\"content\">\n              <div class=\"author\">\n                <img class=\"avatar border-white\" src=\"assets/img/faces/face-2.jpg\" alt=\"...\"/>\n                <h4 class=\"title\">{{currentUser.firstName}} {{currentUser.lastName}}<br/>\n                  <a href=\"#\">\n                    <small>@{{currentUser.username}}</small>\n                  </a>\n                </h4>\n              </div>\n              <p class=\"description text-center\">\n                \"I like the way you work it <br>\n                No diggity <br>\n                I wanna bag it up\"\n              </p>\n            </div>\n            <hr>\n            <div class=\"text-center\">\n              <div class=\"row\">\n                <div class=\"col-md-3 col-md-offset-1\">\n                  <h5>12<br/>\n                    <small>Files</small>\n                  </h5>\n                </div>\n                <div class=\"col-md-4\">\n                  <h5>2GB<br/>\n                    <small>Used</small>\n                  </h5>\n                </div>\n                <div class=\"col-md-3\">\n                  <h5>24,6$<br/>\n                    <small>Spent</small>\n                  </h5>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n        <div class=\"col-lg-8 col-md-7\">\n          <div class=\"card\">\n            <div class=\"header\">\n              <h4 class=\"title\">Edit Profile</h4>\n            </div>\n            <div class=\"content\">\n              <form>\n                <div class=\"row\">\n                  <div class=\"col-md-5\">\n                    <div class=\"form-group\">\n                      <label>Company</label>\n                      <input type=\"text\" class=\"form-control border-input\" disabled placeholder=\"Company\"\n                             value=\"Creative Code Inc.\">\n                    </div>\n                  </div>\n                  <div class=\"col-md-3\">\n                    <div class=\"form-group\">\n                      <label>Username</label>\n                      <input type=\"text\" class=\"form-control border-input\" placeholder=\"Username\">\n                    </div>\n                  </div>\n                  <div class=\"col-md-4\">\n                    <div class=\"form-group\">\n                      <label for=\"exampleInputEmail1\">Email address</label>\n                      <input type=\"email\" class=\"form-control border-input\" placeholder=\"Email\">\n                    </div>\n                  </div>\n                </div>\n\n                <div class=\"row\">\n                  <div class=\"col-md-6\">\n                    <div class=\"form-group\">\n                      <label>First Name</label>\n                      <input type=\"text\" class=\"form-control border-input\" placeholder=\"First Name\">\n                    </div>\n                  </div>\n                  <div class=\"col-md-6\">\n                    <div class=\"form-group\">\n                      <label>Last Name</label>\n                      <input type=\"text\" class=\"form-control border-input\" placeholder=\"Last Name\">\n                    </div>\n                  </div>\n                </div>\n\n                <div class=\"row\">\n                  <div class=\"col-md-12\">\n                    <div class=\"form-group\">\n                      <label>Address</label>\n                      <input type=\"text\" class=\"form-control border-input\" placeholder=\"Home Address\">\n                    </div>\n                  </div>\n                </div>\n\n                <div class=\"row\">\n                  <div class=\"col-md-4\">\n                    <div class=\"form-group\">\n                      <label>City</label>\n                      <input type=\"text\" class=\"form-control border-input\" placeholder=\"City\">\n                    </div>\n                  </div>\n                  <div class=\"col-md-4\">\n                    <div class=\"form-group\">\n                      <label>Country</label>\n                      <input type=\"text\" class=\"form-control border-input\" placeholder=\"Country\">\n                    </div>\n                  </div>\n                  <div class=\"col-md-4\">\n                    <div class=\"form-group\">\n                      <label>Postal Code</label>\n                      <input type=\"number\" class=\"form-control border-input\" placeholder=\"ZIP Code\">\n                    </div>\n                  </div>\n                </div>\n\n                <div class=\"row\">\n                  <div class=\"col-md-12\">\n                    <div class=\"form-group\">\n                      <label>About Me</label>\n                      <textarea rows=\"5\" class=\"form-control border-input\"\n                                placeholder=\"Here can be your description\"></textarea>\n                    </div>\n                  </div>\n                </div>\n                <div class=\"text-center\">\n                  <button type=\"submit\" class=\"btn btn-info btn-fill btn-wd\">Update Profile</button>\n                </div>\n                <div class=\"clearfix\"></div>\n              </form>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n\n  </div>\n  <footer-cmp></footer-cmp>\n</div>\n"
+module.exports = "<div class=\"sidebar\" data-background-color=\"white\" data-active-color=\"danger\">\n  <app-sidebar></app-sidebar>\n</div>\n<div class=\"main-panel\">\n  <app-navbar></app-navbar>\n  <div class=\"content\">\n\n    <div class=\"container-fluid\">\n      <div class=\"row\">\n        <div class=\"col-lg-4 col-md-5\">\n          <div class=\"card card-user\">\n            <div class=\"image\">\n              <img src=\"../../assets/img/background.jpg\" alt=\"...\"/>\n            </div>\n            <div class=\"content\">\n              <div class=\"author\">\n                <img class=\"avatar border-white\" src=\"../../assets/img/faces/face-1.jpg\" alt=\"...\"/>\n                <h4 class=\"title\">{{currentUser.firstName}} {{currentUser.lastName}}<br/>\n                  <a href=\"#\">\n                    <small>@{{currentUser.username}}</small>\n                  </a>\n                </h4>\n              </div>\n              <p class=\"description text-center\">\n                {{currentUser.status}}\n              </p>\n            </div>\n            <hr>\n            <div class=\"text-center\">\n              <div class=\"row\">\n                <div class=\"col-md-3 col-md-offset-1\">\n                  <h5>{{currentUser.role}}<br/>\n                    <small>Role</small>\n                  </h5>\n                </div>\n                <div class=\"col-md-4\">\n                  <h5>2<br/>\n                    <small>File</small>\n                  </h5>\n                </div>\n                <div class=\"col-md-3\">\n                  <h5>24,6$<br/>\n                    <small>Spent</small>\n                  </h5>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n        <div class=\"col-lg-8 col-md-7\">\n          <div class=\"card\">\n            <div class=\"header\">\n              <h4 class=\"title\">Edit Profile</h4>\n            </div>\n            <div class=\"content\">\n              <form [formGroup]=\"userForm\" (ngSubmit)=\"onSubmit()\">\n                <div class=\"row\">\n                  <div class=\"col-md-3\">\n                    <div class=\"form-group\">\n                      <label>Username</label>\n                      <input type=\"text\" formControlName=\"username\" class=\"form-control border-input\" disabled placeholder=\"Username\">\n                    </div>\n                  </div>\n                  <div class=\"col-md-5\">\n                    <div class=\"form-group\">\n                      <label for=\"exampleInputEmail1\">Email address</label>\n                      <input type=\"email\" formControlName=\"email\" class=\"form-control border-input\" placeholder=\"Email\">\n                    </div>\n                  </div>\n                  <div class=\"col-md-4\">\n                    <div class=\"form-group\">\n                      <label>Phone</label>\n                      <input type=\"text\" formControlName=\"phone\" class=\"form-control border-input\" placeholder=\"Phone\" maxlength=\"10\">\n                    </div>\n                  </div>\n                </div>\n\n                <div class=\"row\">\n                  <div class=\"col-md-6\">\n                    <div class=\"form-group\">\n                      <label>First Name</label>\n                      <input type=\"text\" formControlName=\"firstName\" class=\"form-control border-input\" placeholder=\"First Name\">\n                    </div>\n                  </div>\n                  <div class=\"col-md-6\">\n                    <div class=\"form-group\">\n                      <label>Last Name</label>\n                      <input type=\"text\" formControlName=\"lastName\" class=\"form-control border-input\" placeholder=\"Last Name\">\n                    </div>\n                  </div>\n                </div>\n\n                <div class=\"row\">\n                  <div class=\"col-md-12\">\n                    <div class=\"form-group\">\n                      <label>Address</label>\n                      <input type=\"text\" class=\"form-control border-input\" placeholder=\"Home Address\">\n                    </div>\n                  </div>\n                </div>\n\n                <div class=\"row\">\n                  <div class=\"col-md-4\">\n                    <div class=\"form-group\">\n                      <label>City</label>\n                      <input type=\"text\" class=\"form-control border-input\" placeholder=\"City\">\n                    </div>\n                  </div>\n                  <div class=\"col-md-4\">\n                    <div class=\"form-group\">\n                      <label>Country</label>\n                      <input type=\"text\" class=\"form-control border-input\" placeholder=\"Country\">\n                    </div>\n                  </div>\n                  <div class=\"col-md-4\">\n                    <div class=\"form-group\">\n                      <label>Postal Code</label>\n                      <input type=\"number\" class=\"form-control border-input\" placeholder=\"ZIP Code\">\n                    </div>\n                  </div>\n                </div>\n\n                <div class=\"row\">\n                  <div class=\"col-md-12\">\n                    <div class=\"form-group\">\n                      <label>About Me</label>\n                      <textarea rows=\"5\" class=\"form-control border-input\"\n                                placeholder=\"Here can be your description\"></textarea>\n                    </div>\n                  </div>\n                </div>\n                <div class=\"text-center\">\n                  <button type=\"submit\" class=\"btn btn-info btn-fill btn-wd\">Update Profile</button>\n                </div>\n                <div class=\"clearfix\"></div>\n              </form>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n\n  </div>\n  <footer-cmp></footer-cmp>\n</div>\n<!--<fixedplugin-cmp></fixedplugin-cmp>-->\n"
 
 /***/ }),
 
@@ -1862,6 +1989,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _models__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../_models */ "./src/app/_models/index.ts");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../_services */ "./src/app/_services/index.ts");
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1876,10 +2004,20 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var UserComponent = /** @class */ (function () {
-    function UserComponent(route, userService) {
+    function UserComponent(route, userService, router, formBuilder) {
         this.route = route;
         this.userService = userService;
+        this.router = router;
+        this.formBuilder = formBuilder;
+        this.userForm = this.formBuilder.group({
+            firstName: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_5__["Validators"].required],
+            lastName: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_5__["Validators"].required],
+            username: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_5__["Validators"].required],
+            email: [''],
+            phone: ['']
+        });
     }
     UserComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -1892,19 +2030,51 @@ var UserComponent = /** @class */ (function () {
         }
         else {
             this.currentUser = JSON.parse(localStorage.getItem('currentUser')).user;
+            this.initForm();
         }
+    };
+    Object.defineProperty(UserComponent.prototype, "f", {
+        get: function () {
+            return this.userForm.controls;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    UserComponent.prototype.initForm = function () {
+        this.f.firstName.patchValue(this.currentUser.firstName);
+        this.f.lastName.patchValue(this.currentUser.lastName);
+        this.f.username.patchValue(this.currentUser.username);
+        this.f.phone.patchValue(this.currentUser.phone);
+        this.f.email.patchValue(this.currentUser.email);
     };
     UserComponent.prototype.getById = function (id) {
         var _this = this;
         this.userService.getById(id).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["first"])()).subscribe(function (user) {
             _this.currentUser = user;
+            _this.initForm();
+        });
+    };
+    UserComponent.prototype.onSubmit = function () {
+        var _this = this;
+        // stop here if form is invalid
+        if (this.userForm.invalid) {
+            return;
+        }
+        this.userService.update(this.currentUser._id, this.userForm.value)
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_3__["first"])())
+            .subscribe(function (data) {
+            _this.router.navigate(['/table']);
+        }, function (error) {
         });
     };
     UserComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             template: __webpack_require__(/*! ./user.component.html */ "./src/app/user/user.component.html")
         }),
-        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_1__["ActivatedRoute"], _services__WEBPACK_IMPORTED_MODULE_4__["UserService"]])
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_1__["ActivatedRoute"],
+            _services__WEBPACK_IMPORTED_MODULE_4__["UserService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"],
+            _angular_forms__WEBPACK_IMPORTED_MODULE_5__["FormBuilder"]])
     ], UserComponent);
     return UserComponent;
 }());
