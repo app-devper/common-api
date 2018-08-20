@@ -5,25 +5,25 @@ import * as appUtils from '../utils/app-utils'
 import userRouter from '../module/user/users.routes'
 import authenRouter from '../module/authentication/authentication.routes'
 import merchantRouter from '../module/merchant/merchant.routes'
-logger.info('Loading server api routes')
+logger.info('Loading server api routes');
 
-let apiRouter = express.Router() // Load router
+let apiRouter = express.Router(); // Load router
 
 apiRouter.use((req, res, next) => {
-  req.reqId = appUtils.genRequestId()
-  req.reqDate = new Date()
+  req.reqId = appUtils.genRequestId();
+  req.reqDate = new Date();
   controller.api(req, res, next)
-})
+});
 
 //  Load routes for out controllers
-apiRouter.use('/authen', authenRouter)
-apiRouter.use('/user', userRouter)
-apiRouter.use('/merchant', merchantRouter)
+apiRouter.use('/authen', authenRouter);
+apiRouter.use('/user', userRouter);
+apiRouter.use('/merchant', merchantRouter);
 
 apiRouter.use((req, res, next) => {
   controller.authorize(req, res, next)
-})
+});
 
-logger.info('Server api routes loaded')
+logger.info('Server api routes loaded');
 
 export default apiRouter

@@ -26,6 +26,25 @@ export const addUser = (req, res) => {
   }
 }
 
+export const registerUser = (req, res) => {
+  let logModel = new LogModel()
+  logModel.setRequest(req)
+  loggerAccess.info(logModel.getAccessLog())
+  try {
+    service.registerUser(req, (response) => {
+      logModel.setResponse(response)
+      loggerInfo.info(logModel.getInfoLog())
+      return res.status(response.httpCode).send(response)
+    })
+  } catch (err) {
+    logger.error('addUser Unhandled Exception: ' + err)
+    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err)
+    logModel.setResponse(response)
+    loggerInfo.info(logModel.getInfoLog())
+    return res.status(response.httpCode).send(response)
+  }
+}
+
 export const updateUser = (req, res) => {
   let logModel = new LogModel()
   logModel.setRequest(req)

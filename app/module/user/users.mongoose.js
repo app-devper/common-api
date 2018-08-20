@@ -7,6 +7,12 @@ export const addUser = (req, user) => {
   return usersData.save()
 }
 
+export const registerUser = (req, user) => {
+  logger.info('mongoose registerUser')
+  let usersData = new UsersSchema(user)
+  return usersData.save()
+}
+
 export const updateUser = (req, userId, user) => {
   logger.info('mongoose updateUser')
   return UsersSchema.findByIdAndUpdate({_id: userId}, {$set: user})

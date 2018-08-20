@@ -4,7 +4,6 @@ import bodyParser from 'body-parser' // Load bodyParser
 import cors from 'cors' // Load cors
 import logger from './utils/logger' // Load logger
 import config from './config/config' // Load config (environment)
-
 import router from './routes/web.router' // Load root router
 import apiRouter from './routes/api.router' // Load api router
 
