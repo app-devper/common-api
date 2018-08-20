@@ -42,6 +42,8 @@ export const registerUser = async (req, callback) => {
       } else {
         reqBody.updatedDate = new Date();
         reqBody.createdDate = new Date();
+        reqBody.status = "ACTIVE";
+        reqBody.role = "USER";
         let result = await usersMongoose.registerUser(req, reqBody);
         callback(appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'Add user success', result))
       }
