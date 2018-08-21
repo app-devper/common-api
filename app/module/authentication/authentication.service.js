@@ -1,6 +1,6 @@
 // authentication service
 
-import logger from '../../utils/logger'// Load logger
+import logger from '../../utils/logger' // Load logger
 import * as appUtils from '../../utils/app-utils'
 import * as authenMongoose from './authentication.mongoose'
 import * as usersMongoose from '../user/users.mongoose'
@@ -204,6 +204,44 @@ const checkDuplicateLogin = async (req, rcvBody, user) => {
   }
 };
 
+// login social
+export const loginSocial = async (req, callback) => {
+  let rcvBody = req.body;
+  try {
+    logger.info('rcvBody.socialId ==>', rcvBody.socialId);
+    logger.info('rcvBody.socialType ==> ', rcvBody.socialType);
+    logger.info('rcvBody.socialName ==> ', rcvBody.socialName);
+    logger.info('rcvBody.firstName ==> ', rcvBody.firstName);
+    logger.info('rcvBody.email ==> ', rcvBody.email);
+
+    // validate username & password : res user
+    if (!rcvBody || appUtils.isBlank(rcvBody.socialId) || appUtils.isBlank(rcvBody.socialType) || appUtils.isBlank(rcvBody.socialName)) {
+      callback(appUtils.genResponse(req.get('dc-language'), 'CM4090000', 'Invalid data'))
+    } else {
+      // next step get user Info
+      const user = await usersMongoose.getUserByCriteria(req, {socialId: rcvBody.socialId, socialType: rcvBody.socialType});
+      if (user === null) {
+        // user is not found
+        rcvBody.username = rcvBody.socialId;
+        rcvBody.updatedDate = new Date();
+        rcvBody.createdDate = new Date();
+        rcvBody.status = "ACTIVE";
+        rcvBody.role = "USER";
+        let result = await usersMongoose.registerUser(req, rcvBody);
+        let res = await checkDuplicateLogin(req, rcvBody, result)
+        callback(res)
+      } else {
+        let res = await checkDuplicateLogin(req, rcvBody, user)
+        callback(res)
+      }
+    }
+  } catch (err) {
+    logger.error('service login Unhandled Exception: ' + err);
+    callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err))
+  }
+};
+
+// logout
 export const logout = async (req, callback) => {
   let accessToken = req.get('dc-access-token');
   try {

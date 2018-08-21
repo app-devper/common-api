@@ -11,6 +11,9 @@ let UsersSchema = new Schema({
   password: String,
   firstName: String,
   lastName: String,
+  socialId: String,
+  socialType: String,
+  socialName: String,
   createdBy: {type: Schema.Types.ObjectId, ref: 'users'},
   createdDate: {type: Date, default: Date.now},
   updatedBy: {type: Schema.Types.ObjectId, ref: 'users'},
@@ -19,9 +22,10 @@ let UsersSchema = new Schema({
   phone: String,
   role: String,
   email: String,
+  gender: String,//MALE, FEMALE
   countLoginFailed: Number,
   timeToUnlock: {type: Date}
-})
+});
 
 // Build the users Model:
 export default mongoose.model('users', UsersSchema)

@@ -50,7 +50,7 @@ export const registerUser = async (req, callback) => {
     }
 
   } catch (err) {
-    logger.error('service addUser Unhandled Exception: ' + err);
+    logger.error('service registerUser Unhandled Exception: ' + err);
     callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err))
   }
 };
