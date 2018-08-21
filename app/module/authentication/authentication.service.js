@@ -222,16 +222,15 @@ export const loginSocial = async (req, callback) => {
       const user = await usersMongoose.getUserByCriteria(req, {socialId: rcvBody.socialId, socialType: rcvBody.socialType});
       if (user === null) {
         // user is not found
-        rcvBody.username = rcvBody.socialId;
         rcvBody.updatedDate = new Date();
         rcvBody.createdDate = new Date();
         rcvBody.status = "ACTIVE";
         rcvBody.role = "USER";
         let result = await usersMongoose.registerUser(req, rcvBody);
-        let res = await checkDuplicateLogin(req, rcvBody, result)
+        let res = await checkDuplicateLogin(req, rcvBody, result);
         callback(res)
       } else {
-        let res = await checkDuplicateLogin(req, rcvBody, user)
+        let res = await checkDuplicateLogin(req, rcvBody, user);
         callback(res)
       }
     }
