@@ -14,6 +14,7 @@ export const api = (req, res, next) => {
   logger.info('validator something route method : ' + req.method);
 
   let bypass = ((req.url === '/authen' && req.method === 'POST') ||
+    (req.url === '/authen/social' && req.method === 'POST')||
     (req.url === '/authen/logout' && req.method === 'GET')||
     (req.url === '/user/register' && req.method === 'POST')
   );
