@@ -55,6 +55,7 @@ export const unlockLoginStatus = (req, username) => {
   })
 };
 
+
 export const getUserByUsername = (req, username) => {
   logger.info('mongoose getUserByUsername');
   logger.info('username : ' + username);
