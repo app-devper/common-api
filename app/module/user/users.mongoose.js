@@ -15,7 +15,7 @@ export const registerUser = (req, user) => {
 
 export const updateUser = (req, userId, user) => {
   logger.info('mongoose updateUser');
-  return UsersSchema.findByIdAndUpdate({_id: userId}, {$set: user})
+  return UsersSchema.findByIdAndUpdate({_id: userId}, {$set: user}, {new: true})
 };
 
 export const getUserById = (req, _id) => {
