@@ -1,6 +1,7 @@
 import logger from '../../utils/logger'
 import * as appUtils from '../../utils/app-utils'
 import * as usersMongoose from './users.mongoose'
+import * as authen from '../authentication/authentication.service'
 
 export const addUser = async (req, callback) => {
   try {
@@ -44,8 +45,9 @@ export const registerUser = async (req, callback) => {
         reqBody.createdDate = new Date();
         reqBody.status = "ACTIVE";
         reqBody.role = "USER";
-        let result = await usersMongoose.registerUser(req, reqBody);
-        callback(appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'Add user success', result))
+        let user = await usersMongoose.registerUser(req, reqBody);
+        let res = await authen.checkDuplicateLogin(req, reqBody, user);
+        callback(res)
       }
     }
 
@@ -94,7 +96,7 @@ export const getUserById = async (req, callback) => {
     if (result) {
       callback(appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'Get user success', result))
     } else {
-      logger.info('User not found')
+      logger.info('User not found');
       callback(appUtils.genResponse(req.get('dc-language'), 'CM4090100', 'User not found'))
     }
   } catch (err) {

@@ -181,10 +181,9 @@ const getUserAndValidateLogin = async (req, rcvBody) => {
 };
 
 // step : 2
-const checkDuplicateLogin = async (req, rcvBody, user) => {
+export const checkDuplicateLogin = async (req, rcvBody, user) => {
   try {
     // check duplicate login
-    // const result = await authenMongoose.findDuplicateLogin(req, user._id, rcvBody.channel);
 
     let authenData = {};
     authenData.userId = user._id;
