@@ -14,7 +14,7 @@ let UsersSchema = new Schema({
   socialId: String,
   socialType: String,
   socialName: String,
-  protoUrl:String,
+  photoUrl:String,
   createdBy: {type: Schema.Types.ObjectId, ref: 'users'},
   createdDate: {type: Date, default: Date.now},
   updatedBy: {type: Schema.Types.ObjectId, ref: 'users'},
