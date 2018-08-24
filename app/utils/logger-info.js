@@ -3,10 +3,10 @@ import fs from 'fs'
 import 'winston-daily-rotate-file'
 import config from '../config/config'
 
-let logDir = config.logPathConfig.infoLog // directory path of log
+let logDir = config.logPathConfig.infoLog; // directory path of log
 
 // check log exists
-fs.existsSync(logDir) || fs.mkdirSync(logDir)
+fs.existsSync(logDir) || fs.mkdirSync(logDir);
 let logInfo = new (winston.Logger)({
   transports: [
     new winston.transports.DailyRotateFile({
@@ -21,6 +21,6 @@ let logInfo = new (winston.Logger)({
     })
   ],
   exitOnError: false
-})
+});
 
 export default logInfo

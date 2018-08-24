@@ -32,15 +32,16 @@ export const addUser = async (req, callback) => {
 export const registerUser = async (req, callback) => {
   try {
     let reqBody = req.body;
-    if (!reqBody || appUtils.isBlank(reqBody.username) || appUtils.isBlank(reqBody.password)) {
+    if (!reqBody || appUtils.isBlank(reqBody.email) || appUtils.isBlank(reqBody.password)) {
       logger.info('Invalid data');
       callback(appUtils.genResponse(req.get('dc-language'), 'CM4090000', 'Invalid data'))
     } else {
-      let user = await usersMongoose.getUserByUsername(req, reqBody.username);
+      let user = await usersMongoose.getUserByUsername(req, reqBody.email);
       if (user) {
         logger.info('User duplicate');
         callback(appUtils.genResponse(req.get('dc-language'), 'CM4010101', 'User duplicate'))
       } else {
+        reqBody.username = reqBody.email;
         reqBody.updatedDate = new Date();
         reqBody.createdDate = new Date();
         reqBody.status = "ACTIVE";
@@ -50,7 +51,6 @@ export const registerUser = async (req, callback) => {
         callback(res)
       }
     }
-
   } catch (err) {
     logger.error('service registerUser Unhandled Exception: ' + err);
     callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err))

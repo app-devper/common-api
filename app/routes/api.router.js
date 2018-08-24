@@ -2,6 +2,7 @@ import * as express from 'express' // Load express
 import logger from '../utils/logger' // Load logger
 import * as controller from '../module/api/api.controller' // Load controller
 import * as appUtils from '../utils/app-utils'
+
 import userRouter from '../module/user/users.routes'
 import authenRouter from '../module/authentication/authentication.routes'
 import merchantRouter from '../module/merchant/merchant.routes'

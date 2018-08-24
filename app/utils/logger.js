@@ -4,10 +4,10 @@ import moment from 'moment'
 import 'winston-daily-rotate-file'
 import config from '../config/config'
 
-let logDir = config.logPathConfig.appLog // directory path of log
+let logDir = config.logPathConfig.appLog; // directory path of log
 
 // check log exists
-fs.existsSync(logDir) || fs.mkdirSync(logDir)
+fs.existsSync(logDir) || fs.mkdirSync(logDir);
 
 let logger = new (winston.Logger)({
   transports: [
@@ -41,7 +41,7 @@ let logger = new (winston.Logger)({
     })
   ],
   exitOnError: false
-})
+});
 
 if (!config.logPathConfig.isLocal) {
   logger.remove(winston.transports.Console)
