@@ -43,14 +43,13 @@ export const registerUser = async (req, callback) => {
       } else {
         reqBody.updatedDate = new Date();
         reqBody.createdDate = new Date();
-        reqBody.status = "ACTIVE";
-        reqBody.role = "USER";
+        reqBody.status = 'ACTIVE';
+        reqBody.role = 'USER';
         let user = await usersMongoose.registerUser(req, reqBody);
         let res = await authen.checkDuplicateLogin(req, reqBody, user);
         callback(res)
       }
     }
-
   } catch (err) {
     logger.error('service registerUser Unhandled Exception: ' + err);
     callback(appUtils.genResponse(req.get('dc-language'), 'CM5000000', err))

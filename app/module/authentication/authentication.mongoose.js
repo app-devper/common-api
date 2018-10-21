@@ -9,20 +9,20 @@ export const addAuthentication = (req, data) => {
 
 export const findDuplicateLogin = (req, _id, channel) => {
   logger.info('mongoose findDuplicateLogin')
-  return AuthenticationSchema.findOne({userId: _id, valid: true, channel: channel})
+  return AuthenticationSchema.findOne({ userId: _id, valid: true, channel: channel })
 }
 
 export const updateLogin = (req, _id) => {
   logger.info('mongoose updateLogin')
-  return AuthenticationSchema.findOneAndUpdate({_id: _id, valid: true}, {$set: {accessTime: Date.now()}}, {new: true})
+  return AuthenticationSchema.findOneAndUpdate({ _id: _id, valid: true }, { $set: { accessTime: Date.now() } }, { new: true })
 }
 
 export const removeAuthentication = (req, userId) => {
   logger.info('mongoose removeAuthentication')
-  return AuthenticationSchema.remove({userId: userId})
+  return AuthenticationSchema.remove({ userId: userId })
 }
 
 export const getAuthentication = (req, accessToken) => {
   logger.info('mongoose getAuthentication')
-  return AuthenticationSchema.findOne({token: accessToken, valid: true}).populate('userId').lean().exec()
+  return AuthenticationSchema.findOne({ token: accessToken, valid: true }).populate('userId').lean().exec()
 }

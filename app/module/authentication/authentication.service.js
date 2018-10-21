@@ -70,8 +70,7 @@ const getUserAndValidateLogin = async (req, rcvBody) => {
       // user is not found
       return appUtils.genResponse(req.get('dc-language'), 'CM4090006', 'User not found')
     } else {
-
-      if (user.status !== "ACTIVE") {
+      if (user.status !== 'ACTIVE') {
         logger.info('Unauthorized');
         return appUtils.genResponse(req.get('dc-language'), 'CM4010001', 'Unauthorized')
       }
@@ -196,7 +195,7 @@ export const checkDuplicateLogin = async (req, rcvBody, user) => {
     authenData.deviceId = (rcvBody.deviceId === undefined ? undefined : rcvBody.deviceId);
 
     const authen = await authenMongoose.addAuthentication(req, authenData);
-    return appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'Login success', {user, accessToken: authen.token})
+    return appUtils.genResponse(req.get('dc-language'), 'CM2000000', 'Login success', { user, accessToken: authen.token })
   } catch (err) {
     logger.error('service checkDuplicateLogin Unhandled Exception: ' + err);
     return appUtils.genResponse(req.get('dc-language'), 'CM5000000', err)
@@ -218,13 +217,13 @@ export const loginSocial = async (req, callback) => {
       callback(appUtils.genResponse(req.get('dc-language'), 'CM4090000', 'Invalid data'))
     } else {
       // next step get user Info
-      const user = await usersMongoose.getUserByCriteria(req, {socialId: rcvBody.socialId, socialType: rcvBody.socialType});
+      const user = await usersMongoose.getUserByCriteria(req, { socialId: rcvBody.socialId, socialType: rcvBody.socialType });
       if (user === null) {
         // user is not found
         rcvBody.updatedDate = new Date();
         rcvBody.createdDate = new Date();
-        rcvBody.status = "ACTIVE";
-        rcvBody.role = "USER";
+        rcvBody.status = 'ACTIVE';
+        rcvBody.role = 'USER';
         let result = await usersMongoose.registerUser(req, rcvBody);
         let res = await checkDuplicateLogin(req, rcvBody, result);
         callback(res)

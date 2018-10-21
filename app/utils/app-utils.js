@@ -2,7 +2,7 @@ import logger from '../log/logger' //     Load logger
 import { resCode } from '../common/constants' // Load config (environment)
 import { MainResponse } from '../response/main.response'
 import { resMessage } from '../common/message.properties'
-import moment from "moment";
+import moment from 'moment';
 
 export const genResponse = (_language = 'en', _resCode, _devMessage, _data = undefined) => {
   let responseObj;

@@ -5,7 +5,7 @@ import logger from '../../log/logger' // Load logger
 import loggerAccess from '../../log/logger-access'
 import loggerInfo from '../../log/logger-info'
 
-import {LogModel} from '../../log/log.model.js'
+import { LogModel } from '../../log/log.model.js'
 
 export const addUser = (req, res) => {
   let logModel = new LogModel();

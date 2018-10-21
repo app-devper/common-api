@@ -1,7 +1,7 @@
 /**
  * Module dependencies.
  */
-import mongoose, {Schema} from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 
 /**
  * User Schema
@@ -14,18 +14,18 @@ let UsersSchema = new Schema({
   socialId: String,
   socialType: String,
   socialName: String,
-  photoUrl:String,
-  createdBy: {type: Schema.Types.ObjectId, ref: 'users'},
-  createdDate: {type: Date, default: Date.now},
-  updatedBy: {type: Schema.Types.ObjectId, ref: 'users'},
-  updatedDate: {type: Date},
+  photoUrl: String,
+  createdBy: { type: Schema.Types.ObjectId, ref: 'users' },
+  createdDate: { type: Date, default: Date.now },
+  updatedBy: { type: Schema.Types.ObjectId, ref: 'users' },
+  updatedDate: { type: Date },
   status: String,
   phone: String,
   role: String,
   email: String,
-  gender: String,//MALE, FEMALE
+  gender: String, // MALE, FEMALE
   countLoginFailed: Number,
-  timeToUnlock: {type: Date}
+  timeToUnlock: { type: Date }
 });
 
 // Build the users Model:

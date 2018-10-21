@@ -15,7 +15,7 @@ export const registerUser = (req, user) => {
 
 export const updateUser = (req, userId, user) => {
   logger.info('mongoose updateUser');
-  return UsersSchema.findByIdAndUpdate({_id: userId}, {$set: user}, {new: true})
+  return UsersSchema.findByIdAndUpdate({ _id: userId }, { $set: user }, { new: true })
 };
 
 export const getUserById = (req, _id) => {
@@ -25,7 +25,7 @@ export const getUserById = (req, _id) => {
 
 export const removeUser = (req, userId) => {
   logger.info('mongoose removeUser');
-  return UsersSchema.remove({_id: userId})
+  return UsersSchema.remove({ _id: userId })
 };
 
 export const getUser = (req) => {
@@ -35,7 +35,7 @@ export const getUser = (req) => {
 
 export const updateLoginStatus = (req, param) => {
   logger.info('mongoose updateLoginStatus');
-  return UsersSchema.update({_id: param._id}, {
+  return UsersSchema.update({ _id: param._id }, {
     $set: {
       countLoginFailed: param.countLoginFailed,
       timeToUnlock: param.timeToUnlock,
@@ -46,7 +46,7 @@ export const updateLoginStatus = (req, param) => {
 
 export const unlockLoginStatus = (req, username) => {
   logger.info('mongoose unlockLoginStatus');
-  return UsersSchema.update({username: username}, {
+  return UsersSchema.update({ username: username }, {
     $set: {
       countLoginFailed: 0,
       timeToUnlock: null,
@@ -55,11 +55,10 @@ export const unlockLoginStatus = (req, username) => {
   })
 };
 
-
 export const getUserByUsername = (req, username) => {
   logger.info('mongoose getUserByUsername');
   logger.info('username : ' + username);
-  return UsersSchema.findOne({username: username.toLowerCase()})
+  return UsersSchema.findOne({ username: username.toLowerCase() })
 };
 
 export const getUserByCriteria = (req, criteria) => {

@@ -23,7 +23,7 @@ export const addMerchant = (req, data, callback) => {
 export const updateMerchant = (req, _id, data, callback) => {
   try {
     logger.info('mongoose updateMerchant')
-    MerchantsSchema.findByIdAndUpdate({_id}, {
+    MerchantsSchema.findByIdAndUpdate({ _id }, {
       $set: data
     }).exec(function (err, result) {
       if (err) {
@@ -62,7 +62,7 @@ export const getMerchantById = (req, _id, callback) => {
 export const removeMerchant = (req, _id, callback) => {
   try {
     logger.info('mongoose removeMerchant')
-    MerchantsSchema.remove({_id})
+    MerchantsSchema.remove({ _id })
       .exec(function (err, result) {
         if (err) {
           logger.error('removeMerchant Failed! >> ' + err)

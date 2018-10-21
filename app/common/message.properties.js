@@ -29,7 +29,7 @@ export const resMessage = {
       en: 'Data not found.',
       th: 'ไม่พบข้อมูล',
       httpCode: 409
-    },
+    }
   },
   authentication: {
     unAuthorized: {
