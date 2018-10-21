@@ -1,0 +1,20 @@
+{
+  "db": "mongodb+srv://common:f9mWPxwVEGGkYnca@common-syu9e.mongodb.net",
+  "options": {
+    "keepAlive": 300000,
+    "connectTimeoutMS": 30000,
+    "reconnectTries": 1000000,
+    "useNewUrlParser": true
+  },
+  "app": {
+    "name": "Common",
+    "port": 8089,
+    "apiEndPoint": "http://localhost:8089"
+  },
+  "logPathConfig": {
+    "isLocal": true,
+    "appLog": "/App_Log/",
+    "accessLog": "/Access_Log/",
+    "infoLog": "/Info_Log/"
+  }
+}

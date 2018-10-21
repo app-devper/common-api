@@ -1,8 +1,9 @@
 import express from 'express' // Load express
-import logger from '../utils/logger' // Load logger
 import serveIndex from 'serve-index'
-import config from '../config/config'
+import config from 'config'
 import path from 'path'
+import logger from '../log/logger' // Load logger
+
 const appDir = path.join(__dirname, '../../dist/index.html');
 const webDir = path.join(__dirname, '../../dist');
 

@@ -1,0 +1,7 @@
+{
+  "activateTime": 12,
+  "email": "support@common.com",
+  "timeout": 900000,
+  "userLockTime": 900,
+  "userLoginAttempt": 3
+}

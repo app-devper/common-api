@@ -1,11 +1,10 @@
-import logger from '../../utils/logger' // Load logger
-import config from '../../config/config'
 import mongoose from 'mongoose' // Load mongoose
 import * as applicationUtils from '../../utils/app-utils'
 import * as service from '../authentication/authentication.service'
-import loggerInfo from '../../utils/logger-info'
-import loggerAccess from '../../utils/logger-access'
-import {LogModel} from '../../config/log/log.model'
+import logger from '../../log/logger' // Load logger
+import loggerInfo from '../../log/logger-info'
+import loggerAccess from '../../log/logger-access'
+import { LogModel } from '../../log/log.model'
 
 // api
 export const api = (req, res, next) => {
@@ -14,8 +13,8 @@ export const api = (req, res, next) => {
   logger.info('validator something route method : ' + req.method);
 
   let bypass = ((req.url === '/authen' && req.method === 'POST') ||
-    (req.url === '/authen/social' && req.method === 'POST')||
-    (req.url === '/authen/logout' && req.method === 'GET')||
+    (req.url === '/authen/social' && req.method === 'POST') ||
+    (req.url === '/authen/logout' && req.method === 'GET') ||
     (req.url === '/user/register' && req.method === 'POST')
   );
 
@@ -40,17 +39,11 @@ export const api = (req, res, next) => {
 
   let connectionStatus = mongoose.connection.readyState;
   if (connectionStatus === 0) {
-    mongoose.connect(config.db, {keepAlive: 300000, connectTimeoutMS: 30000}, (err) => {
-      if (err) {
-        logger.error('Failed to reconnect to MongoDB');
-        logger.error(err.message);
-        let response = applicationUtils.genResponse(req.get('dc-language'), 'CM5000036', err.message);
-        res.status(response.httpCode).send(response)
-      } else {
-        logger.info('Reconnected to MongoDB Successfully....');
-        authentication()
-      }
-    })
+    let errMessage = 'Failed to connect to MongoDB';
+    logger.error(errMessage);
+    // Response.
+    let response = applicationUtils.genResponse(req.get('dc-language'), 'OB5000036', errMessage);
+    res.status(response.httpCode).send(response);
   } else {
     authentication()
   }

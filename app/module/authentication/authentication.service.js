@@ -1,10 +1,10 @@
 // authentication service
 
-import logger from '../../utils/logger' // Load logger
+import logger from '../../log/logger' // Load logger
 import * as appUtils from '../../utils/app-utils'
 import * as authenMongoose from './authentication.mongoose'
 import * as usersMongoose from '../user/users.mongoose'
-import config from '../../config/config'
+import config from 'config'
 
 export const authenticationApi = async (rcvReq, callback) => {
   let req = rcvReq;

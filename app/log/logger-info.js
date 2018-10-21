@@ -1,18 +1,16 @@
-import winston from 'winston'
+import * as winston from 'winston'
 import fs from 'fs'
 import 'winston-daily-rotate-file'
-import config from '../config/config'
+import config from 'config'
 
 let logDir = config.logPathConfig.infoLog; // directory path of log
 
 // check log exists
 fs.existsSync(logDir) || fs.mkdirSync(logDir);
-let logInfo = new (winston.Logger)({
+let logInfo = winston.createLogger({
+  format: winston.format.printf(info => `${info.message}`),
   transports: [
     new winston.transports.DailyRotateFile({
-      formatter: function (options) {
-        return (undefined !== options.message ? options.message : '')
-      },
       filename: logDir + 'info_%DATE%.log',
       datePattern: 'YYYYMMDD_HH00',
       zippedArchive: false,

@@ -1,4 +1,4 @@
-import logger from '../../utils/logger' // Load logger
+import logger from '../../log/logger' // Load logger
 import UsersSchema from './users.model'
 
 export const addUser = (req, user) => {

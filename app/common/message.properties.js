@@ -16,15 +16,20 @@ export const resMessage = {
       httpCode: 500
     },
     invalidData: {
-      en: 'Invalid Data',
+      en: 'Invalid data.',
       th: 'ข้อมูลไม่ถูกต้อง',
       httpCode: 409
     },
-    notFound: {
-      en: 'Service Missing / Not found. Please contact admin ',
+    serviceFound: {
+      en: 'Service Missing / Not found. Please contact admin.',
       th: 'ไม่พบบริการที่คุณร้องขอ กรุณาติดต่อ ผู้ดูแลระบบ',
       httpCode: 404
-    }
+    },
+    dataFound: {
+      en: 'Data not found.',
+      th: 'ไม่พบข้อมูล',
+      httpCode: 409
+    },
   },
   authentication: {
     unAuthorized: {
@@ -33,7 +38,7 @@ export const resMessage = {
       httpCode: 401
     },
     forbidden: {
-      en: 'Forbidden. Please contact admin',
+      en: 'Forbidden. Please contact admin.',
       th: 'คุณไม่มีสิทธิ์เข้าใช้งานระบบนี้ กรุณาติดต่อ ผู้ดูแลระบบ',
       httpCode: 403
     },
@@ -48,7 +53,7 @@ export const resMessage = {
       httpCode: 401
     },
     duplicateLogin: {
-      en: 'Your current session is duplicate',
+      en: 'Your current session is duplicate.',
       th: 'Username ของท่านมีการเข้าใช้งานแล้ว ที่เครื่องโทรศัพท์เครื่องอื่น กรุณาตรวจสอบ',
       httpCode: 401
     },
@@ -64,13 +69,8 @@ export const resMessage = {
     }
   },
   user: {
-    notFound: {
-      en: 'User not found.',
-      th: 'ไม่พบข้อมูล',
-      httpCode: 409
-    },
     duplicate: {
-      en: 'Username is duplicate',
+      en: 'Username is duplicate.',
       th: 'Username มีอยู่แล้ว กรุณาตรวจสอบ',
       httpCode: 401
     }
@@ -82,4 +82,4 @@ export const resMessage = {
       httpCode: 599
     }
   }
-}
+};

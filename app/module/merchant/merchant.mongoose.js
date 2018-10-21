@@ -1,4 +1,4 @@
-import logger from '../../utils/logger' // Load logger
+import logger from '../../log/logger' // Load logger
 import MerchantsSchema from './merchant.model'
 
 export const addMerchant = (req, data, callback) => {

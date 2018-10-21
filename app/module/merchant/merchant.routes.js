@@ -1,6 +1,6 @@
 import express from 'express'
 import * as controller from './merchant.controller' // Load controller
-import logger from '../../utils/logger' // Load logger
+import logger from '../../log/logger' // Load logger
 
 let merchantRouter = express.Router()
 

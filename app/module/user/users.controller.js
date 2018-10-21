@@ -1,11 +1,11 @@
 import * as applicationUtils from '../../utils/app-utils'
 import * as service from './users.service'
 
-import logger from '../../utils/logger' // Load logger
-import loggerAccess from '../../utils/logger-access'
-import loggerInfo from '../../utils/logger-info'
+import logger from '../../log/logger' // Load logger
+import loggerAccess from '../../log/logger-access'
+import loggerInfo from '../../log/logger-info'
 
-import {LogModel} from '../../config/log/log.model.js'
+import {LogModel} from '../../log/log.model.js'
 
 export const addUser = (req, res) => {
   let logModel = new LogModel();

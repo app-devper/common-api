@@ -1,11 +1,11 @@
 import * as applicationUtils from '../../utils/app-utils'
 import * as service from './authentication.service'
 
-import logger from '../../utils/logger'// Load logger
-import loggerAccess from '../../utils/logger-access'
-import loggerInfo from '../../utils/logger-info'
+import logger from '../../log/logger'// Load logger
+import loggerAccess from '../../log/logger-access'
+import loggerInfo from '../../log/logger-info'
 
-import {LogModel} from '../../config/log/log.model.js'
+import {LogModel} from '../../log/log.model.js'
 
 // login
 export const login = (req, res) => {
@@ -20,7 +20,7 @@ export const login = (req, res) => {
     })
   } catch (err) {
     logger.error('login Unhandled Exception: ' + err);
-    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err);
+    let response = applicationUtils.genResponse(req.get('dc-language'), 'CM5000000', err);
     logModel.setResponse(response);
     loggerInfo.info(logModel.getInfoLog());
     return res.status(response.httpCode).send(response)
@@ -40,7 +40,7 @@ export const loginSocial = (req, res) => {
     })
   } catch (err) {
     logger.error('login Unhandled Exception: ' + err);
-    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err);
+    let response = applicationUtils.genResponse(req.get('dc-language'), 'CM5000000', err);
     logModel.setResponse(response);
     loggerInfo.info(logModel.getInfoLog());
     return res.status(response.httpCode).send(response)
@@ -64,9 +64,9 @@ export const logout = (req, res) => {
     })
   } catch (err) {
     logger.error('logout Unhandled Exception: ' + err);
-    let response = applicationUtils.genResponse(req.get('dc-language'), 'DC5000000', err);
+    let response = applicationUtils.genResponse(req.get('dc-language'), 'CM5000000', err);
     logModel.setResponse(response);
     loggerInfo.info(logModel.getInfoLog());
     return res.status(response.httpCode).send(response)
   }
-}
+};

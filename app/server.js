@@ -2,8 +2,8 @@ import express from 'express' // Load express
 import mongoose from 'mongoose' // Load mongoose
 import bodyParser from 'body-parser' // Load bodyParser
 import cors from 'cors' // Load cors
-import logger from './utils/logger' // Load logger
-import config from './config/config' // Load config (environment)
+import logger from './log/logger' // Load logger
+import config from 'config' // Load config (environment)
 import router from './routes/web.router' // Load root router
 import apiRouter from './routes/api.router' // Load api router
 
@@ -13,12 +13,7 @@ logger.info('Connecting to MongoDB Instance: ' + config.db);
 let db = mongoose.connection;
 let port = process.env.PORT || config.app.port;
 
-let options = {
-  keepAlive: 300000,
-  connectTimeoutMS: 30000
-};
-
-mongoose.connect(config.db, options);
+mongoose.connect(config.db, config.options);
 
 db.on('connecting', function () {
   logger.log('connecting to MongoDB...')
@@ -55,7 +50,7 @@ let app = express(db);
 
 app.enable('trust proxy');
 
-// configure app to use bodyParser()
+// Configure app to use bodyParser()
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
 app.use(bodyParser.json({limit: '50mb'}));
 

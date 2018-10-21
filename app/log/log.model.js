@@ -1,5 +1,4 @@
 import moment from 'moment'
-import process from 'process'
 import _ from 'lodash'
 
 export class LogModel {

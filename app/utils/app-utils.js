@@ -1,7 +1,8 @@
-import logger from './logger' //     Load logger
-import {resCode} from '../common/constants' // Load config (environment)
-import {MainResponse} from '../response/main.response'
-import {resMessage} from '../common/message.properties'
+import logger from '../log/logger' //     Load logger
+import { resCode } from '../common/constants' // Load config (environment)
+import { MainResponse } from '../response/main.response'
+import { resMessage } from '../common/message.properties'
+import moment from "moment";
 
 export const genResponse = (_language = 'en', _resCode, _devMessage, _data = undefined) => {
   let responseObj;
@@ -22,7 +23,7 @@ export const genToken = () => {
 };
 
 export const genRequestId = () => {
-  return s4() + s4() + s4() + s4()
+  return moment(new Date()).format('YYYYMMDDHHmmssSSS') + s4().toUpperCase()
 };
 
 export const isBlank = (str) => {
