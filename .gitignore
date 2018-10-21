@@ -1,5 +1,5 @@
 # Ignore the production build folder
-build
+#build
 npm-debug.log
 .idea/
 uploads
