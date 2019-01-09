@@ -25,7 +25,7 @@ export const getUserById = (req, _id) => {
 
 export const removeUser = (req, userId) => {
   logger.info('mongoose removeUser');
-  return UsersSchema.remove({ _id: userId })
+  return UsersSchema.deleteOne({ _id: userId })
 };
 
 export const getUser = (req) => {

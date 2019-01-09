@@ -1,9 +1,9 @@
 let request = require('superagent');
 let expect = require('expect.js');
 
-import config from '../app/config/config';
+import config from 'config';
 
-let apiEndpoint = config.app.apiEndpoint;
+let apiEndPoint = config.app.apiEndPoint;
 
 describe('Routing /user', function () {
   describe('#User Service', function () {
@@ -11,7 +11,7 @@ describe('Routing /user', function () {
     let user;
     it('login', function (done) {
       this.timeout(5000);
-      request.post(apiEndpoint + '/authen')
+      request.post(apiEndPoint + '/api/authen')
         .send({username: 'wowit', pwd: '5f4dcc3b5aa765d61d8327deb882cf99', channel: "app"})
         .end(function (err, res) {
           if (err) done(err);
@@ -27,7 +27,7 @@ describe('Routing /user', function () {
 
     it('get user id', function (done) {
       this.timeout(5000);
-      request.get(apiEndpoint + '/user/' + data.user._id)
+      request.get(apiEndPoint + '/api/user/' + data.user._id)
         .set('dc-access-token', data.accessToken)
         .set('dc-user-id', data.user._id)
         .end(function (err, res) {
@@ -42,7 +42,7 @@ describe('Routing /user', function () {
 
     it('get users', function (done) {
       this.timeout(5000);
-      request.get(apiEndpoint + '/user')
+      request.get(apiEndPoint + '/api/user')
         .set('dc-access-token', data.accessToken)
         .set('dc-user-id', data.user._id)
         .end(function (err, res) {
@@ -57,7 +57,7 @@ describe('Routing /user', function () {
 
     it('add user duplicate', function (done) {
       this.timeout(5000);
-      request.post(apiEndpoint + '/user')
+      request.post(apiEndPoint + '/api/user')
         .set('dc-access-token', data.accessToken)
         .set('dc-user-id', data.user._id)
         .send({
@@ -80,7 +80,7 @@ describe('Routing /user', function () {
 
     it('add user', function (done) {
       this.timeout(5000);
-      request.post(apiEndpoint + '/user')
+      request.post(apiEndPoint + '/api/user')
         .set('dc-access-token', data.accessToken)
         .set('dc-user-id', data.user._id)
         .send({
@@ -107,7 +107,7 @@ describe('Routing /user', function () {
 
     it('update user', function (done) {
       this.timeout(5000);
-      request.put(apiEndpoint + '/user/' + user._id)
+      request.put(apiEndPoint + '/api/user/' + user._id)
         .set('dc-access-token', data.accessToken)
         .set('dc-user-id', data.user._id)
         .send({
@@ -133,7 +133,7 @@ describe('Routing /user', function () {
 
     it('remove user', function (done) {
       this.timeout(5000);
-      request.del(apiEndpoint + '/user/' + user._id)
+      request.del(apiEndPoint + '/api/user/' + user._id)
         .set('dc-access-token', data.accessToken)
         .set('dc-user-id', data.user._id)
         .end(function (err, res) {
@@ -149,7 +149,7 @@ describe('Routing /user', function () {
 
     it('logout', function (done) {
       this.timeout(5000);
-      request.get(apiEndpoint + '/authen/logout')
+      request.get(apiEndPoint + '/api/authen/logout')
         .set('dc-access-token', data.accessToken)
         .set('dc-user-id', data.user._id)
         .end(function (err, res) {
@@ -165,7 +165,7 @@ describe('Routing /user', function () {
 
     it('get user invalid', function (done) {
       this.timeout(5000);
-      request.get(apiEndpoint + '/user/' + data.user._id)
+      request.get(apiEndPoint + '/api/user/' + data.user._id)
         .set('dc-access-token', data.accessToken)
         .set('dc-user-id', data.user._id)
         .end(function (err, res) {

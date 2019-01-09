@@ -12,7 +12,7 @@ export const genResponse = (_language = 'en', _resCode, _devMessage, _data = und
     let resHttpCode = messageCode.httpCode;
     responseObj = new MainResponse(_resCode, messageRes, _devMessage, _data, resHttpCode)
   } catch (error) {
-    logger.error('AppUtils Unhandled Exception: ' + error);
+    logger.error('app-utils Unhandled Exception: ' + error);
     responseObj = new MainResponse('CM5000000', resMessage.general.error.en, error.message, undefined, 500)
   }
   return responseObj

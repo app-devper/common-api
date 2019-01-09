@@ -26,7 +26,7 @@ let UsersSchema = new Schema({
   gender: String, // MALE, FEMALE
   countLoginFailed: Number,
   timeToUnlock: { type: Date }
-});
+}, { collection: 'users', versionKey: false });
 
 // Build the users Model:
 export default mongoose.model('users', UsersSchema)

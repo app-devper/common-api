@@ -43,9 +43,9 @@ export const authenticationApi = async (rcvReq, callback) => {
 export const login = async (req, callback) => {
   let rcvBody = req.body;
   try {
-    logger.info('rcvBody.username ==>', rcvBody.username);
-    logger.info('rcvBody.pwd ==> ', rcvBody.pwd);
-    logger.info('rcvBody.channel ==> ', rcvBody.channel);
+    logger.info('rcvBody.username ==>' + rcvBody.username);
+    logger.info('rcvBody.pwd ==> '+ rcvBody.pwd);
+    logger.info('rcvBody.channel ==> '+ rcvBody.channel);
 
     // validate username & password : res user
     if (rcvBody === undefined || appUtils.isBlank(rcvBody.username) || appUtils.isBlank(rcvBody.pwd) || appUtils.isBlank(rcvBody.channel)) {

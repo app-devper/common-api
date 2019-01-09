@@ -5,7 +5,7 @@ import * as appUtils from '../utils/app-utils'
 
 import userRouter from '../module/user/users.routes'
 import authenRouter from '../module/authentication/authentication.routes'
-import merchantRouter from '../module/merchant/merchant.routes'
+
 logger.info('Loading server api routes');
 
 let apiRouter = express.Router(); // Load router
@@ -19,7 +19,6 @@ apiRouter.use((req, res, next) => {
 //  Load routes for out controllers
 apiRouter.use('/authen', authenRouter);
 apiRouter.use('/user', userRouter);
-apiRouter.use('/merchant', merchantRouter);
 
 apiRouter.use((req, res, next) => {
   controller.authorize(req, res, next)

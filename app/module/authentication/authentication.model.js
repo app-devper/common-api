@@ -14,7 +14,7 @@ let AuthenticationSchema = new Schema({
   deviceType: String,
   deviceToken: String,
   userId: { type: Schema.Types.ObjectId, ref: 'users' }
-}, { collection: 'authentications' });
+}, { collection: 'authentications', versionKey: false });
 
 // Build the authentication Model:
 export default mongoose.model('authentications', AuthenticationSchema)
