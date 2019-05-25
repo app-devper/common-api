@@ -1,5 +1,5 @@
 {
-  "db": "mongodb+srv://common:f9mWPxwVEGGkYnca@common-syu9e.mongodb.net",
+  "db": "mongodb+srv://common:f9mWPxwVEGGkYnca@common-syu9e.mongodb.net/common",
   "options": {
     "keepAlive": 300000,
     "connectTimeoutMS": 30000,
@@ -13,8 +13,8 @@
   },
   "logPathConfig": {
     "isLocal": true,
-    "appLog": "/App_Log/",
-    "accessLog": "/Access_Log/",
-    "infoLog": "/Info_Log/"
+    "appLog": "/tmp/App_Log/",
+    "accessLog": "/tmp/Access_Log/",
+    "infoLog": "/tmp/Info_Log/"
   }
 }

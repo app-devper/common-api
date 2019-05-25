@@ -4,7 +4,6 @@ import _ from 'lodash'
 export class LogModel {
   constructor () {
     this.TIMESTAMP = new Date();
-    this.USERNAME = '';
     this.THREAD = process.pid;
     this.IP = '';
     this.REQ_ID = '';
@@ -19,7 +18,6 @@ export class LogModel {
   }
 
   setRequest (req) {
-    this.USERNAME = req.get('dc-user-name') ? req.get('dc-user-name') : '';
     this.REQ_URI = req.originalUrl;
     this.REQ_ID = req.reqId;
     this.TIMESTAMP = req.reqDate;
@@ -30,15 +28,22 @@ export class LogModel {
     this.REQ_PARAMS = _.isEmpty(req.params) ? '' : JSON.stringify(req.params)
   }
 
-  setResponse (res) {
-    this.RES_BODY = JSON.stringify(res);
-    this.RES_STATUS = res.httpCode;
+  setResponse (req, response) {
+    this.REQ_URI = req.originalUrl;
+    this.REQ_ID = req.reqId;
+    this.TIMESTAMP = req.reqDate;
+    this.IP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    this.REQ_METHOD = req.method;
+    this.REQ_BODY = _.isEmpty(req.body) ? '' : JSON.stringify(req.body);
+    this.REQ_HEADERS = JSON.stringify(req.headers);
+    this.REQ_PARAMS = _.isEmpty(req.params) ? '' : JSON.stringify(req.params);
+    this.RES_BODY = JSON.stringify(response);
+    this.RES_STATUS = response.status;
     this.RES_TIME = new Date() - this.TIMESTAMP
   }
 
   getAccessLog () {
     return moment(this.TIMESTAMP).format('YYYY-MM-DD HH:mm:ss.SSS') + '|' +
-      this.USERNAME + '|' +
       this.THREAD + '|' +
       this.IP + '|' +
       this.REQ_ID + '|' +
@@ -51,7 +56,6 @@ export class LogModel {
 
   getInfoLog () {
     return moment(this.TIMESTAMP).format('YYYY-MM-DD HH:mm:ss.SSS') + '|' +
-      this.USERNAME + '|' +
       this.THREAD + '|' +
       this.IP + '|' +
       this.REQ_ID + '|' +

@@ -17,7 +17,7 @@ describe('Routing /user', function () {
           if (err) done(err);
           else {
             expect(res).to.exist;
-            expect(res.status).to.eql(200);
+            expect(res.user).to.eql(200);
             data = res.body.data;
             console.log('Login Data', data);
             done();
@@ -34,7 +34,7 @@ describe('Routing /user', function () {
           if (err) done(err);
           else {
             expect(res).to.exist;
-            expect(res.status).to.eql(200);
+            expect(res.user).to.eql(200);
             done();
           }
         });
@@ -49,7 +49,7 @@ describe('Routing /user', function () {
           if (err) done(err);
           else {
             expect(res).to.exist;
-            expect(res.status).to.eql(200);
+            expect(res.user).to.eql(200);
             done();
           }
         });
@@ -66,13 +66,13 @@ describe('Routing /user', function () {
           email: data.user.email,
           phone: data.user.phone,
           password: "5f4dcc3b5aa765d61d8327deb882cf99",
-          status: data.user.status,
+          status: data.user.user,
           username: data.user.username,
           role: data.user.role
         })
         .end(function (err, res) {
           expect(err).to.exist;
-          expect(err.status).to.eql(401);
+          expect(err.user).to.eql(401);
           expect(res.body.resCode).to.eql('CM4010101');
           done();
         });
@@ -89,7 +89,7 @@ describe('Routing /user', function () {
           email: data.user.email,
           phone: data.user.phone,
           password: "5f4dcc3b5aa765d61d8327deb882cf99",
-          status: data.user.status,
+          status: data.user.user,
           username: "mocha",
           role: data.user.role
         })
@@ -97,7 +97,7 @@ describe('Routing /user', function () {
           if (err) done(err);
           else {
             expect(res).to.exist;
-            expect(res.status).to.eql(200);
+            expect(res.user).to.eql(200);
             user = res.body.data;
             console.log('Add Data', user);
             done();
@@ -115,7 +115,7 @@ describe('Routing /user', function () {
           lastName: data.user.lastName,
           email: data.user.email,
           phone: data.user.phone,
-          status: data.user.status,
+          status: data.user.user,
           username: "mocha",
           role: data.user.role
         })
@@ -123,7 +123,7 @@ describe('Routing /user', function () {
           if (err) done(err);
           else {
             expect(res).to.exist;
-            expect(res.status).to.eql(200);
+            expect(res.user).to.eql(200);
             user = res.body.data;
             console.log('Update Data', user);
             done();
@@ -140,7 +140,7 @@ describe('Routing /user', function () {
           if (err) done(err);
           else {
             expect(res).to.exist;
-            expect(res.status).to.eql(200);
+            expect(res.user).to.eql(200);
             user = res.body.data;
             done();
           }
@@ -156,7 +156,7 @@ describe('Routing /user', function () {
           if (err) done(err);
           else {
             expect(res).to.exist;
-            expect(res.status).to.eql(200);
+            expect(res.user).to.eql(200);
             expect(res.body.resCode).to.eql('CM2000000');
             done();
           }
@@ -170,7 +170,7 @@ describe('Routing /user', function () {
         .set('dc-user-id', data.user._id)
         .end(function (err, res) {
           expect(err).to.exist;
-          expect(err.status).to.eql(401);
+          expect(err.user).to.eql(401);
           expect(res.body.resCode).to.eql('CM4010007');
           done();
         });

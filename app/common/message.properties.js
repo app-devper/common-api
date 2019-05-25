@@ -5,11 +5,6 @@ export const resMessage = {
       th: 'ทำรายการสำเร็จ',
       httpCode: 200
     },
-    fail: {
-      en: 'Transaction fail.',
-      th: 'ทำรายการไม่สำเร็จ',
-      httpCode: 200
-    },
     error: {
       en: 'Transaction fail.',
       th: 'ขออภัย ระบบไม่สามารถให้บริการได้ในขณะนี้',
@@ -20,15 +15,20 @@ export const resMessage = {
       th: 'ข้อมูลไม่ถูกต้อง',
       httpCode: 409
     },
-    serviceFound: {
+    serviceNotFound: {
       en: 'Service Missing / Not found. Please contact admin.',
       th: 'ไม่พบบริการที่คุณร้องขอ กรุณาติดต่อ ผู้ดูแลระบบ',
       httpCode: 404
     },
-    dataFound: {
+    dataNotFound: {
       en: 'Data not found.',
       th: 'ไม่พบข้อมูล',
       httpCode: 409
+    },
+    methodNotAllowed: {
+      en: 'Method not allowed.',
+      th: 'วิธีการไม่ได้รับอนุญาต',
+      httpCode: 405
     }
   },
   authentication: {
@@ -54,25 +54,25 @@ export const resMessage = {
     },
     duplicateLogin: {
       en: 'Your current session is duplicate.',
-      th: 'Username ของท่านมีการเข้าใช้งานแล้ว ที่เครื่องโทรศัพท์เครื่องอื่น กรุณาตรวจสอบ',
+      th: 'Username ของท่านมีการเข้าใช้งานแล้ว กรุณาตรวจสอบ',
       httpCode: 401
     },
     tooManyInvalidPass: {
       en: 'Too many invalid attempts. Your account has been temporarily locked, Please try again later.',
       th: 'Username / Password ของท่านไม่ถูกต้อง เกินจำนวนครั้งที่กำหนด กรุณารอสักครู่ เพื่อทำรายการใหม่อีกครั้ง',
-      httpCode: 409
+      httpCode: 401
     },
     incorrectUserPass: {
       en: 'Incorrect username or password. Please try again.',
       th: 'Username / Password ของท่านไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง',
-      httpCode: 409
+      httpCode: 401
     }
   },
   user: {
     duplicate: {
       en: 'Username is duplicate.',
       th: 'Username มีอยู่แล้ว กรุณาตรวจสอบ',
-      httpCode: 401
+      httpCode: 409
     }
   },
   db: {

@@ -3,7 +3,8 @@
   "options": {
     "keepAlive": 300000,
     "connectTimeoutMS": 30000,
-    "reconnectTries": 1000000
+    "reconnectTries": 1000000,
+    "useNewUrlParser": true
   },
   "app": {
     "name": "Common",

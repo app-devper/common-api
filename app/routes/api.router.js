@@ -2,26 +2,28 @@ import * as express from 'express' // Load express
 import logger from '../log/logger' // Load logger
 import * as controller from '../module/api/api.controller' // Load controller
 import * as appUtils from '../utils/app-utils'
-
-import userRouter from '../module/user/users.routes'
+import { header } from '../common/constants';
+import userRouter from '../module/users/users.routes'
 import authenRouter from '../module/authentication/authentication.routes'
+import adminRouter from '../module/admin/admin.routes';
 
 logger.info('Loading server api routes');
 
 let apiRouter = express.Router(); // Load router
 
 apiRouter.use((req, res, next) => {
-  req.reqId = appUtils.genRequestId();
+  req.reqId = req.get(header.transaction) || appUtils.genRequestId();
   req.reqDate = new Date();
   controller.api(req, res, next)
 });
 
 //  Load routes for out controllers
-apiRouter.use('/authen', authenRouter);
-apiRouter.use('/user', userRouter);
+apiRouter.use('/admin', adminRouter);
+apiRouter.use('/authentication', authenRouter);
+apiRouter.use('/users', userRouter);
 
-apiRouter.use((req, res, next) => {
-  controller.authorize(req, res, next)
+apiRouter.use((req, res) => {
+  controller.authorize(req, res)
 });
 
 logger.info('Server api routes loaded');
