@@ -3,7 +3,6 @@ import loggerInfo from '../../log/logger-info';
 import * as applicationUtils from '../../utils/app-utils';
 import { resMessage } from '../../common/message.properties';
 import * as service from '../authentication/authentication.service';
-import config from "config";
 
 export const handlerRequest = async (req, res, next) => {
   if (req.bypass) {
@@ -41,10 +40,6 @@ export const sendResponse = (req, res, result) => {
   let logModel = new LogModel();
   logModel.setResponse(req, result);
   loggerInfo.info(logModel.getInfoLog());
-  let accessToken = req.cookies.accessToken;
-  if (accessToken) {
-    res.cookie('accessToken', accessToken, { maxAge: config.timeout, httpOnly: true });
-  }
   res.status(result.status).send(result)
 };
 

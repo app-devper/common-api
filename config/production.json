@@ -1,5 +1,5 @@
 {
-  "db": "mongodb+srv://common:f9mWPxwVEGGkYnca@common-syu9e.mongodb.net",
+  "db": "mongodb+srv://common:f9mWPxwVEGGkYnca@common-syu9e.mongodb.net/common",
   "options": {
     "keepAlive": 300000,
     "connectTimeoutMS": 30000,
