@@ -1,4 +1,4 @@
-import AuthenticationSchema from './authentication.model'
+import AuthenticationSchema from './authenticate.model'
 import logger from '../../log/logger'
 
 export const addAuthentication = (req, data) => {

@@ -10,7 +10,6 @@ export const addUser = (req, user) => {
 export const registerUser = (req, user) => {
   logger.info('mongoose registerUser');
   let usersData = new UsersSchema(user);
-
   return usersData.save()
 };
 
@@ -26,7 +25,7 @@ export const getUserById = (req, _id) => {
 
 export const removeUser = (req, userId) => {
   logger.info('mongoose removeUser');
-  return UsersSchema.deleteOne({ _id: userId })
+  return UsersSchema.findOneAndRemove({ _id: userId })
 };
 
 export const getUser = (req) => {
@@ -36,7 +35,7 @@ export const getUser = (req) => {
 
 export const updateLoginStatus = (req, param) => {
   logger.info('mongoose updateLoginStatus');
-  return UsersSchema.update({ _id: param._id }, {
+  return UsersSchema.updateOne({ _id: param._id }, {
     $set: {
       countLoginFailed: param.countLoginFailed,
       timeToUnlock: param.timeToUnlock,

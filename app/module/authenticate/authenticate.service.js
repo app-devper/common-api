@@ -1,10 +1,10 @@
 // authentication service
-
+import jwt from 'jsonwebtoken';
+import config from 'config'
 import logger from '../../log/logger' // Load logger
 import * as appUtils from '../../utils/app-utils'
-import * as authenMongoose from './authentication.mongoose'
+import * as authenMongoose from './authenticate.mongoose'
 import * as usersMongoose from '../users/users.mongoose'
-import config from 'config'
 import { resMessage } from '../../common/message.properties'
 import { header } from '../../common/constants'
 import { ACTIVE } from '../../common/user.status'
@@ -80,7 +80,7 @@ export const validateUser = async (req, user, password) => {
 };
 
 export const checkToken = async (req) => {
-  let accessToken = req.get(header.token) || req.cookies.accessToken;
+  let accessToken = req.headers[header.token] || req.cookies.accessToken;
   try {
     if (appUtils.isBlank(accessToken)) {
       logger.info('Access token invalid');
@@ -111,6 +111,57 @@ export const checkToken = async (req) => {
   } catch (err) {
     logger.error('service checkToken Unhandled Exception: ', err);
     return appUtils.genResponse(req.language, resMessage.general.error, err.message)
+  }
+};
+
+export const checkJwt = (req) => {
+  let token = req.headers.authorization;
+  logger.info('token: ' + token);
+  if (token.startsWith('Bearer ')) {
+    // Remove Bearer from string
+    token = token.slice(7, token.length);
+  }
+  if (token) {
+    jwt.verify(token, config.secret, (err, decoded) => {
+      if (err) {
+        return appUtils.genResponse(req.language, resMessage.authentication.tokenInvalid, 'Token is invalid')
+      } else {
+        logger.info('Decoded: ' + JSON.stringify(decoded));
+        req.user = decoded;
+        return null
+      }
+    });
+  } else {
+    return appUtils.genResponse(req.language, resMessage.general.invalidData, 'Missing Authorization Header');
+  }
+};
+
+export const loginJwt = async (req, res) => {
+  let rcvBody = req.body;
+  if (appUtils.isBlank(rcvBody.username) || appUtils.isBlank(rcvBody.pwd) || appUtils.isBlank(rcvBody.channel)) {
+    logger.info('Invalid login data');
+    return appUtils.genResponse(req.language, resMessage.general.invalidData, 'Invalid login data')
+  } else {
+    const user = await usersMongoose.getUserByUsername(req, rcvBody.username);
+    if (user) {
+      if (user.status !== ACTIVE) {
+        logger.info('Unauthorized');
+        return appUtils.genResponse(req.language, resMessage.authentication.unAuthorized, 'Unauthorized')
+      }
+      let result = await validateUser(req, user, rcvBody.pwd);
+      if (result) {
+        return result
+      }
+      delete user.password;
+      delete user.countLoginFailed;
+      delete user.timeToUnlock;
+      const token = jwt.sign(user, config.secret);
+      res.cookie('accessToken', token, { maxAge: config.timeout, httpOnly: true });
+      return appUtils.genResponse(req.language, resMessage.general.success, 'Login success', { user, accessToken: token })
+    } else {
+      logger.info('User not found');
+      return appUtils.genResponse(req.language, resMessage.authentication.incorrectUserPass, 'User not found')
+    }
   }
 };
 
@@ -178,8 +229,10 @@ export const logout = async (req) => {
       const result = await authenMongoose.getAuthentication(req, accessToken);
       if (result !== null) {
         await authenMongoose.removeAuthentication(req, result.userId._id);
+        return appUtils.genResponse(req.language, resMessage.general.success, 'Logout success')
+      } else {
+        return appUtils.genResponse(req.language, resMessage.general.success, 'Logout success')
       }
-      return appUtils.genResponse(req.language, resMessage.general.success, 'Logout success')
     }
   } catch (err) {
     logger.error('service logout Unhandled Exception: ' + err);

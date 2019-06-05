@@ -2,17 +2,24 @@ import { LogModel } from '../../log/log.model';
 import loggerInfo from '../../log/logger-info';
 import * as applicationUtils from '../../utils/app-utils';
 import { resMessage } from '../../common/message.properties';
-import * as service from '../authentication/authentication.service';
+import * as service from '../authenticate/authenticate.service';
 
 export const handlerRequest = async (req, res, next) => {
   if (req.bypass) {
     return next()
   }
-  let result = await service.checkToken(req);
+  let token = req.headers.authorization;
+  let result = null;
+  if (token && token.startsWith('Bearer ')) {
+    result = await service.checkJwt(req);
+  } else {
+    result = await service.checkToken(req)
+  }
   if (result) {
     return sendResponse(req, res, result)
+  } else {
+    next()
   }
-  next()
 };
 
 export const basicAuth = async (req, res, next) => {
@@ -21,19 +28,24 @@ export const basicAuth = async (req, res, next) => {
     return next();
   }
   // check for basic auth header
-  if (!req.headers.authorization || req.headers.authorization.indexOf('Basic ') === -1) {
+  let token = req.headers.authorization;
+  if (token.startsWith('Basic ')) {
+    // Remove Basic from string
+    token = token.slice(6, token.length);
+  }
+  if (token) {
+    // verify auth credentials
+    const credentials = Buffer.from(token, 'base64').toString('ascii');
+    const [username, password] = credentials.split(':');
+    const result = await service.authenticate(req, username, password);
+    if (result) {
+      return sendResponse(req, res, result)
+    } else {
+      next();
+    }
+  } else {
     return res.status(401).json({ message: 'Missing Authorization Header' });
   }
-
-  // verify auth credentials
-  const base64Credentials = req.headers.authorization.split(' ')[1];
-  const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
-  const [username, password] = credentials.split(':');
-  const result = await service.authenticate(req, username, password);
-  if (result) {
-    return sendResponse(req, res, result)
-  }
-  next();
 };
 
 export const sendResponse = (req, res, result) => {

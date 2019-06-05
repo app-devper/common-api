@@ -1,5 +1,5 @@
 import express from 'express'
-import * as controller from './authentication.controller' // Load controller
+import * as controller from './authenticate.controller' // Load controller
 import * as apiController from '../api/api.controller' // Load controller
 import logger from '../../log/logger'
 import { handlerRequest } from '../api/api.helper';

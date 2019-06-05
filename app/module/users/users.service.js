@@ -17,16 +17,19 @@ export const addUser = async (req, callback) => {
         logger.info('User duplicate');
         callback(appUtils.genResponse(req.language, resMessage.user.duplicate, 'User duplicate'))
       } else {
+        reqBody.status = ACTIVE;
+        reqBody.role = USER;
+        reqBody.username = reqBody.username.toLowerCase();
         reqBody.updatedDate = new Date();
         reqBody.createdDate = new Date();
         reqBody.createdBy = req.user._id;
         reqBody.updatedBy = req.user._id;
-        reqBody.status = ACTIVE;
         let result = await usersMongoose.addUser(req, reqBody);
         callback(appUtils.genResponse(req.language, resMessage.general.success, 'Add user success', result))
       }
     }
   } catch (err) {
+    logger.error('error: ' + err.name);
     logger.error('service addUser Unhandled Exception: ' + err);
     callback(appUtils.genResponse(req.language, resMessage.general.error, err.message))
   }
@@ -44,10 +47,11 @@ export const registerUser = async (req, callback) => {
         logger.info('User duplicate');
         callback(appUtils.genResponse(req.language, resMessage.user.duplicate, 'User duplicate'))
       } else {
-        reqBody.updatedDate = new Date();
-        reqBody.createdDate = new Date();
         reqBody.status = ACTIVE;
         reqBody.role = USER;
+        reqBody.username = reqBody.username.toLowerCase();
+        reqBody.updatedDate = new Date();
+        reqBody.createdDate = new Date();
         let result = await usersMongoose.registerUser(req, reqBody);
         callback(appUtils.genResponse(req.language, resMessage.general.success, 'Add user success', result))
       }
@@ -66,6 +70,7 @@ export const updateUser = async (req, callback) => {
     let result = await usersMongoose.updateUser(req, req.params.userId, reqBody);
     callback(appUtils.genResponse(req.language, resMessage.general.success, 'Update user success', result))
   } catch (err) {
+    logger.error('error: ' + err.name);
     logger.error('service updateUser Unhandled Exception: ' + err);
     callback(appUtils.genResponse(req.language, resMessage.general.error, err.message))
   }
@@ -74,7 +79,12 @@ export const updateUser = async (req, callback) => {
 export const removeUser = async (req, callback) => {
   try {
     let result = await usersMongoose.removeUser(req, req.params.userId);
-    callback(appUtils.genResponse(req.language, resMessage.general.success, 'Remove user success', result))
+    if (result) {
+      callback(appUtils.genResponse(req.language, resMessage.general.success, 'Remove user success', result))
+    } else {
+      logger.info('User not found');
+      callback(appUtils.genResponse(req.language, resMessage.general.dataNotFound, 'User not found'))
+    }
   } catch (err) {
     logger.error('service removeUser Unhandled Exception: ' + err);
     callback(appUtils.genResponse(req.language, resMessage.general.error, err.message))

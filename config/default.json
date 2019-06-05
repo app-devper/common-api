@@ -3,5 +3,6 @@
   "email": "support@common.com",
   "timeout": 900000,
   "userLockTime": 900,
-  "userLoginAttempt": 3
+  "userLoginAttempt": 3,
+  "secret": "qwertyuiopasdfghjklzxcvbnm123456"
 }

@@ -31,7 +31,8 @@
     "serve-index": "^1.9.1",
     "uuid": "^3.3.2",
     "winston": "^3.1.0",
-    "winston-daily-rotate-file": "^3.3.3"
+    "winston-daily-rotate-file": "^3.3.3",
+    "jsonwebtoken": "^8.2.2"
   },
   "devDependencies": {
     "eslint": "^5.7.0",
