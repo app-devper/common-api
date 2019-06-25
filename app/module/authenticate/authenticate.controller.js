@@ -8,7 +8,7 @@ export const login = async (req, res) => {
   try {
     let channel = req.body.channel;
     let result = null;
-    if (channel && channel.toLowerCase() === "jwt") {
+    if (channel && channel.toLowerCase() === 'jwt') {
       result = await service.loginJwt(req, res);
     } else {
       result = await service.login(req, res);

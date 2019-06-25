@@ -6,11 +6,10 @@ export const header = {
 
 export const role = {
   admin: 'ADMIN',
-  user: 'USER',
+  user: 'USER'
 };
 
 export const status = {
   active: 'ACTIVE',
-  inactive: 'INACTIVE',
+  inactive: 'INACTIVE'
 };
-

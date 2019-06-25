@@ -1,5 +1,5 @@
 
 export const bypass = [
-  '/authenticate',
+  '/auth',
   '/users/register'
 ];

@@ -8,22 +8,22 @@ import mongoose, { Schema } from 'mongoose'
  */
 let UsersSchema = new Schema({
   username: {
-    type: String, index: true, unique: true, lowercase: true, trim: true, required: true,
+    type: String, index: true, unique: true, lowercase: true, trim: true, required: true
   },
   password: {
-    type: String, trim: true, required: true,
+    type: String, trim: true, required: true
   },
   firstName: String,
   lastName: String,
   status: {
-    type: String, trim: true, required: true,
+    type: String, trim: true, required: true
   },
   phone: String,
   role: {
-    type: String, trim: true, required: true,
+    type: String, trim: true, required: true
   },
   email: {
-    type: String, lowercase: true, trim: true,
+    type: String, lowercase: true, trim: true
   },
   gender: String, // MALE, FEMALE
   countLoginFailed: { type: Number, default: 0 },

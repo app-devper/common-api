@@ -1,23 +1,14 @@
 import express from 'express'
-import * as controller from './authenticate.controller' // Load controller
-import * as apiController from '../api/api.controller' // Load controller
-import logger from '../../log/logger'
 import { handlerRequest } from '../api/api.helper';
+import { methodNotAllowed } from '../api/api.controller';
+import { login, logout } from './authenticate.controller';
 
 let authenRouter = express.Router();
 
-authenRouter.post('/', handlerRequest, (req, res) => {
-  logger.info('authen router post login');
-  controller.login(req, res)
-});
+authenRouter.post('/', handlerRequest, login);
 
-authenRouter.get('/logout', handlerRequest, (req, res) => {
-  logger.info('authen router get logout');
-  controller.logout(req, res)
-});
+authenRouter.get('/logout', handlerRequest, logout);
 
-authenRouter.all('/*', (req, res) => {
-  apiController.methodNotAllowed(req, res)
-});
+authenRouter.all('/*', methodNotAllowed);
 
 export default authenRouter
