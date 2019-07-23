@@ -4,7 +4,7 @@ import { sendErrorResponse, sendResponse } from '../api/api.helper';
 
 export const addUser = (req, res) => {
   try {
-    service.addUser(req, (response) => {
+    service.addUser(req).then((response) => {
       sendResponse(req, res, response)
     })
   } catch (err) {
@@ -15,7 +15,7 @@ export const addUser = (req, res) => {
 
 export const registerUser = (req, res) => {
   try {
-    service.registerUser(req, (response) => {
+    service.registerUser(req).then((response) => {
       sendResponse(req, res, response)
     })
   } catch (err) {
@@ -26,7 +26,7 @@ export const registerUser = (req, res) => {
 
 export const updateUser = (req, res) => {
   try {
-    service.updateUser(req, (response) => {
+    service.updateUser(req).then((response) => {
       sendResponse(req, res, response)
     })
   } catch (err) {
@@ -37,7 +37,7 @@ export const updateUser = (req, res) => {
 
 export const removeUser = (req, res) => {
   try {
-    service.removeUser(req, (response) => {
+    service.removeUser(req).then((response) => {
       sendResponse(req, res, response)
     })
   } catch (err) {
@@ -48,7 +48,7 @@ export const removeUser = (req, res) => {
 
 export const getUser = (req, res) => {
   try {
-    service.getUser(req, (response) => {
+    service.getUser(req).then((response) => {
       sendResponse(req, res, response)
     })
   } catch (err) {
@@ -59,7 +59,7 @@ export const getUser = (req, res) => {
 
 export const getUserById = (req, res) => {
   try {
-    service.getUserById(req, (response) => {
+    service.getUserById(req).then((response) => {
       sendResponse(req, res, response)
     })
   } catch (err) {

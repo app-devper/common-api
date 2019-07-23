@@ -1,5 +1,5 @@
 import logger from '../../log/logger' // Load logger
-import UsersSchema from './users.model'
+import UsersSchema from './users.schema'
 
 export const addUser = (req, user) => {
   logger.info('mongoose addUser');

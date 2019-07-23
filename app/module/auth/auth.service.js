@@ -2,7 +2,7 @@
 import jwt from 'jsonwebtoken';
 import config from 'config'
 import logger from '../../log/logger' // Load logger
-import * as authenMongoose from './authenticate.mongoose'
+import * as authenMongoose from './auth.mongoose'
 import * as usersMongoose from '../users/users.mongoose'
 import { resMessage } from '../../common/message.properties'
 import { header } from '../../common/constants'

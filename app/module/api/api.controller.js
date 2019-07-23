@@ -14,8 +14,8 @@ export const apiHandler = (req, res, next) => {
   loggerAccess.info(logModel.getAccessLog());
 
   logger.info('Start ==================================================================================================================');
-  logger.info('validator something route url : ' + req.url);
-  logger.info('validator something route method : ' + req.method);
+  logger.info('Route url : ' + req.url);
+  logger.info('Route method : ' + req.method);
 
   req.language = req.headers[header.language] || 'en';
   req.bypass = bypass.includes(req.url);

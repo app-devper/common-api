@@ -1,4 +1,4 @@
-import * as service from './authenticate.service'
+import * as service from './auth.service'
 
 import logger from '../../log/logger' // Load logger
 import { sendErrorResponse, sendResponse } from '../api/api.helper';

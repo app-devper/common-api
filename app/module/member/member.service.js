@@ -1,0 +1,42 @@
+import logger from '../../log/logger'
+import { genResponse, pagination } from '../../utils/utils'
+import * as memberMongoose from './member.mongoose'
+import mongoose from 'mongoose';
+import { resMessage } from "../../common/message.properties";
+
+export const getMember = async (req) => {
+  try {
+    let count = await memberMongoose.countMember();
+    let { offset, limit, nextUrl, previousUrl, fullUrl } = pagination(req, count);
+    let result = await memberMongoose.getMemberLimit(offset, limit);
+    result = result.map(item => {
+      item.url = fullUrl + req.path + item._id;
+      return item
+    });
+    return genResponse(req.language, resMessage.general.success, 'Get Member success',
+      { count, next: nextUrl, previous: previousUrl, results: result })
+  } catch (err) {
+    logger.error('service getMember Unhandled Exception: ' + err);
+    return genResponse(req.language, resMessage.general.error, err.message)
+  }
+};
+
+export const getMemberById = async (req) => {
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.memberId)) {
+      return genResponse(req.language, resMessage.general.invalidData, 'Invalid Member id format')
+    } else {
+      let result = await memberMongoose.getMemberById(req.params.memberId);
+      if (result) {
+        return genResponse(req.language, resMessage.general.success, 'Get Member success', result)
+      } else {
+        logger.info('Member not found');
+        return genResponse(req.language, resMessage.general.dataNotFound, 'Member not found')
+      }
+    }
+  } catch (err) {
+    logger.error('service getMemberById Unhandled Exception: ' + err);
+    return genResponse(req.language, resMessage.general.error, err.message)
+  }
+};
+

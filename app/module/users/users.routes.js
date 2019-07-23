@@ -9,17 +9,11 @@ let userRouter = express.Router();
 logger.info('user.routes loaded');
 
 userRouter.post('/', handlerRequest, addUser);
-
 userRouter.post('/register', handlerRequest, registerUser);
-
 userRouter.get('/', handlerRequest, getUser);
-
 userRouter.get('/:userId', handlerRequest, getUserById);
-
 userRouter.put('/:userId', handlerRequest, updateUser);
-
 userRouter.delete('/:userId', handlerRequest, removeUser);
-
 userRouter.all('/*', methodNotAllowed);
 
 export default userRouter

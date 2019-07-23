@@ -1,9 +1,10 @@
 import * as express from 'express' // Load express
 import logger from '../log/logger' // Load logger
 import { header } from '../common/constants';
-import userRouter from '../module/users/users.routes'
-import authenRouter from '../module/authenticate/authenticate.routes'
-import adminRouter from '../module/admin/admin.routes';
+import users from '../module/users/users.routes'
+import auth from '../module/auth/auth.routes'
+import admin from '../module/admin/admin.routes';
+import members from '../module/member/member.routes';
 import { apiHandler, authorize } from "../module/api/api.controller";
 import { genRequestId } from "../utils/utils";
 
@@ -18,9 +19,10 @@ apiRouter.use((req, res, next) => {
 });
 
 //  Load routes for out controllers
-apiRouter.use('/admin', adminRouter);
-apiRouter.use('/auth', authenRouter);
-apiRouter.use('/users', userRouter);
+apiRouter.use('/admin', admin);
+apiRouter.use('/auth', auth);
+apiRouter.use('/users', users);
+apiRouter.use('/members', members);
 
 apiRouter.use(authorize);
 

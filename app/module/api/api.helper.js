@@ -1,7 +1,7 @@
 import { LogModel } from '../../log/log.model';
 import loggerInfo from '../../log/logger-info';
 import { resMessage } from '../../common/message.properties';
-import * as service from '../authenticate/authenticate.service';
+import * as service from '../auth/auth.service';
 import { genResponse } from '../../utils/utils';
 
 export const handlerRequest = async (req, res, next) => {

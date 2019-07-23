@@ -29,6 +29,25 @@ export const isBlank = (str) => {
   return str === undefined || str === null || str === ''
 };
 
+export const pagination = (req, count) => {
+  let offset = parseInt(req.query['offset']) || 0;
+  let limit = parseInt(req.query['limit']) || 20;
+  let next = offset + limit;
+  let previous = offset - limit;
+  let fullUrl = req.protocol + '://' + req.get('host') + req.baseUrl;
+  let nextUrl = null;
+  if (next < count) {
+    nextUrl = fullUrl + "?offset=" + next + "&limit=" + limit;
+  }
+  let previousUrl = null;
+  if (previous > 0) {
+    previousUrl = fullUrl + "?offset=" + previous + "&limit=" + limit;
+  } else if (previous <= 0 && offset !== 0) {
+    previousUrl = fullUrl + "?offset=" + 0 + "&limit=" + offset;
+  }
+  return { offset, limit, nextUrl, previousUrl, fullUrl }
+};
+
 const s4 = () => {
   return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
 };
