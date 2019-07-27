@@ -2,6 +2,7 @@ import * as winston from 'winston'
 import fs from 'fs'
 import 'winston-daily-rotate-file'
 import config from 'config'
+
 const { combine, timestamp, printf } = winston.format;
 
 let logDir = config.logPathConfig.appLog; // directory path of log
@@ -14,14 +15,10 @@ const myFormat = printf(info => {
 });
 
 let logger = winston.createLogger({
-  format: combine(
-    timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss'
-    }),
+  format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     myFormat
   ),
   transports: [
-    new winston.transports.Console(),
     new winston.transports.DailyRotateFile({
       filename: logDir + 'app_%DATE%.log',
       datePattern: 'YYYYMMDD_HH00',
@@ -33,8 +30,8 @@ let logger = winston.createLogger({
   exitOnError: false
 });
 
-if (!config.logPathConfig.isLocal) {
-  logger.remove(winston.transports.Console)
+if (config.logPathConfig.isLocal) {
+  logger.add(new winston.transports.Console())
 }
 
 export default logger

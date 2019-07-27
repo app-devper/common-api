@@ -15,7 +15,7 @@ export const login = async (req, res) => {
     }
     sendResponse(req, res, result);
   } catch (err) {
-    logger.error('controller login Unhandled Exception: ' + err);
+    logger.error('controller login Unhandled Exception: ' + err.message);
     sendErrorResponse(req, res, err)
   }
 };
@@ -26,7 +26,7 @@ export const logout = async (req, res) => {
     let result = await service.logout(req);
     sendResponse(req, res, result);
   } catch (err) {
-    logger.error('controller logout Unhandled Exception: ' + err);
+    logger.error('controller logout Unhandled Exception: ' + err.message);
     sendErrorResponse(req, res, err)
   }
 };

@@ -2,7 +2,7 @@ import logger from '../../log/logger'
 import { genResponse, pagination } from '../../utils/utils'
 import * as memberMongoose from './member.mongoose'
 import mongoose from 'mongoose';
-import { resMessage } from "../../common/message.properties";
+import { resMessage } from '../../common/message.properties';
 
 export const getMember = async (req) => {
   try {
@@ -39,4 +39,3 @@ export const getMemberById = async (req) => {
     return genResponse(req.language, resMessage.general.error, err.message)
   }
 };
-

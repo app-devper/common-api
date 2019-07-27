@@ -8,7 +8,7 @@ export const addUser = (req, res) => {
       sendResponse(req, res, response)
     })
   } catch (err) {
-    logger.error('addUser Unhandled Exception: ' + err);
+    logger.error('addUser Unhandled Exception: ' + err.message);
     sendErrorResponse(req, res, err)
   }
 };
@@ -19,7 +19,7 @@ export const registerUser = (req, res) => {
       sendResponse(req, res, response)
     })
   } catch (err) {
-    logger.error('registerUser Unhandled Exception: ' + err);
+    logger.error('registerUser Unhandled Exception: ' + err.message);
     sendErrorResponse(req, res, err)
   }
 };
@@ -30,7 +30,7 @@ export const updateUser = (req, res) => {
       sendResponse(req, res, response)
     })
   } catch (err) {
-    logger.error('updateUser Unhandled Exception: ' + err);
+    logger.error('updateUser Unhandled Exception: ' + err.message);
     sendErrorResponse(req, res, err)
   }
 };
@@ -41,7 +41,7 @@ export const removeUser = (req, res) => {
       sendResponse(req, res, response)
     })
   } catch (err) {
-    logger.error('removeUser Unhandled Exception: ' + err);
+    logger.error('removeUser Unhandled Exception: ' + err.message);
     sendErrorResponse(req, res, err)
   }
 };
@@ -52,7 +52,7 @@ export const getUser = (req, res) => {
       sendResponse(req, res, response)
     })
   } catch (err) {
-    logger.error('getUser Unhandled Exception: ' + err);
+    logger.error('getUser Unhandled Exception: ' + err.message);
     sendErrorResponse(req, res, err)
   }
 };
@@ -63,7 +63,7 @@ export const getUserById = (req, res) => {
       sendResponse(req, res, response)
     })
   } catch (err) {
-    logger.error('getUserById Unhandled Exception: ' + err);
+    logger.error('getUserById Unhandled Exception: ' + err.message);
     sendErrorResponse(req, res, err)
   }
 };

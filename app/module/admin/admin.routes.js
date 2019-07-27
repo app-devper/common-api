@@ -1,8 +1,8 @@
 import express from 'express'
 import logger from '../../log/logger'
 import { basicAuth } from '../api/api.helper';
-import { unlockUser } from "./admin.controller";
-import { methodNotAllowed } from "../api/api.controller";
+import { unlockUser } from './admin.controller';
+import { methodNotAllowed } from '../api/api.controller';
 
 let adminRouter = express.Router();
 

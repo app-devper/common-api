@@ -5,8 +5,8 @@ import users from '../module/users/users.routes'
 import auth from '../module/auth/auth.routes'
 import admin from '../module/admin/admin.routes';
 import members from '../module/member/member.routes';
-import { apiHandler, authorize } from "../module/api/api.controller";
-import { genRequestId } from "../utils/utils";
+import { apiHandler, authorize } from '../module/api/api.controller';
+import { genRequestId } from '../utils/utils';
 
 logger.info('Loading server api routes');
 

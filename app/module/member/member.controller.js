@@ -1,6 +1,6 @@
 import * as service from './member.service'
 import logger from '../../log/logger' // Load logger
-import { sendErrorResponse, sendResponse } from "../api/api.helper";
+import { sendErrorResponse, sendResponse } from '../api/api.helper';
 
 export const getMember = (req, res) => {
   try {
@@ -8,7 +8,7 @@ export const getMember = (req, res) => {
       sendResponse(req, res, response)
     })
   } catch (err) {
-    logger.error('getMember Unhandled Exception: ' + err);
+    logger.error('getMember Unhandled Exception: ' + err.message);
     sendErrorResponse(req, res, err)
   }
 };
@@ -19,8 +19,7 @@ export const getMemberById = (req, res) => {
       sendResponse(req, res, response)
     })
   } catch (err) {
-    logger.error('getMemberById Unhandled Exception: ' + err);
+    logger.error('getMemberById Unhandled Exception: ' + err.message);
     sendErrorResponse(req, res, err)
   }
 };
-

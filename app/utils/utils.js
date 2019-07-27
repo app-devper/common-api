@@ -37,13 +37,13 @@ export const pagination = (req, count) => {
   let fullUrl = req.protocol + '://' + req.get('host') + req.baseUrl;
   let nextUrl = null;
   if (next < count) {
-    nextUrl = fullUrl + "?offset=" + next + "&limit=" + limit;
+    nextUrl = fullUrl + '?offset=' + next + '&limit=' + limit;
   }
   let previousUrl = null;
   if (previous > 0) {
-    previousUrl = fullUrl + "?offset=" + previous + "&limit=" + limit;
+    previousUrl = fullUrl + '?offset=' + previous + '&limit=' + limit;
   } else if (previous <= 0 && offset !== 0) {
-    previousUrl = fullUrl + "?offset=" + 0 + "&limit=" + offset;
+    previousUrl = fullUrl + '?offset=' + 0 + '&limit=' + offset;
   }
   return { offset, limit, nextUrl, previousUrl, fullUrl }
 };

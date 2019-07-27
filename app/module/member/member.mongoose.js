@@ -39,10 +39,10 @@ export const getMember = () => {
 
 export const countMember = () => {
   logger.info('mongoose countMember');
-  return MemberSchema.count({})
+  return MemberSchema.countDocuments({})
 };
 
-export const getMemberLimit = (offset = 0, limit = 20,) => {
+export const getMemberLimit = (offset = 0, limit = 20) => {
   logger.info('mongoose getMemberLimit');
   return MemberSchema.find({}).limit(limit)
     .skip(offset).lean()
