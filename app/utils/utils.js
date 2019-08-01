@@ -48,7 +48,7 @@ export const pagination = (req, count) => {
   return { offset, limit, nextUrl, previousUrl, fullUrl }
 };
 
-const value = 0x10000;
+const value = "0x10000";
 const s4 = () => {
-  return Math.floor((1 + Math.random()) * value).toString(16).substring(1)
+  return Math.floor((1 + Math.random()) * parseInt(value,16)).toString(16).substring(1)
 };
