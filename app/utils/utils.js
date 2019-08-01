@@ -30,8 +30,8 @@ export const isBlank = (str) => {
 };
 
 export const pagination = (req, count) => {
-  let offset = parseInt(req.query['offset']) || 0;
-  let limit = parseInt(req.query['limit']) || 20;
+  let offset = parseInt(req.query['offset'], 10) || 0;
+  let limit = parseInt(req.query['limit'], 10) || 20;
   let next = offset + limit;
   let previous = offset - limit;
   let fullUrl = req.protocol + '://' + req.get('host') + req.baseUrl;
@@ -48,6 +48,7 @@ export const pagination = (req, count) => {
   return { offset, limit, nextUrl, previousUrl, fullUrl }
 };
 
+const value = 0x10000;
 const s4 = () => {
-  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1)
+  return Math.floor((1 + Math.random()) * value).toString(16).substring(1)
 };
