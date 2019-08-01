@@ -221,7 +221,7 @@ export const login = async (req, res) => {
 
 // logout
 export const logout = async (req) => {
-  let accessToken = req.get(header.token) || req.cookies.accessToken;
+  let accessToken = req.headers[header.token] || req.cookies.accessToken;
   try {
     if (isBlank(accessToken)) {
       return genResponse(req.language, resMessage.general.invalidData, 'invalidData')

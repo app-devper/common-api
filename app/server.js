@@ -66,3 +66,5 @@ app.listen(port);
 
 // Logging initialization
 logger.info(config.app.name + ' listening on port: ' + port);
+
+export default app
