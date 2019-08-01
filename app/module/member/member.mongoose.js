@@ -3,7 +3,7 @@ import MemberSchema from './member.schema'
 
 export const addMember = (member) => {
   logger.info('mongoose addMember');
-  let memberData = new MemberSchema(member);
+  const memberData = new MemberSchema(member);
   return memberData.save()
 };
 

@@ -3,7 +3,7 @@ import logger from '../../log/logger'
 
 export const addAuthentication = (req, data) => {
   logger.info('mongoose addAuthentication');
-  let authenticationSchema = new AuthenticationSchema(data);
+  const authenticationSchema = new AuthenticationSchema(data);
   return authenticationSchema.save()
 };
 

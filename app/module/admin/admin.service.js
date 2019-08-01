@@ -5,9 +5,9 @@ import { genResponse } from '../../utils/utils';
 
 export const unlockUser = async (req, callback) => {
   try {
-    let user = await usersMongoose.getUserByUsername(req, req.params.username);
+    const user = await usersMongoose.getUserByUsername(req, req.params.username);
     if (user) {
-      let reqParam = {
+      const reqParam = {
         _id: user._id,
         countLoginFailed: 0,
         timeToUnlock: new Date()

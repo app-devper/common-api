@@ -7,8 +7,8 @@ import uuid from 'uuid'
 export const genResponse = (language = 'en', messageCode, devMessage, data = undefined) => {
   let responseObj;
   try {
-    let messageRes = messageCode[language];
-    let resHttpCode = messageCode.httpCode;
+    const messageRes = messageCode[language];
+    const resHttpCode = messageCode.httpCode;
     responseObj = new MainResponse(resHttpCode + '', messageRes, devMessage, data, resHttpCode)
   } catch (error) {
     logger.error('app-utils Unhandled Exception: ' + error);
@@ -30,11 +30,11 @@ export const isBlank = (str) => {
 };
 
 export const pagination = (req, count) => {
-  let offset = parseInt(req.query['offset'], 10) || 0;
-  let limit = parseInt(req.query['limit'], 10) || 20;
-  let next = offset + limit;
-  let previous = offset - limit;
-  let fullUrl = req.protocol + '://' + req.get('host') + req.baseUrl;
+  const offset = parseInt(req.query['offset'], 10) || 0;
+  const limit = parseInt(req.query['limit'], 10) || 20;
+  const next = offset + limit;
+  const previous = offset - limit;
+  const fullUrl = req.protocol + '://' + req.get('host') + req.baseUrl;
   let nextUrl = null;
   if (next < count) {
     nextUrl = fullUrl + '?offset=' + next + '&limit=' + limit;

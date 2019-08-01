@@ -2,7 +2,7 @@ import express from 'express'
 import * as controller from '../member/member.controller' // Load controller
 import logger from '../../log/logger' // Load logger
 
-let router = express.Router();
+const router = express.Router();
 
 logger.info('member.routes loaded');
 

@@ -9,7 +9,7 @@ import { sendResponse } from './api.helper';
 import { genResponse } from '../../utils/utils';
 
 export const apiHandler = (req, res, next) => {
-  let logModel = new LogModel();
+  const logModel = new LogModel();
   logModel.setRequest(req);
   loggerAccess.info(logModel.getAccessLog());
 
@@ -20,11 +20,11 @@ export const apiHandler = (req, res, next) => {
   req.language = req.headers[header.language] || 'en';
   req.bypass = bypass.includes(req.url);
 
-  let connectionStatus = mongoose.connection.readyState;
+  const connectionStatus = mongoose.connection.readyState;
   if (connectionStatus === 0) {
-    let errMessage = 'Failed to connect to MongoDB';
+    const errMessage = 'Failed to connect to MongoDB';
     logger.info(errMessage);
-    let response = genResponse(req.language, resMessage.db.connectionFail, errMessage);
+    const response = genResponse(req.language, resMessage.db.connectionFail, errMessage);
     sendResponse(req, res, response)
   } else {
     next()
@@ -33,12 +33,12 @@ export const apiHandler = (req, res, next) => {
 
 export const authorize = (req, res) => {
   logger.info('Not found');
-  let response = genResponse(req.language, resMessage.general.serviceNotFound, 'Not found');
+  const response = genResponse(req.language, resMessage.general.serviceNotFound, 'Not found');
   sendResponse(req, res, response)
 };
 
 export const methodNotAllowed = (req, res) => {
   logger.info('Method not allowed');
-  let response = genResponse(req.language, resMessage.general.methodNotAllowed, 'Method not allowed');
+  const response = genResponse(req.language, resMessage.general.methodNotAllowed, 'Method not allowed');
   sendResponse(req, res, response)
 };

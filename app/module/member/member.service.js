@@ -6,8 +6,8 @@ import { resMessage } from '../../common/message.properties';
 
 export const getMember = async (req) => {
   try {
-    let count = await memberMongoose.countMember();
-    let { offset, limit, nextUrl, previousUrl, fullUrl } = pagination(req, count);
+    const count = await memberMongoose.countMember();
+    const { offset, limit, nextUrl, previousUrl, fullUrl } = pagination(req, count);
     let result = await memberMongoose.getMemberLimit(offset, limit);
     result = result.map(item => {
       item.url = fullUrl + req.path + item._id;
@@ -26,7 +26,7 @@ export const getMemberById = async (req) => {
     if (!mongoose.Types.ObjectId.isValid(req.params.memberId)) {
       return genResponse(req.language, resMessage.general.invalidData, 'Invalid Member id format')
     } else {
-      let result = await memberMongoose.getMemberById(req.params.memberId);
+      const result = await memberMongoose.getMemberById(req.params.memberId);
       if (result) {
         return genResponse(req.language, resMessage.general.success, 'Get Member success', result)
       } else {

@@ -11,8 +11,8 @@ import cookieParser from 'cookie-parser';
 logger.info('Starting: ' + config.app.name + '....');
 logger.info('Connecting to MongoDB Instance: ' + config.db);
 
-let db = mongoose.connection;
-let port = process.env.PORT || config.app.port;
+const db = mongoose.connection;
+const port = process.env.PORT || config.app.port;
 
 mongoose.connect(config.db, config.options);
 
@@ -44,7 +44,7 @@ db.on('disconnected', function () {
 
 // Create the app
 // ============================================================================================
-let app = express(db);
+const app = express(db);
 
 app.enable('trust proxy');
 

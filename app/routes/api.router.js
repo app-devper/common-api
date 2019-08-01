@@ -10,7 +10,7 @@ import { genRequestId } from '../utils/utils';
 
 logger.info('Loading server api routes');
 
-let apiRouter = express.Router(); // Load router
+const apiRouter = express.Router(); // Load router
 
 apiRouter.use((req, res, next) => {
   req.reqId = req.get(header.transaction) || genRequestId();

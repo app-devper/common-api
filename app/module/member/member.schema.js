@@ -7,7 +7,7 @@ import mongoose, { Schema } from 'mongoose'
  * Member Schema
  */
 
-let MemberSchema = new Schema({
+const MemberSchema = new Schema({
   senderId: { type: String, trim: true },
   firstName: { type: String, trim: true },
   lastName: { type: String, trim: true },

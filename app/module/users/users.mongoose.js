@@ -3,13 +3,13 @@ import UsersSchema from './users.schema'
 
 export const addUser = (req, user) => {
   logger.info('mongoose addUser');
-  let usersData = new UsersSchema(user);
+  const usersData = new UsersSchema(user);
   return usersData.save()
 };
 
 export const registerUser = (req, user) => {
   logger.info('mongoose registerUser');
-  let usersData = new UsersSchema(user);
+  const usersData = new UsersSchema(user);
   return usersData.save()
 };
 

@@ -4,7 +4,7 @@ import { methodNotAllowed } from '../api/api.controller';
 import { handlerRequest } from '../api/api.helper';
 import { addUser, getUser, getUserById, registerUser, removeUser, updateUser } from './users.controller';
 
-let userRouter = express.Router();
+const userRouter = express.Router();
 
 logger.info('user.routes loaded');
 

@@ -3,7 +3,7 @@
  */
 import mongoose, { Schema } from 'mongoose'
 
-let AuthenticationSchema = new Schema({
+const AuthenticationSchema = new Schema({
   token: String,
   channel: String,
   username: String,

@@ -8,7 +8,7 @@ export const handlerRequest = async (req, res, next) => {
   if (req.bypass) {
     return next()
   }
-  let token = req.headers.authorization;
+  const token = req.headers.authorization;
   let result = null;
   if (token && token.startsWith('Bearer ')) {
     result = await service.checkJwt(req);
@@ -49,15 +49,15 @@ export const basicAuth = async (req, res, next) => {
 };
 
 export const sendResponse = (req, res, result) => {
-  let logModel = new LogModel();
+  const logModel = new LogModel();
   logModel.setResponse(req, result);
   loggerInfo.info(logModel.getInfoLog());
   res.status(result.status).send(result)
 };
 
 export const sendErrorResponse = (req, res, err) => {
-  let result = genResponse(req.language, resMessage.general.error, err.message);
-  let logModel = new LogModel();
+  const result = genResponse(req.language, resMessage.general.error, err.message);
+  const logModel = new LogModel();
   logModel.setResponse(req, result);
   loggerInfo.info(logModel.getInfoLog());
   res.status(result.status).send(result)

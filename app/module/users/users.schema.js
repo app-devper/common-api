@@ -6,7 +6,7 @@ import mongoose, { Schema } from 'mongoose'
 /**
  * User Schema
  */
-let UsersSchema = new Schema({
+const UsersSchema = new Schema({
   username: {
     type: String, index: true, unique: true, lowercase: true, trim: true, required: true
   },

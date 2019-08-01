@@ -29,7 +29,7 @@ export const validateUser = async (req, user, password) => {
   let isLocked = true;
   // case user lock
   if (user.countLoginFailed >= config.userLoginAttempt) {
-    let date = new Date();
+    const date = new Date();
     // unlock
     if (date >= new Date(user.timeToUnlock)) {
       isLocked = false
@@ -51,9 +51,9 @@ export const validateUser = async (req, user, password) => {
   } else {
     if (isLocked) {
       // update time to lock
-      let dateUnlock = new Date();
+      const dateUnlock = new Date();
       dateUnlock.setSeconds(dateUnlock.getSeconds() + config.userLockTime);
-      let reqParam = {
+      const reqParam = {
         _id: user._id,
         countLoginFailed: user.countLoginFailed,
         timeToUnlock: dateUnlock
@@ -62,13 +62,13 @@ export const validateUser = async (req, user, password) => {
       logger.info('User is lock');
       return genResponse(req.language, resMessage.authentication.tooManyInvalidPass, 'User is lock')
     } else {
-      let param = {
+      const param = {
         _id: user._id,
         countLoginFailed: user.countLoginFailed + 1,
         timeToUnlock: user.timeToUnlock
       };
       if (param.countLoginFailed >= config.userLoginAttempt) {
-        let dateUnlock = new Date();
+        const dateUnlock = new Date();
         dateUnlock.setSeconds(dateUnlock.getSeconds() + config.userLockTime);
         param.timeToUnlock = dateUnlock;
       }
@@ -80,7 +80,7 @@ export const validateUser = async (req, user, password) => {
 };
 
 export const checkToken = async (req) => {
-  let accessToken = req.headers[header.token] || req.cookies.accessToken;
+  const accessToken = req.headers[header.token] || req.cookies.accessToken;
   try {
     if (isBlank(accessToken)) {
       logger.info('Access token invalid');
@@ -89,7 +89,7 @@ export const checkToken = async (req) => {
       const result = await authenMongoose.getAuthentication(req, accessToken.toLowerCase());
       if (result !== null && result.userId !== null) {
         if (result.userId.status === ACTIVE) {
-          let dateNow = Date.now();
+          const dateNow = Date.now();
           if (dateNow - result.accessTime.getTime() < config.timeout) {
             logger.info('Authorize success');
             await authenMongoose.updateLogin(req, result._id);
@@ -137,7 +137,7 @@ export const checkJwt = (req) => {
 };
 
 export const loginJwt = async (req, res) => {
-  let rcvBody = req.body;
+  const rcvBody = req.body;
   if (isBlank(rcvBody.username) || isBlank(rcvBody.pwd) || isBlank(rcvBody.channel)) {
     logger.info('Invalid login data');
     return genResponse(req.language, resMessage.general.invalidData, 'Invalid login data')
@@ -148,7 +148,7 @@ export const loginJwt = async (req, res) => {
         logger.info('Unauthorized');
         return genResponse(req.language, resMessage.authentication.unAuthorized, 'Unauthorized')
       }
-      let result = await validateUser(req, user, rcvBody.pwd);
+      const result = await validateUser(req, user, rcvBody.pwd);
       if (result) {
         return result
       }
@@ -166,7 +166,7 @@ export const loginJwt = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  let rcvBody = req.body;
+  const rcvBody = req.body;
   try {
     logger.info('body.username ==> ' + rcvBody.username);
     logger.info('body.channel ==> ' + rcvBody.channel);
@@ -183,17 +183,17 @@ export const login = async (req, res) => {
           logger.info('Unauthorized');
           return genResponse(req.language, resMessage.authentication.unAuthorized, 'Unauthorized')
         }
-        let result = await validateUser(req, user, rcvBody.pwd);
+        const result = await validateUser(req, user, rcvBody.pwd);
         if (result) {
           return result
         }
-        let reqParam = {
+        const reqParam = {
           _id: user._id,
           countLoginFailed: 0,
           timeToUnlock: user.timeToUnlock
         };
         await usersMongoose.updateLoginStatus(req, reqParam);
-        let authenData = {};
+        const authenData = {};
         authenData.userId = user._id;
         authenData.username = user.username;
         authenData.token = genToken();
@@ -221,7 +221,7 @@ export const login = async (req, res) => {
 
 // logout
 export const logout = async (req) => {
-  let accessToken = req.headers[header.token] || req.cookies.accessToken;
+  const accessToken = req.headers[header.token] || req.cookies.accessToken;
   try {
     if (isBlank(accessToken)) {
       return genResponse(req.language, resMessage.general.invalidData, 'invalidData')

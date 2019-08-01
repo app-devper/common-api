@@ -4,7 +4,7 @@ import { basicAuth } from '../api/api.helper';
 import { unlockUser } from './admin.controller';
 import { methodNotAllowed } from '../api/api.controller';
 
-let adminRouter = express.Router();
+const adminRouter = express.Router();
 
 logger.info('admin.routes loaded');
 

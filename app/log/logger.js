@@ -5,7 +5,7 @@ import config from 'config'
 
 const { combine, timestamp, printf } = winston.format;
 
-let logDir = config.logPathConfig.appLog; // directory path of log
+const logDir = config.logPathConfig.appLog; // directory path of log
 
 // check log exists
 fs.existsSync(logDir) || fs.mkdirSync(logDir);
@@ -14,7 +14,7 @@ const myFormat = printf(info => {
   return `${info.timestamp} ${info.level.toUpperCase()}: ${info.message}`;
 });
 
-let logger = winston.createLogger({
+const logger = winston.createLogger({
   format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     myFormat
   ),
