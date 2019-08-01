@@ -8,7 +8,9 @@
     "dev": "nodemon ./app/server.js --exec babel-node",
     "test": "mocha test/*.spec.js --recursive --watch --require babel-core/register --timeout 1000 --exit",
     "lint": "eslint ./app",
-    "fix": "eslint ./app --fix"
+    "lint-test": "eslint ./test",
+    "fix": "eslint ./app --fix",
+    "fix-test": "eslint ./test --fix"
   },
   "repository": {},
   "author": "Worawit Boonsorn",

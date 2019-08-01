@@ -1,3 +1,4 @@
+/* global it, describe */
 import supertest from 'supertest'
 import chai from 'chai'
 import server from '../app/server'
@@ -11,11 +12,10 @@ describe('Routing /users', () => {
     let user;
     it('login', (done) => {
       request.post('/api/auth')
-        .send({ username: 'wowit', pwd: '5f4dcc3b5aa765d61d8327deb882cf99', channel: "app" })
+        .send({ username: 'wowit', pwd: '5f4dcc3b5aa765d61d8327deb882cf99', channel: 'app' })
         .end((err, res) => {
           if (err) done(err);
           else {
-            expect(res).to.exist;
             expect(res.statusCode).to.eql(200);
             data = res.body.data;
             done();
@@ -30,7 +30,6 @@ describe('Routing /users', () => {
         .end((err, res) => {
           if (err) done(err);
           else {
-            expect(res).to.exist;
             expect(res.statusCode).to.eql(200);
             done();
           }
@@ -44,7 +43,6 @@ describe('Routing /users', () => {
         .end((err, res) => {
           if (err) done(err);
           else {
-            expect(res).to.exist;
             expect(res.statusCode).to.eql(200);
             done();
           }
@@ -60,15 +58,17 @@ describe('Routing /users', () => {
           lastName: data.user.lastName,
           email: data.user.email,
           phone: data.user.phone,
-          password: "5f4dcc3b5aa765d61d8327deb882cf99",
+          password: '5f4dcc3b5aa765d61d8327deb882cf99',
           status: data.user.user,
           username: data.user.username,
           role: data.user.role
         })
         .end((err, res) => {
-          expect(res).to.exist;
-          expect(res.statusCode).to.eql(409);
-          done();
+          if (err) done(err);
+          else {
+            expect(res.statusCode).to.eql(409);
+            done();
+          }
         });
     });
 
@@ -81,15 +81,14 @@ describe('Routing /users', () => {
           lastName: data.user.lastName,
           email: data.user.email,
           phone: data.user.phone,
-          password: "5f4dcc3b5aa765d61d8327deb882cf99",
+          password: '5f4dcc3b5aa765d61d8327deb882cf99',
           status: data.user.user,
-          username: "mocha",
+          username: 'mocha',
           role: data.user.role
         })
         .end((err, res) => {
           if (err) done(err);
           else {
-            expect(res).to.exist;
             expect(res.statusCode).to.eql(200);
             user = res.body.data;
             done();
@@ -107,13 +106,12 @@ describe('Routing /users', () => {
           email: data.user.email,
           phone: data.user.phone,
           status: data.user.user,
-          username: "mocha",
+          username: 'mocha',
           role: data.user.role
         })
         .end((err, res) => {
           if (err) done(err);
           else {
-            expect(res).to.exist;
             expect(res.statusCode).to.eql(200);
             user = res.body.data;
             done();
@@ -128,7 +126,6 @@ describe('Routing /users', () => {
         .end((err, res) => {
           if (err) done(err);
           else {
-            expect(res).to.exist;
             expect(res.statusCode).to.eql(200);
             user = res.body.data;
             done();
@@ -143,7 +140,6 @@ describe('Routing /users', () => {
         .end((err, res) => {
           if (err) done(err);
           else {
-            expect(res).to.exist;
             expect(res.statusCode).to.eql(200);
             done();
           }
@@ -154,11 +150,12 @@ describe('Routing /users', () => {
       request.get('/api/users/' + data.user._id)
         .set('x-access-token', data.accessToken)
         .end((err, res) => {
-          expect(res).to.exist;
-          expect(res.statusCode).to.eql(401);
-          done();
+          if (err) done(err);
+          else {
+            expect(res.statusCode).to.eql(401);
+            done();
+          }
         });
     });
-
   });
 });
