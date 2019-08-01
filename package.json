@@ -24,7 +24,7 @@
     "cors": "^2.8.4",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.2.2",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.15",
     "moment": "^2.22.2",
     "mongoose": "^5.3.4",
     "serve-index": "^1.9.1",
