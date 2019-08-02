@@ -1,13 +1,5 @@
 {
   "db": "mongodb+srv://common:f9mWPxwVEGGkYnca@common-syu9e.mongodb.net/common",
-  "options": {
-    "keepAlive": 300000,
-    "connectTimeoutMS": 30000,
-    "reconnectTries": 1000000,
-    "useNewUrlParser": true,
-    "useCreateIndex": true,
-    "useFindAndModify": false
-  },
   "app": {
     "name": "Common",
     "port": 8089,

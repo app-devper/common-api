@@ -156,7 +156,7 @@ export const loginJwt = async (req, res) => {
       delete user.countLoginFailed;
       delete user.timeToUnlock;
       const token = jwt.sign(user, config.secret);
-      res.cookie('accessToken', token, { maxAge: config.timeout, httpOnly: true });
+      //res.cookie('accessToken', token, { maxAge: config.timeout, httpOnly: true });
       return genResponse(req.language, resMessage.general.success, 'Login success', { user, accessToken: token })
     } else {
       logger.info('User not found');
@@ -206,7 +206,7 @@ export const login = async (req, res) => {
         delete user.countLoginFailed;
         delete user.timeToUnlock;
         const authen = await authenMongoose.addAuthentication(req, authenData);
-        res.cookie('accessToken', authen.token, { maxAge: config.timeout, httpOnly: true });
+        //res.cookie('accessToken', authen.token, { maxAge: config.timeout, httpOnly: true });
         return genResponse(req.language, resMessage.general.success, 'Login success', { user, accessToken: authen.token })
       } else {
         logger.info('User not found');
@@ -229,10 +229,8 @@ export const logout = async (req) => {
       const result = await authenMongoose.getAuthentication(req, accessToken);
       if (result !== null) {
         await authenMongoose.removeAuthentication(req, result.userId._id);
-        return genResponse(req.language, resMessage.general.success, 'Logout success')
-      } else {
-        return genResponse(req.language, resMessage.general.success, 'Logout success')
       }
+      return genResponse(req.language, resMessage.general.success, 'Logout success')
     }
   } catch (err) {
     logger.error('service logout Unhandled Exception: ' + err);

@@ -21,11 +21,11 @@ describe('Routing /users', () => {
             done();
           }
         });
-    });
+    }).timeout(10000);
 
     it('get user id', (done) => {
       request.get('/api/users/' + data.user._id)
-        .set('dc-access-token', data.accessToken)
+        .set('x-access-token', data.accessToken)
         .set('dc-user-id', data.user._id)
         .end((err, res) => {
           if (err) done(err);
@@ -34,7 +34,7 @@ describe('Routing /users', () => {
             done();
           }
         });
-    });
+    }).timeout(10000);
 
     it('get users', (done) => {
       request.get('/api/users')
@@ -47,7 +47,7 @@ describe('Routing /users', () => {
             done();
           }
         });
-    });
+    }).timeout(10000);
 
     it('add user duplicate', (done) => {
       request.post('/api/users')
@@ -70,7 +70,7 @@ describe('Routing /users', () => {
             done();
           }
         });
-    });
+    }).timeout(10000);
 
     it('add user', (done) => {
       request.post('/api/users')
@@ -94,7 +94,7 @@ describe('Routing /users', () => {
             done();
           }
         });
-    });
+    }).timeout(10000);
 
     it('update user', (done) => {
       request.put('/api/users/' + user._id)
@@ -117,7 +117,7 @@ describe('Routing /users', () => {
             done();
           }
         });
-    });
+    }).timeout(10000);
 
     it('remove user', (done) => {
       request.del('/api/users/' + user._id)
@@ -131,7 +131,7 @@ describe('Routing /users', () => {
             done();
           }
         });
-    });
+    }).timeout(10000);
 
     it('logout', (done) => {
       request.get('/api/auth/logout')
@@ -144,7 +144,7 @@ describe('Routing /users', () => {
             done();
           }
         });
-    });
+    }).timeout(10000);
 
     it('get user invalid', (done) => {
       request.get('/api/users/' + data.user._id)
@@ -156,6 +156,6 @@ describe('Routing /users', () => {
             done();
           }
         });
-    });
+    }).timeout(10000);
   });
 });
