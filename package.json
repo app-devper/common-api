@@ -6,7 +6,7 @@
   "scripts": {
     "start": "babel-node ./app/server.js",
     "dev": "nodemon ./app/server.js --exec babel-node",
-    "test": "mocha test/*.spec.js --timeout 10000 --recursive --watch --require babel-core/register ",
+    "test": "mocha test/*.spec.js --timeout 10000 --recursive --require babel-core/register --exit",
     "lint": "eslint ./app",
     "lint-test": "eslint ./test",
     "fix": "eslint ./app --fix",
