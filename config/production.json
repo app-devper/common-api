@@ -5,7 +5,8 @@
     "connectTimeoutMS": 30000,
     "reconnectTries": 1000000,
     "useNewUrlParser": true,
-    "useCreateIndex": true
+    "useCreateIndex": true,
+    "useFindAndModify": false
   },
   "app": {
     "name": "Common",
