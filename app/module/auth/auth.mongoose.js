@@ -1,5 +1,5 @@
 import AuthenticationSchema from './auth.schema'
-import logger from '../../log/logger'
+import logger from '../../logger/logger'
 
 export const addAuthentication = (req, data) => {
   logger.info('mongoose addAuthentication');

@@ -1,6 +1,6 @@
-import logger from '../../log/logger'
-import { genResponse, isBlank } from '../../utils/utils'
-import * as usersMongoose from './users.mongoose'
+import logger from '../../logger/logger'
+import { genResponse, isBlank } from '../../util/utils'
+import * as usersMongoose from './user.mongoose'
 import { resMessage } from '../../common/message.properties'
 import { ACTIVE } from '../../common/user.status';
 import { USER } from '../../common/user.role';
@@ -29,8 +29,7 @@ export const addUser = async (req) => {
       }
     }
   } catch (err) {
-    logger.error('error: ' + err.name);
-    logger.error('service addUser Unhandled Exception: ' + err);
+    logger.error('service addUser Exception: ' + err);
     return genResponse(req.language, resMessage.general.error, err.message)
   }
 };
@@ -57,7 +56,7 @@ export const registerUser = async (req) => {
       }
     }
   } catch (err) {
-    logger.error('service registerUser Unhandled Exception: ' + err);
+    logger.error('service registerUser Exception: ' + err);
     return genResponse(req.language, resMessage.general.error, err.message)
   }
 };
@@ -70,8 +69,7 @@ export const updateUser = async (req) => {
     const result = await usersMongoose.updateUser(req, req.params.userId, reqBody);
     return genResponse(req.language, resMessage.general.success, 'Update user success', result)
   } catch (err) {
-    logger.error('error: ' + err.name);
-    logger.error('service updateUser Unhandled Exception: ' + err);
+    logger.error('service updateUser Exception: ' + err);
     return genResponse(req.language, resMessage.general.error, err.message)
   }
 };
@@ -86,7 +84,7 @@ export const removeUser = async (req) => {
       return genResponse(req.language, resMessage.general.dataNotFound, 'User not found')
     }
   } catch (err) {
-    logger.error('service removeUser Unhandled Exception: ' + err);
+    logger.error('service removeUser Exception: ' + err);
     return genResponse(req.language, resMessage.general.error, err.message)
   }
 };
@@ -96,7 +94,7 @@ export const getUser = async (req) => {
     const result = await usersMongoose.getUser(req);
     return genResponse(req.language, resMessage.general.success, 'Get user success', result)
   } catch (err) {
-    logger.error('service getUser Unhandled Exception: ' + err);
+    logger.error('service getUser Exception: ' + err);
     return genResponse(req.language, resMessage.general.error, err.message)
   }
 };
@@ -111,7 +109,7 @@ export const getUserById = async (req) => {
       return genResponse(req.language, resMessage.general.dataNotFound, 'User not found')
     }
   } catch (err) {
-    logger.error('service getUserById Unhandled Exception: ' + err);
+    logger.error('service getUserById Exception: ' + err);
     return genResponse(req.language, resMessage.general.error, err.message)
   }
 };

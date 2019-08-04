@@ -1,7 +1,7 @@
 // main response
 
-export class MainResponse {
-  constructor (_resCode, _resMessage, _devMessage, _data, _status) {
+export class Response {
+  constructor (_resCode, _resMessage, _devMessage, _status, _data) {
     this.resCode = _resCode;
     this.resMessage = _resMessage;
     this.devMessage = _devMessage;

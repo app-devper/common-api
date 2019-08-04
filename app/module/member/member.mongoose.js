@@ -1,4 +1,4 @@
-import logger from '../../log/logger' // Load logger
+import logger from '../../logger/logger' // Load logger
 import MemberSchema from './member.schema'
 
 export const addMember = (member) => {

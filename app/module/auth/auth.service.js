@@ -1,27 +1,32 @@
 // authentication service
 import jwt from 'jsonwebtoken';
 import config from 'config'
-import logger from '../../log/logger' // Load logger
+import logger from '../../logger/logger' // Load logger
 import * as authenMongoose from './auth.mongoose'
-import * as usersMongoose from '../users/users.mongoose'
+import * as usersMongoose from '../user/user.mongoose'
 import { resMessage } from '../../common/message.properties'
 import { header } from '../../common/constants'
 import { ACTIVE } from '../../common/user.status'
 import { ADMIN } from '../../common/user.role';
-import { genResponse, genToken, isBlank } from '../../utils/utils';
+import { genResponse, genToken, isBlank } from '../../util/utils';
 
 export const authenticate = async (req, username, password) => {
-  const user = await usersMongoose.getUserByUsername(req, username);
-  if (user) {
-    if (user.status !== ACTIVE || user.role !== ADMIN) {
-      logger.info('Unauthorized');
-      return genResponse(req.language, resMessage.authentication.unAuthorized, 'Unauthorized')
+  try {
+    const user = await usersMongoose.getUserByUsername(req, username);
+    if (user) {
+      if (user.status !== ACTIVE || user.role !== ADMIN) {
+        logger.info('Unauthorized');
+        return genResponse(req.language, resMessage.authentication.unAuthorized, 'Unauthorized')
+      }
+      req.user = user;
+      return await validateUser(req, user, password)
+    } else {
+      logger.info('User not found');
+      return genResponse(req.language, resMessage.authentication.incorrectUserPass, 'User not found')
     }
-    req.user = user;
-    return validateUser(req, user, password)
-  } else {
-    logger.info('User not found');
-    return genResponse(req.language, resMessage.authentication.incorrectUserPass, 'User not found')
+  } catch (err) {
+    logger.error('service authenticate Exception: ' + err);
+    return genResponse(req.language, resMessage.general.error, err.message)
   }
 };
 
@@ -80,11 +85,11 @@ export const validateUser = async (req, user, password) => {
 };
 
 export const checkToken = async (req) => {
-  const accessToken = req.headers[header.token] || req.cookies.accessToken;
   try {
+    const accessToken = req.headers[header.token] || req.cookies.accessToken;
     if (isBlank(accessToken)) {
-      logger.info('Access token invalid');
-      return genResponse(req.language, resMessage.general.invalidData, 'Access token invalid')
+      logger.info('Missing Authorization Header');
+      return genResponse(req.language, resMessage.general.missingAuthorization, 'Missing Authorization Header')
     } else {
       const result = await authenMongoose.getAuthentication(req, accessToken.toLowerCase());
       if (result !== null && result.userId !== null) {
@@ -109,65 +114,75 @@ export const checkToken = async (req) => {
       }
     }
   } catch (err) {
-    logger.error('service checkToken Unhandled Exception: ', err);
+    logger.error('service checkToken Exception: ' + err);
     return genResponse(req.language, resMessage.general.error, err.message)
   }
 };
 
-export const checkJwt = (req) => {
-  let token = req.headers.authorization;
-  logger.info('token: ' + token);
-  if (token.startsWith('Bearer ')) {
-    // Remove Bearer from string
-    token = token.slice(7, token.length);
-  }
-  if (token) {
-    jwt.verify(token, config.secret, (err, decoded) => {
-      if (err) {
-        return genResponse(req.language, resMessage.authentication.tokenInvalid, 'Token is invalid')
-      } else {
+export const checkJwt = async (req) => {
+  try {
+    let token = req.headers.authorization;
+    logger.info('token: ' + token);
+    if (token.startsWith('Bearer ')) {
+      // Remove Bearer from string
+      token = token.slice(7, token.length);
+    }
+    if (token) {
+      try {
+        const decoded = await jwt.verify(token, config.secret);
         logger.info('Decoded: ' + JSON.stringify(decoded));
         req.user = decoded;
-        return null
+        return null;
+      } catch (err) {
+        logger.error('service checkJwt verify Exception: ' + err);
+        return genResponse(req.language, resMessage.authentication.tokenInvalid, err.message)
       }
-    });
-  } else {
-    return genResponse(req.language, resMessage.general.invalidData, 'Missing Authorization Header');
-  }
-};
-
-export const loginJwt = async (req, res) => {
-  const rcvBody = req.body;
-  if (isBlank(rcvBody.username) || isBlank(rcvBody.pwd) || isBlank(rcvBody.channel)) {
-    logger.info('Invalid login data');
-    return genResponse(req.language, resMessage.general.invalidData, 'Invalid login data')
-  } else {
-    const user = await usersMongoose.getUserByUsername(req, rcvBody.username);
-    if (user) {
-      if (user.status !== ACTIVE) {
-        logger.info('Unauthorized');
-        return genResponse(req.language, resMessage.authentication.unAuthorized, 'Unauthorized')
-      }
-      const result = await validateUser(req, user, rcvBody.pwd);
-      if (result) {
-        return result
-      }
-      delete user.password;
-      delete user.countLoginFailed;
-      delete user.timeToUnlock;
-      const token = jwt.sign(user, config.secret);
-      //res.cookie('accessToken', token, { maxAge: config.timeout, httpOnly: true });
-      return genResponse(req.language, resMessage.general.success, 'Login success', { user, accessToken: token })
     } else {
-      logger.info('User not found');
-      return genResponse(req.language, resMessage.authentication.incorrectUserPass, 'User not found')
+      return genResponse(req.language, resMessage.general.missingAuthorization, 'Missing Authorization Header');
     }
+  } catch (err) {
+    logger.error('service checkJwt Exception: ' + err);
+    return genResponse(req.language, resMessage.general.error, err.message)
   }
 };
 
-export const login = async (req, res) => {
-  const rcvBody = req.body;
+export const loginJwt = async (req) => {
   try {
+    const rcvBody = req.body;
+    if (isBlank(rcvBody.username) || isBlank(rcvBody.pwd) || isBlank(rcvBody.channel)) {
+      logger.info('Invalid login data');
+      return genResponse(req.language, resMessage.general.invalidData, 'Invalid login data')
+    } else {
+      const user = await usersMongoose.getUserByUsername(req, rcvBody.username);
+      if (user) {
+        if (user.status !== ACTIVE) {
+          logger.info('Unauthorized');
+          return genResponse(req.language, resMessage.authentication.unAuthorized, 'Unauthorized')
+        }
+        const result = await validateUser(req, user, rcvBody.pwd);
+        if (result) {
+          return result
+        }
+        delete user.password;
+        delete user.countLoginFailed;
+        delete user.timeToUnlock;
+        const token = jwt.sign(user, config.secret);
+        // res.cookie('accessToken', token, { maxAge: config.timeout, httpOnly: true });
+        return genResponse(req.language, resMessage.general.success, 'Login success', { user, accessToken: token })
+      } else {
+        logger.info('User not found');
+        return genResponse(req.language, resMessage.authentication.incorrectUserPass, 'User not found')
+      }
+    }
+  } catch (err) {
+    logger.error('service login Exception: ' + err);
+    return genResponse(req.language, resMessage.general.error, err.message)
+  }
+};
+
+export const login = async (req) => {
+  try {
+    const rcvBody = req.body;
     logger.info('body.username ==> ' + rcvBody.username);
     logger.info('body.channel ==> ' + rcvBody.channel);
 
@@ -206,7 +221,7 @@ export const login = async (req, res) => {
         delete user.countLoginFailed;
         delete user.timeToUnlock;
         const authen = await authenMongoose.addAuthentication(req, authenData);
-        //res.cookie('accessToken', authen.token, { maxAge: config.timeout, httpOnly: true });
+        // res.cookie('accessToken', authen.token, { maxAge: config.timeout, httpOnly: true });
         return genResponse(req.language, resMessage.general.success, 'Login success', { user, accessToken: authen.token })
       } else {
         logger.info('User not found');
@@ -214,15 +229,15 @@ export const login = async (req, res) => {
       }
     }
   } catch (err) {
-    logger.error('service login Unhandled Exception: ' + err);
+    logger.error('service login Exception: ' + err);
     return genResponse(req.language, resMessage.general.error, err.message)
   }
 };
 
 // logout
 export const logout = async (req) => {
-  const accessToken = req.headers[header.token] || req.cookies.accessToken;
   try {
+    const accessToken = req.headers[header.token] || req.headers.authorization || req.cookies.accessToken;
     if (isBlank(accessToken)) {
       return genResponse(req.language, resMessage.general.invalidData, 'invalidData')
     } else {
@@ -233,7 +248,7 @@ export const logout = async (req) => {
       return genResponse(req.language, resMessage.general.success, 'Logout success')
     }
   } catch (err) {
-    logger.error('service logout Unhandled Exception: ' + err);
+    logger.error('service logout Exception: ' + err);
     return genResponse(req.language, resMessage.general.error, err.message)
   }
 };

@@ -1,5 +1,5 @@
-import logger from '../../log/logger' // Load logger
-import UsersSchema from './users.schema'
+import logger from '../../logger/logger' // Load logger
+import UsersSchema from './user.schema'
 
 export const addUser = (req, user) => {
   logger.info('mongoose addUser');
@@ -45,7 +45,6 @@ export const updateLoginStatus = (req, param) => {
 };
 
 export const getUserByUsername = (req, username) => {
-  logger.info('username : ' + username);
   logger.info('mongoose getUserByUsername');
   return UsersSchema.findOne({ username: username.toLowerCase() }).lean()
 };

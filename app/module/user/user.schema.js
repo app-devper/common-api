@@ -6,7 +6,7 @@ import mongoose, { Schema } from 'mongoose'
 /**
  * User Schema
  */
-const UsersSchema = new Schema({
+const UserSchema = new Schema({
   username: {
     type: String, index: true, unique: true, lowercase: true, trim: true, required: true
   },
@@ -35,4 +35,4 @@ const UsersSchema = new Schema({
 }, { collection: 'users', versionKey: false });
 
 // Build the users Model:
-export default mongoose.model('users', UsersSchema)
+export default mongoose.model('users', UserSchema)

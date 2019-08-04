@@ -25,7 +25,6 @@ describe('#User Service', () => {
   it('get user id', (done) => {
     request.get('/api/users/' + data.user._id)
       .set('x-access-token', data.accessToken)
-      .set('dc-user-id', data.user._id)
       .end((err, res) => {
         if (err) done(err);
         else {
@@ -38,7 +37,6 @@ describe('#User Service', () => {
   it('get users', (done) => {
     request.get('/api/users')
       .set('x-access-token', data.accessToken)
-      .set('dc-user-id', data.user._id)
       .end((err, res) => {
         if (err) done(err);
         else {
@@ -51,7 +49,6 @@ describe('#User Service', () => {
   it('add user duplicate', (done) => {
     request.post('/api/users')
       .set('x-access-token', data.accessToken)
-      .set('dc-user-id', data.user._id)
       .send({
         firstName: data.user.firstName,
         lastName: data.user.lastName,
@@ -74,7 +71,6 @@ describe('#User Service', () => {
   it('add user', (done) => {
     request.post('/api/users')
       .set('x-access-token', data.accessToken)
-      .set('dc-user-id', data.user._id)
       .send({
         firstName: data.user.firstName,
         lastName: data.user.lastName,
@@ -98,7 +94,6 @@ describe('#User Service', () => {
   it('update user', (done) => {
     request.put('/api/users/' + user._id)
       .set('x-access-token', data.accessToken)
-      .set('dc-user-id', data.user._id)
       .send({
         firstName: data.user.firstName,
         lastName: data.user.lastName,
@@ -121,7 +116,6 @@ describe('#User Service', () => {
   it('remove user', (done) => {
     request.del('/api/users/' + user._id)
       .set('x-access-token', data.accessToken)
-      .set('dc-user-id', data.user._id)
       .end((err, res) => {
         if (err) done(err);
         else {
@@ -135,7 +129,6 @@ describe('#User Service', () => {
   it('logout', (done) => {
     request.get('/api/auth/logout')
       .set('x-access-token', data.accessToken)
-      .set('dc-user-id', data.user._id)
       .end((err, res) => {
         if (err) done(err);
         else {

@@ -1,9 +1,9 @@
-import logger from '../../log/logger'
+import logger from '../../logger/logger'
 import { resMessage } from '../../common/message.properties'
-import * as usersMongoose from '../users/users.mongoose';
-import { genResponse } from '../../utils/utils';
+import * as usersMongoose from '../user/user.mongoose';
+import { genResponse } from '../../util/utils';
 
-export const unlockUser = async (req, callback) => {
+export const unlockUser = async (req) => {
   try {
     const user = await usersMongoose.getUserByUsername(req, req.params.username);
     if (user) {
@@ -13,13 +13,13 @@ export const unlockUser = async (req, callback) => {
         timeToUnlock: new Date()
       };
       await usersMongoose.updateLoginStatus(req, reqParam);
-      callback(genResponse(req.language, resMessage.general.success, 'Unlock user success'))
+      return genResponse(req.language, resMessage.general.success, 'Unlock user success')
     } else {
       logger.info('User not found');
-      callback(genResponse(req.language, resMessage.general.dataNotFound, 'User not found'))
+      return genResponse(req.language, resMessage.general.dataNotFound, 'User not found')
     }
   } catch (err) {
-    logger.error('service unlockUser Unhandled Exception: ' + err);
-    callback(genResponse(req.language, resMessage.general.error, err.message))
+    logger.error('service unlockUser Exception: ' + err);
+    return genResponse(req.language, resMessage.general.error, err.message)
   }
 };

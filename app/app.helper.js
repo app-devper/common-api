@@ -1,8 +1,8 @@
-import { LogModel } from '../../log/log.model';
-import loggerInfo from '../../log/logger-info';
-import { resMessage } from '../../common/message.properties';
-import * as service from '../auth/auth.service';
-import { genResponse } from '../../utils/utils';
+import { LogModel } from './logger/log.model';
+import loggerInfo from './logger/logger-info';
+import { resMessage } from './common/message.properties';
+import * as service from './module/auth/auth.service';
+import { genResponse } from './util/utils';
 
 export const handlerRequest = async (req, res, next) => {
   if (req.bypass) {
@@ -44,19 +44,12 @@ export const basicAuth = async (req, res, next) => {
       return next();
     }
   } else {
-    return res.status(401).json({ message: 'Missing Authorization Header' });
+    const result = genResponse(req.language, resMessage.general.missingAuthorization, 'Missing Authorization');
+    return sendResponse(req, res, result)
   }
 };
 
 export const sendResponse = (req, res, result) => {
-  const logModel = new LogModel();
-  logModel.setResponse(req, result);
-  loggerInfo.info(logModel.getInfoLog());
-  res.status(result.status).send(result)
-};
-
-export const sendErrorResponse = (req, res, err) => {
-  const result = genResponse(req.language, resMessage.general.error, err.message);
   const logModel = new LogModel();
   logModel.setResponse(req, result);
   loggerInfo.info(logModel.getInfoLog());

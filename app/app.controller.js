@@ -1,12 +1,12 @@
 import mongoose from 'mongoose' // Load mongoose
-import logger from '../../log/logger' // Load logger
-import loggerAccess from '../../log/logger-access'
-import { LogModel } from '../../log/log.model'
-import { resMessage } from '../../common/message.properties'
-import { header } from '../../common/constants'
-import { bypass } from '../../common/authorization'
-import { sendResponse } from './api.helper';
-import { genResponse } from '../../utils/utils';
+import logger from './logger/logger' // Load logger
+import loggerAccess from './logger/logger-access'
+import { LogModel } from './logger/log.model'
+import { resMessage } from './common/message.properties'
+import { header } from './common/constants'
+import { bypass } from './common/authorization'
+import { sendResponse } from './app.helper';
+import { genResponse } from './util/utils';
 
 export const apiHandler = (req, res, next) => {
   const logModel = new LogModel();

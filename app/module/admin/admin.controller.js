@@ -1,14 +1,8 @@
 import * as service from './admin.service'
-import logger from '../../log/logger' // Load logger
-import { sendErrorResponse, sendResponse } from '../api/api.helper';
+import { sendResponse } from '../../app.helper';
 
 export const unlockUser = (req, res) => {
-  try {
-    service.unlockUser(req, (response) => {
-      sendResponse(req, res, response)
-    })
-  } catch (err) {
-    logger.error('addUser Unhandled Exception: ' + err);
-    sendErrorResponse(req, res, err)
-  }
+  service.unlockUser(req).then(response => {
+    sendResponse(req, res, response)
+  })
 };

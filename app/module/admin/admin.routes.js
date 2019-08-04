@@ -1,8 +1,8 @@
 import express from 'express'
-import logger from '../../log/logger'
-import { basicAuth } from '../api/api.helper';
+import logger from '../../logger/logger'
+import { basicAuth } from '../../app.helper';
 import { unlockUser } from './admin.controller';
-import { methodNotAllowed } from '../api/api.controller';
+import { methodNotAllowed } from '../../app.controller';
 
 const adminRouter = express.Router();
 

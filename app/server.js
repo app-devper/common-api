@@ -2,11 +2,11 @@ import express from 'express' // Load express
 import mongoose from 'mongoose' // Load mongoose
 import bodyParser from 'body-parser' // Load bodyParser
 import cors from 'cors' // Load cors
-import logger from './log/logger' // Load logger
 import config from 'config' // Load config (environment)
-import router from './routes/web.router' // Load root router
-import apiRouter from './routes/api.router' // Load api router
 import cookieParser from 'cookie-parser';
+
+import logger from './logger/logger' // Load logger
+import router from './app.router' // Load app router
 
 logger.info('Starting: ' + config.app.name + '....');
 logger.info('Connecting to MongoDB Instance: ' + config.db);
@@ -16,29 +16,29 @@ const port = process.env.PORT || config.app.port;
 
 mongoose.connect(config.db, config.options);
 
-db.on('connecting', function () {
+db.on('connecting', () => {
   logger.info('connecting to MongoDB...')
 });
 
-db.on('error', function (error) {
+db.on('error', (error) => {
   logger.error('Could not connect to MongoDB!');
   logger.error(error.message);
   mongoose.disconnect()
 });
 
-db.on('connected', function () {
+db.on('connected', () => {
   logger.info('MongoDB connected!')
 });
 
-db.once('open', function () {
+db.once('open', () => {
   logger.info('MongoDB connection opened!')
 });
 
-db.on('reconnected', function () {
+db.on('reconnected', () => {
   logger.info('MongoDB reconnected!')
 });
 
-db.on('disconnected', function () {
+db.on('disconnected', () => {
   logger.info('MongoDB disconnected!')
 });
 
@@ -57,8 +57,7 @@ app.use(cookieParser());
 app.use(cors());
 
 // Configure app routes
-app.use('/api', apiRouter);
-app.use('/', router);
+app.use('/api', router);
 
 // Start the app by listening on <port>
 // ===========================================================================================

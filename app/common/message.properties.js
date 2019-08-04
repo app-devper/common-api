@@ -6,7 +6,7 @@ export const resMessage = {
       httpCode: 200
     },
     error: {
-      en: 'Transaction fail.',
+      en: 'Internal Server Error.',
       th: 'ขออภัย ระบบไม่สามารถให้บริการได้ในขณะนี้',
       httpCode: 500
     },
@@ -14,6 +14,11 @@ export const resMessage = {
       en: 'Invalid data.',
       th: 'ข้อมูลไม่ถูกต้อง',
       httpCode: 409
+    },
+    missingAuthorization: {
+      en: 'Missing Authorization Header',
+      th: 'การอนุมัติที่ส่วนหัวขาดหายไป',
+      httpCode: 401
     },
     serviceNotFound: {
       en: 'Service Missing / Not found. Please contact admin.',

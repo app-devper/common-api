@@ -1,6 +1,6 @@
 import express from 'express'
-import { handlerRequest } from '../api/api.helper';
-import { methodNotAllowed } from '../api/api.controller';
+import { handlerRequest } from '../../app.helper';
+import { methodNotAllowed } from '../../app.controller';
 import { login, logout } from './auth.controller';
 
 const authenRouter = express.Router();

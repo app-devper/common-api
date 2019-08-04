@@ -1,25 +1,14 @@
 import * as service from './member.service'
-import logger from '../../log/logger' // Load logger
-import { sendErrorResponse, sendResponse } from '../api/api.helper';
+import { sendResponse } from '../../app.helper';
 
 export const getMember = (req, res) => {
-  try {
-    service.getMember(req).then((response) => {
-      sendResponse(req, res, response)
-    })
-  } catch (err) {
-    logger.error('getMember Unhandled Exception: ' + err.message);
-    sendErrorResponse(req, res, err)
-  }
+  service.getMember(req).then((response) => {
+    sendResponse(req, res, response)
+  })
 };
 
 export const getMemberById = (req, res) => {
-  try {
-    service.getMemberById(req).then((response) => {
-      sendResponse(req, res, response)
-    })
-  } catch (err) {
-    logger.error('getMemberById Unhandled Exception: ' + err.message);
-    sendErrorResponse(req, res, err)
-  }
+  service.getMemberById(req).then((response) => {
+    sendResponse(req, res, response)
+  })
 };

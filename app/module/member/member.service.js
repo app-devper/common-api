@@ -1,5 +1,5 @@
-import logger from '../../log/logger'
-import { genResponse, pagination } from '../../utils/utils'
+import logger from '../../logger/logger'
+import { genResponse, pagination } from '../../util/utils'
 import * as memberMongoose from './member.mongoose'
 import mongoose from 'mongoose';
 import { resMessage } from '../../common/message.properties';
@@ -16,7 +16,7 @@ export const getMember = async (req) => {
     return genResponse(req.language, resMessage.general.success, 'Get Member success',
       { count, next: nextUrl, previous: previousUrl, results: result })
   } catch (err) {
-    logger.error('service getMember Unhandled Exception: ' + err);
+    logger.error('service getMember Exception: ' + err);
     return genResponse(req.language, resMessage.general.error, err.message)
   }
 };
@@ -35,7 +35,7 @@ export const getMemberById = async (req) => {
       }
     }
   } catch (err) {
-    logger.error('service getMemberById Unhandled Exception: ' + err);
+    logger.error('service getMemberById Exception: ' + err);
     return genResponse(req.language, resMessage.general.error, err.message)
   }
 };

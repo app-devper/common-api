@@ -1,6 +1,6 @@
 import express from 'express'
-import * as controller from '../member/member.controller' // Load controller
-import logger from '../../log/logger' // Load logger
+import * as controller from './member.controller' // Load controller
+import logger from '../../logger/logger' // Load logger
 
 const router = express.Router();
 
