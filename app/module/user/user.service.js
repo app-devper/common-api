@@ -22,41 +22,16 @@ export const addUser = async (req) => {
         reqBody.username = reqBody.username.toLowerCase();
         reqBody.updatedDate = new Date();
         reqBody.createdDate = new Date();
-        reqBody.createdBy = req.user._id;
-        reqBody.updatedBy = req.user._id;
+        if (req.user) {
+          reqBody.createdBy = req.user._id;
+          reqBody.updatedBy = req.user._id;
+        }
         const result = await usersMongoose.addUser(req, reqBody);
         return genResponse(req.language, resMessage.general.success, 'Add user success', result)
       }
     }
   } catch (err) {
     logger.error('service addUser Exception: ' + err);
-    return genResponse(req.language, resMessage.general.error, err.message)
-  }
-};
-
-export const registerUser = async (req) => {
-  try {
-    const reqBody = req.body;
-    if (!reqBody || isBlank(reqBody.username) || isBlank(reqBody.password)) {
-      logger.info('Invalid data');
-      return genResponse(req.language, resMessage.general.invalidData, 'Invalid data')
-    } else {
-      const user = await usersMongoose.getUserByUsername(req, reqBody.username);
-      if (user) {
-        logger.info('User duplicate');
-        return genResponse(req.language, resMessage.user.duplicate, 'User duplicate')
-      } else {
-        reqBody.status = ACTIVE;
-        reqBody.role = USER;
-        reqBody.username = reqBody.username.toLowerCase();
-        reqBody.updatedDate = new Date();
-        reqBody.createdDate = new Date();
-        const result = await usersMongoose.registerUser(req, reqBody);
-        return genResponse(req.language, resMessage.general.success, 'Add user success', result)
-      }
-    }
-  } catch (err) {
-    logger.error('service registerUser Exception: ' + err);
     return genResponse(req.language, resMessage.general.error, err.message)
   }
 };

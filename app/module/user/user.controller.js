@@ -8,7 +8,7 @@ export const addUser = (req, res) => {
 };
 
 export const registerUser = (req, res) => {
-  service.registerUser(req).then((response) => {
+  service.addUser(req).then((response) => {
     sendResponse(req, res, response)
   })
 };
