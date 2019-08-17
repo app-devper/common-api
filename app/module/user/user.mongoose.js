@@ -4,6 +4,9 @@ import UsersSchema from './user.schema'
 export const addUser = (req, user) => {
   logger.info('mongoose addUser');
   const usersData = new UsersSchema(user);
+  if (!user.createdBy) {
+    usersData.createdBy = usersData._id
+  }
   return usersData.save()
 };
 
