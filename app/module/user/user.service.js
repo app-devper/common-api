@@ -20,11 +20,9 @@ export const addUser = async (req) => {
         reqBody.status = ACTIVE;
         reqBody.role = USER;
         reqBody.username = reqBody.username.toLowerCase();
-        reqBody.updatedDate = new Date();
         reqBody.createdDate = new Date();
         if (req.user) {
           reqBody.createdBy = req.user._id;
-          reqBody.updatedBy = req.user._id;
         }
         const result = await usersMongoose.addUser(req, reqBody);
         return genResponse(req.language, resMessage.general.success, 'Add user success', result)
