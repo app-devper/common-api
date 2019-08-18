@@ -7,7 +7,7 @@ import config from 'config';
 
 import logger from '../../../logger/logger' // Load logger
 
-const PAGE_ACCESS_TOKEN = (process.env.PAGE_ACCESS_TOKEN) ? (process.env.PAGE_ACCESS_TOKEN) : config.get('pageAccessToken');
+const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN || config.get('pageAccessToken');
 
 const callAPI = (endPoint, messageDataArray, queryParams = {}, retries = 5) => {
   // Error if developer forgot to specify an endpoint to send our request to

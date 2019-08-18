@@ -14,5 +14,6 @@
   "userLoginAttempt": 3,
   "secret": "qwertyuiopasdfghjklzxcvbnm123456",
   "pageAccessToken": "EAAEEUQL7xWMBAKo3KSOvwrsoMQwJH22JnSUpmYn4vP295S6kUYe2Jj9T4couasMLDOhZAJ9PXyKhPKxrjZBEspvZCHlaYjXaZCVEM6Hcs3NMqd3RLwMZCxi2QY4NP2xGOH2s00x6xmJWWSMbeSQTwQlSY0tzV4b4lHZArH0nhTdATA5YQ2zQYu",
-  "validationToken": "verify_token"
+  "validationToken": "verify_token",
+  "fcmServerKey": "AAAAuGagTXQ:APA91bFCDNcur9sIzIEIRhTbiZTvNRp-WK8oc2fK_0br4y-gHk9QTSvAAn4yYKtNGxY-s8XuTD7iQN-eSXw68fTAzXqfedLrSiMnNdtDnyLBB8masWtMuN-b4-8O8cmcgilt9Tqo8YEBaFWaS1rcZewPHr6yIGO4lw"
 }
