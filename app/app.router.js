@@ -9,6 +9,7 @@ import auth from './module/auth/auth.routes'
 import admin from './module/admin/admin.routes';
 import member from './module/member/member.routes';
 import webhook from './module/webhook/webhook.routes';
+import movie from './module/movie/movie.routes';
 import notification from './module/notification/notification.routes';
 import { apiHandler, authorize } from './app.controller';
 import { genRequestId } from './util/utils';
@@ -30,7 +31,7 @@ router.use('/users', user);
 router.use('/members', member);
 router.use('/notifications', notification);
 router.use('/webhook', webhook);
-
+router.use('/moviedb', movie);
 
 router.use('/logs', serveIndex(config.logPathConfig.appLog, { icons: true }));
 router.use('/logs', express.static(config.logPathConfig.appLog));
