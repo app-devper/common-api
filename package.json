@@ -4,8 +4,8 @@
   "description": "Server side API source code",
   "main": "./index.js",
   "scripts": {
-    "start": "babel-node ./index.js --require babel-polyfill",
-    "dev": "nodemon ./index.js --exec babel-node --require babel-polyfill",
+    "start": "babel-node ./index.js",
+    "dev": "nodemon ./index.js --exec babel-node",
     "test": "mocha test/*.spec.js --timeout 10000 --recursive --require babel-core/register --exit",
     "lint": "eslint ./app",
     "lint-test": "eslint ./test",
