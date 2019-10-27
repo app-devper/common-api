@@ -1,0 +1,144 @@
+{
+  "info": {
+    "title": "Node API boilerplate",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/user": {
+      "get": {
+        "operationId": "listUsers",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of all users"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createUser",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "201": {
+            "description": "User created successfully"
+          },
+          "400": {
+            "description": "User not created because of validation error"
+          }
+        }
+      }
+    },
+    "/api/user/{id}": {
+      "get": {
+        "operationId": "showUser",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of user to show",
+            "required": true,
+            "type": "string",
+            "format": "objectId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return user with given id"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateUser",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of user to update",
+            "required": true,
+            "type": "string",
+            "format": "objectId"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "User updated successfully"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteUser",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of user to delete",
+            "required": true,
+            "type": "string",
+            "format": "objectId"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "User deleted successfully"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/api/auth": {
+      "post": {
+        "operationId": "login",
+        "tags": [
+          "Authentication"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "body for login",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string"
+                },
+                "pwd": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login successfully"
+          },
+          "400": {
+            "description": "Login error"
+          }
+        }
+      }
+    }
+  },
+  "swagger": "2.0"
+}

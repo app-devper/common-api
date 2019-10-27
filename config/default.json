@@ -5,7 +5,8 @@
     "reconnectTries": 1000000,
     "useNewUrlParser": true,
     "useCreateIndex": true,
-    "useFindAndModify": false
+    "useFindAndModify": false,
+    "useUnifiedTopology": true
   },
   "activateTime": 12,
   "email": "support@common.com",
