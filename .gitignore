@@ -4,3 +4,4 @@ npm-debug.log
 .idea/
 uploads
 node_modules/*
+config

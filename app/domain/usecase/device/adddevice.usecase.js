@@ -10,7 +10,7 @@ export default class AddDeviceUseCase {
   async execute (param) {
     if (param.deviceId) {
       const device = await this.repository.getDeviceById(param.deviceId);
-      let result = null;
+      let result;
       if (device) {
         result = await this.repository.updateDevice(device._id, param);
       } else {

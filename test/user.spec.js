@@ -1,17 +1,17 @@
 /* global it, describe */
 import supertest from 'supertest'
 import chai from 'chai'
-import server from '../app/server'
-
+import container from '../app/container';
+const server = container.resolve('server');
 const { expect } = chai;
-const request = supertest.agent(server);
+const request = supertest.agent(server.express);
 
 describe('#User Service', () => {
   let data;
   let user;
   it('login', (done) => {
     request.post('/api/auth')
-      .send({ username: 'wowit', pwd: '5f4dcc3b5aa765d61d8327deb882cf99', channel: 'app' })
+      .send({ username: 'wowit', pwd: '5f4dcc3b5aa765d61d8327deb882cf99' })
       .end((err, res) => {
         if (err) done(err);
         else {

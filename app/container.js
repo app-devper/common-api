@@ -14,7 +14,7 @@ import GetUserUseCase from './domain/usecase/user/getuser.usecase';
 import DeviceRepository from './data/repository/device.repository';
 import AddDeviceUseCase from './domain/usecase/device/adddevice.usecase';
 
-const swaggerMiddleware = require('./presentation/swagger/swagger.middleware');
+const swaggerMiddleware = require('./swagger/swagger.middleware');
 
 const container = createContainer();
 

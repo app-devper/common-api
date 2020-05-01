@@ -4,8 +4,7 @@ export default class Server {
   constructor ({ config, database, router, logger }) {
     this.config = config;
     this.logger = logger;
-    const db = database.connect();
-    this.express = express(db);
+    this.express = express(database.connect());
     this.express.disable('x-powered-by');
     this.express.use(router);
   }
