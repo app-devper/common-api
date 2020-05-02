@@ -3,10 +3,11 @@ import ApiError from '../../core/api.error';
 import { authentication, general } from '../../core/message.properties';
 import jwt from 'jsonwebtoken';
 
-export default class LoginUsecase {
-  constructor({ userRepository, logger, config }) {
+export default class VerifyPasswordUsecase {
+  constructor({ userRepository, userRefRepository, logger, config }) {
     this.config = config;
     this.repository = userRepository;
+    this.userRefRepository = userRefRepository;
     this.logger = logger;
   }
 
@@ -31,9 +32,15 @@ export default class LoginUsecase {
     if (isPass) {
       try {
         user = await this.repository.updateUser(user._id, { countLoginFailed: 0 });
-        delete user.password;
-        const accessToken = await jwt.sign({ data: user }, this.config.secret, { expiresIn: this.config.accessTokenTime });
-        return { accessToken }
+        await this.userRefRepository.removeByUserId(user._id);
+        const data = {
+          userId: user._id,
+          active: true,
+          channel: "PASSWORD"
+        }
+        let ref = await this.userRefRepository.addUserRef(data);
+        const actionToken = await jwt.sign({ data: ref._id }, this.config.secret, { expiresIn: this.config.actionTokenTime });
+        return { actionToken }
       } catch (err) {
         this.logger.error(err.message);
         throw new ApiError(err.message, general.error)

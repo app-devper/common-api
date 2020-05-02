@@ -11,21 +11,23 @@ const UserSchema = new Schema({
     type: String, index: true, unique: true, lowercase: true, trim: true, required: true
   },
   password: {
-    type: String, trim: true, required: true
+    type: String, trim: true, required: true, lowercase: true
   },
   firstName: String,
   lastName: String,
   status: {
-    type: String, trim: true, required: true
+    type: String, trim: true, required: true, uppercase: true
   },
   phone: String,
   role: {
-    type: String, trim: true, required: true
+    type: String, trim: true, required: true, uppercase: true
   },
   email: {
     type: String, lowercase: true, trim: true
   },
-  gender: String, // MALE, FEMALE
+  gender: {
+    type: String, uppercase: true, trim: true
+  }, // MALE, FEMALE
   countLoginFailed: { type: Number, default: 0 },
   timeToUnlock: { type: Date, default: Date.now },
   createdBy: { type: Schema.Types.ObjectId, ref: 'users' },

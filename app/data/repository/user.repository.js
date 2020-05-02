@@ -1,49 +1,49 @@
 export default class UserRepository {
-  constructor ({ database }) {
+  constructor({ database }) {
     this.userDao = database.userDao()
   }
 
-  addUser (user) {
+  addUser(user) {
     return this.userDao.addUser(user);
   }
 
-  updateUser (id, user) {
+  updateUser(id, user) {
     return this.userDao.updateUser(id, user)
   }
 
-  getUserById (id) {
+  getUserById(id) {
     return this.userDao.getUserById(id)
   }
 
-  removeUser (id) {
+  removeUser(id) {
     return this.userDao.removeUser()
   }
 
-  getUsers () {
+  getUsers() {
     return this.userDao.getUsers()
   }
 
-  getUserByUsername (username) {
+  getUserByUsername(username) {
     return this.userDao.getUserByUsername(username)
   }
 
-  verifyUser (username, password) {
+  verifyUser(username, password) {
     return this.userDao.verifyUser(username, password)
   }
 
-  getUserByCriteria (criteria) {
+  getUserByCriteria(criteria) {
     return this.userDao.getUserByCriteria(criteria)
   }
 
-  getUserListByCriteria (criteria) {
+  getUserListByCriteria(criteria) {
     return this.userDao.getUserListByCriteria(criteria)
   }
 
-  getUsersByPage (page, limit) {
+  getUsersByPage(page, limit) {
     return this.userDao.getUsersByPage(page, limit)
   }
 
-  countUser () {
+  countUser() {
     return this.userDao.countUser()
   }
 }

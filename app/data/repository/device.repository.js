@@ -1,17 +1,17 @@
 export default class DeviceRepository {
-  constructor ({ database }) {
+  constructor({ database }) {
     this.deviceDao = database.deviceDao()
   }
 
-  addDevice (device) {
+  addDevice(device) {
     return this.deviceDao.addDevice(device);
   }
 
-  updateDevice (id, device) {
+  updateDevice(id, device) {
     return this.deviceDao.updateDevice(id, device);
   }
 
-  getDeviceById (deviceId) {
+  getDeviceById(deviceId) {
     return this.deviceDao.getDeviceById(deviceId);
   }
 }

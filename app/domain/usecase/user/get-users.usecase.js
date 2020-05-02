@@ -1,10 +1,10 @@
-export default class GetUsersUseCase {
-  constructor ({ userRepository, logger }) {
+export default class GetUsersUsecase {
+  constructor({ userRepository, logger }) {
     this.repository = userRepository;
     this.logger = logger;
   }
 
-  async execute (param) {
+  async execute(param) {
     const total = await this.repository.countUser();
     let results = [];
     if (param.page > 0) {

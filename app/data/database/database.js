@@ -1,22 +1,27 @@
 import UserDao from './user/user.dao';
 import DeviceDao from './device/device.dao';
 import mongoose from 'mongoose'
+import UserRefDao from "./ref/user-ref.dao";
 
 export default class Database {
-  constructor ({ config, logger }) {
+  constructor({ config, logger }) {
     this.config = config;
     this.logger = logger;
   }
 
-  userDao () {
+  userDao() {
     return new UserDao(this.logger)
   }
 
-  deviceDao () {
+  deviceDao() {
     return new DeviceDao(this.logger)
   }
 
-  connect () {
+  userRefDao() {
+    return new UserRefDao(this.logger)
+  }
+
+  connect() {
     const db = mongoose.connection;
     mongoose.connect(this.config.db, this.config.options);
     db.on('connecting', () => {

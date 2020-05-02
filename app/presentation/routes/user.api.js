@@ -1,20 +1,37 @@
-import { before, GET, route } from 'awilix-express'
-import { authenticate } from '../core/auth.handler';
+import { before, GET, POST, PUT, route } from 'awilix-express'
+import { authenticate, permission } from '../api.handler';
+import UserMapper from "../mapper/user.mapper";
 
 @route('/user')
 export default class UserApi {
-  constructor ({ getUsersUseCase, getUserUseCase }) {
+  constructor({ getUsersUseCase, getUserUseCase, updateUserUseCase, addUserUseCase }) {
     this.getUsersUseCase = getUsersUseCase;
-    this.getUserUseCase = getUserUseCase
+    this.getUserUseCase = getUserUseCase;
+    this.updateUserUseCase = updateUserUseCase
+    this.addUserUseCase = addUserUseCase
+  }
+
+  @route('/info')
+  @GET()
+  @before([authenticate])
+  async getProfile(req, res, next) {
+    try {
+      const mapper = new UserMapper()
+      const param = mapper.getUserId(req.decoded._id)
+      const result = await this.getUserUseCase.execute(param);
+      res.status(200).send(result)
+    } catch (err) {
+      next(err)
+    }
   }
 
   @GET()
-  @before([authenticate])
-  async getUsers (req, res, next) {
+  @before([authenticate, permission])
+  async getUsers(req, res, next) {
     try {
-      const page = parseInt(req.query['page'], 10) || 1;
-      const limit = parseInt(req.query['limit'], 10) || 10;
-      const result = await this.getUsersUseCase.execute({ page, limit });
+      const mapper = new UserMapper()
+      const param = mapper.getPaging(req.query)
+      const result = await this.getUsersUseCase.execute(param);
       res.status(200).send(result)
     } catch (err) {
       next(err)
@@ -23,10 +40,57 @@ export default class UserApi {
 
   @route('/:id')
   @GET()
-  @before([authenticate])
-  async getUser (req, res, next) {
+  @before([authenticate, permission])
+  async getUser(req, res, next) {
     try {
-      const result = await this.getUserUseCase.execute({ id: req.params.id });
+      const mapper = new UserMapper()
+      const param = mapper.getUserId(req.params.id)
+      const result = await this.getUserUseCase.execute(param);
+      res.status(200).send(result)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  @route('/info')
+  @PUT()
+  @before([authenticate])
+  async updateProfile(req, res, next) {
+    try {
+      const mapper = new UserMapper()
+      const id = mapper.getUserId(req.decoded._id)
+      const body = mapper.getUserBody(req.body, req.decoded._id)
+      const param = { id: id.id, user: body.user }
+      const result = await this.updateUserUseCase.execute(param);
+      res.status(200).send(result)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  @route('/:id')
+  @PUT()
+  @before([authenticate, permission])
+  async updateUser(req, res, next) {
+    try {
+      const mapper = new UserMapper()
+      const id = mapper.getUserId(req.params.id)
+      const body = mapper.getUserBody(req.body, req.decoded._id)
+      const param = { id: id.id, user: body.user }
+      const result = await this.updateUserUseCase.execute(param);
+      res.status(200).send(result)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  @POST()
+  @before([authenticate, permission])
+  async addUser(req, res, next) {
+    try {
+      const mapper = new UserMapper()
+      const param = mapper.addUserBody(req.body, req.decoded._id)
+      const result = await this.addUserUseCase.execute(param);
       res.status(200).send(result)
     } catch (err) {
       next(err)

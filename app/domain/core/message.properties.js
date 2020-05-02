@@ -28,7 +28,13 @@ export const general = {
     th: 'วิธีการไม่ได้รับอนุญาต',
     httpCode: 405,
     resCode: 'CM-405-004'
-  }
+  },
+  duplicateData: {
+    en: 'Data is duplicate.',
+    th: 'ข้อมูลของท่านมีการเข้าใช้งานแล้ว',
+    httpCode: 401,
+    resCode: 'CM-401-005'
+  },
 };
 
 export const authentication = {
@@ -63,8 +69,8 @@ export const authentication = {
     resCode: 'CM-401-104'
   },
   tooManyInvalidPass: {
-    en: 'Too many invalid attempts. Your account has been temporarily locked, Please try again later.',
-    th: 'Username / Password ของท่านไม่ถูกต้อง เกินจำนวนครั้งที่กำหนด กรุณารอสักครู่ เพื่อทำรายการใหม่อีกครั้ง',
+    en: 'Too max invalid attempts. Your account has been locked.',
+    th: 'Password ของท่านไม่ถูกต้อง เกินจำนวนครั้งที่กำหนด',
     httpCode: 401,
     resCode: 'CM-401-105'
   },
@@ -79,5 +85,29 @@ export const authentication = {
     th: 'การอนุมัติที่ส่วนหัวขาดหายไป',
     httpCode: 401,
     resCode: 'CM-401-107'
-  }
+  },
+  tooManyInvalidCode: {
+    en: 'Too max invalid code.',
+    th: 'รหัสของท่านไม่ถูกต้อง เกินจำนวนครั้งที่กำหนด',
+    httpCode: 401,
+    resCode: 'CM-401-108'
+  },
+  incorrectCode: {
+    en: 'Incorrect code. Please try again.',
+    th: 'รหัสของท่านไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง',
+    httpCode: 401,
+    resCode: 'CM-401-109'
+  },
+  activeCode: {
+    en: 'Ref code is active',
+    th: 'Ref code is active',
+    httpCode: 401,
+    resCode: 'CM-401-110'
+  },
+  codeExpired: {
+    en: 'Code expired',
+    th: 'Code expired',
+    httpCode: 401,
+    resCode: 'CM-401-111'
+  },
 };

@@ -1,13 +1,13 @@
 import ApiError from '../../core/api.error';
 import { general } from '../../core/message.properties';
 
-export default class AddDeviceUseCase {
-  constructor ({ deviceRepository, logger }) {
+export default class AddDeviceUsecase {
+  constructor({ deviceRepository, logger }) {
     this.repository = deviceRepository;
     this.logger = logger;
   }
 
-  async execute (param) {
+  async execute(param) {
     if (param.deviceId) {
       const device = await this.repository.getDeviceById(param.deviceId);
       let result;
