@@ -6,7 +6,7 @@
     "apiEndPoint": "https://common-api-app.herokuapp.com/"
   },
   "logPathConfig": {
-    "isLocal": false,
+    "isLocal": true,
     "appLog": "/tmp/App_Log/",
     "accessLog": "/tmp/Access_Log/",
     "infoLog": "/tmp/Info_Log/"
