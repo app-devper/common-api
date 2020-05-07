@@ -3,7 +3,7 @@ import ApiError from '../../core/api.error';
 import { authentication, general } from '../../core/message.properties';
 import jwt from 'jsonwebtoken';
 
-export default class LoginUsecase {
+export default class LoginPasswordUsecase {
   constructor({ userRepository, logger, config }) {
     this.config = config;
     this.repository = userRepository;

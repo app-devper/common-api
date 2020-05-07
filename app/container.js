@@ -8,7 +8,7 @@ import { router } from './presentation/api.router'
 import { errorHandler } from './presentation/api.handler';
 import Database from './data/database/database';
 import UserRepository from './data/repository/user.repository';
-import LoginUsecase from './domain/usecase/auth/login.usecase';
+import LoginPasswordUsecase from './domain/usecase/auth/login-password.usecase';
 import GetUsersUsecase from './domain/usecase/user/get-users.usecase';
 import GetUserUsecase from './domain/usecase/user/get-user.usecase';
 import DeviceRepository from './data/repository/device.repository';
@@ -45,7 +45,7 @@ container.register({
 
 // Domain Layer
 container.register({
-  loginUseCase: asClass(LoginUsecase).singleton(),
+  loginUseCase: asClass(LoginPasswordUsecase).singleton(),
   getChannelUseCase: asClass(GetChannelUsecase).singleton(),
   verifyUserUseCase: asClass(VerifyUserUsecase).singleton(),
   verifyCodeUseCase: asClass(VerifyCodeUsecase).singleton(),
