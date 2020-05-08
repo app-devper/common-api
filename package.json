@@ -8,8 +8,8 @@
   "main": "./app/index.js",
   "scripts": {
     "start": "node ./lib/index.js",
-    "dev": "nodemon ./app/index.js --exec babel-node",
-    "test": "mocha test/*.spec.js --timeout 10000 --recursive --require babel-core/register --exit",
+    "dev": "nodemon --exec babel-node ./app/index.js",
+    "test": "mocha test/*.spec.js --timeout 10000 --recursive -r @babel/register --exit",
     "lint": "eslint ./app",
     "lint-test": "eslint ./test",
     "fix": "eslint ./app --fix",
@@ -56,9 +56,11 @@
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
+    "@babel/node": "^7.8.7",
     "@babel/plugin-proposal-decorators": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
+    "@babel/register": "^7.9.0",
     "chai": "^4.2.0",
     "eslint": "^6.6.0",
     "eslint-config-standard": "^13.0.1",

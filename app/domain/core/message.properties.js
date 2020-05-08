@@ -40,13 +40,13 @@ export const general = {
 export const authentication = {
   unAuthorized: {
     en: 'Unauthorized.',
-    th: 'คุณไม่มีสิทธิ์เข้าใช้งานระบบนี้',
+    th: 'คุณไม่มีสิทธิ์เข้าใช้งานระบบ',
     httpCode: 401,
     resCode: 'CM-401-100'
   },
   forbidden: {
     en: 'Forbidden. Please contact admin.',
-    th: 'คุณไม่มีสิทธิ์เข้าใช้งานระบบนี้ กรุณาติดต่อ ผู้ดูแลระบบ',
+    th: 'คุณไม่มีสิทธิ์เข้าใช้งานระบบ กรุณาติดต่อ ผู้ดูแลระบบ',
     httpCode: 403,
     resCode: 'CM-403-101'
   },

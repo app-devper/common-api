@@ -21,6 +21,8 @@ import UserRefRepository from "./data/repository/user-ref.repository";
 import VerifyCodeUsecase from "./domain/usecase/auth/verify-code.usecase";
 import SetPasswordUsecase from "./domain/usecase/auth/set-password.usecase";
 import VerifyPasswordUsecase from "./domain/usecase/auth/verify-password.usecase";
+import RemoveUserUsecase from "./domain/usecase/user/remove-user.usecase";
+import LogoutUsecase from "./domain/usecase/auth/logout.usecase";
 
 const swaggerMiddleware = require('./swagger/swagger.middleware');
 
@@ -55,7 +57,9 @@ container.register({
   getUserUseCase: asClass(GetUserUsecase).singleton(),
   addDeviceUseCase: asClass(AddDeviceUsecase).singleton(),
   addUserUseCase: asClass(AddUserUsecase).singleton(),
-  updateUserUseCase: asClass(UpdateUserUsecase).singleton()
+  updateUserUseCase: asClass(UpdateUserUsecase).singleton(),
+  removeUserUseCase: asClass(RemoveUserUsecase).singleton(),
+  logoutUseCase: asClass(LogoutUsecase).singleton()
 });
 
 // Middle Wares

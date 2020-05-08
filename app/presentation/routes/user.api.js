@@ -1,14 +1,15 @@
-import { before, GET, POST, PUT, route } from 'awilix-express'
+import { before, DELETE, GET, POST, PUT, route } from 'awilix-express'
 import { authenticate, permission } from '../api.handler';
 import UserMapper from "../mapper/user.mapper";
 
 @route('/user')
 export default class UserApi {
-  constructor({ getUsersUseCase, getUserUseCase, updateUserUseCase, addUserUseCase }) {
+  constructor({ getUsersUseCase, getUserUseCase, updateUserUseCase, addUserUseCase, removeUserUseCase }) {
     this.getUsersUseCase = getUsersUseCase;
     this.getUserUseCase = getUserUseCase;
     this.updateUserUseCase = updateUserUseCase
     this.addUserUseCase = addUserUseCase
+    this.removeUserUseCase = removeUserUseCase
   }
 
   @route('/info')
@@ -91,6 +92,20 @@ export default class UserApi {
       const mapper = new UserMapper()
       const param = mapper.addUserBody(req.body, req.decoded._id)
       const result = await this.addUserUseCase.execute(param);
+      res.status(200).send(result)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  @route('/:id')
+  @DELETE()
+  @before([authenticate, permission])
+  async removeUser(req, res, next) {
+    try {
+      const mapper = new UserMapper()
+      const param = mapper.removeUserId(req.params.id, req.decoded._id)
+      const result = await this.removeUserUseCase.execute(param);
       res.status(200).send(result)
     } catch (err) {
       next(err)

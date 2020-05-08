@@ -1,7 +1,10 @@
-/* global it, describe */
+/* global it */
 import supertest from 'supertest'
 import chai from 'chai'
 import container from '../app/container';
+import { describe } from "mocha";
+import { authentication, general } from "../app/domain/core/message.properties";
+
 const server = container.resolve('server');
 const { expect } = chai;
 const request = supertest.agent(server.express);
@@ -10,10 +13,12 @@ describe('#Auth Service', () => {
   let data;
 
   it('login fail no body', (done) => {
-    request.post('/api/auth').end((err, res) => {
+    request.post('/api/auth')
+      .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(409);
+          expect(res.statusCode).to.eql(general.invalidData.httpCode);
+          expect(res.body.resCode).to.eql(general.invalidData.resCode);
           done();
         }
       });
@@ -25,7 +30,8 @@ describe('#Auth Service', () => {
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(409);
+          expect(res.statusCode).to.eql(general.invalidData.httpCode);
+          expect(res.body.resCode).to.eql(general.invalidData.resCode);
           done();
         }
       });
@@ -37,7 +43,8 @@ describe('#Auth Service', () => {
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(409);
+          expect(res.statusCode).to.eql(general.invalidData.httpCode);
+          expect(res.body.resCode).to.eql(general.invalidData.resCode);
           done();
         }
       });
@@ -45,11 +52,12 @@ describe('#Auth Service', () => {
 
   it('login fail no pwd', (done) => {
     request.post('/api/auth')
-      .send({ username: 'test'})
+      .send({ username: 'test' })
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(409);
+          expect(res.statusCode).to.eql(general.invalidData.httpCode);
+          expect(res.body.resCode).to.eql(general.invalidData.resCode);
           done();
         }
       });
@@ -61,19 +69,34 @@ describe('#Auth Service', () => {
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(401);
+          expect(res.statusCode).to.eql(authentication.incorrectUserPass.httpCode);
+          expect(res.body.resCode).to.eql(authentication.incorrectUserPass.resCode);
           done();
         }
       });
   });
 
-  it('login fail password', (done) => {
+  it('login fail password 1', (done) => {
     request.post('/api/auth')
       .send({ username: 'wowit', pwd: '5f4dcc3b5aa765d61d8327deb882cf9' })
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(401);
+          expect(res.statusCode).to.eql(authentication.incorrectUserPass.httpCode);
+          expect(res.body.resCode).to.eql(authentication.incorrectUserPass.resCode);
+          done();
+        }
+      });
+  });
+
+  it('login fail password 2', (done) => {
+    request.post('/api/auth')
+      .send({ username: 'wowit', pwd: '5f4dcc3b5aa765d61d8327deb882cf9' })
+      .end((err, res) => {
+        if (err) done(err);
+        else {
+          expect(res.statusCode).to.eql(authentication.incorrectUserPass.httpCode);
+          expect(res.body.resCode).to.eql(authentication.incorrectUserPass.resCode);
           done();
         }
       });
@@ -86,30 +109,32 @@ describe('#Auth Service', () => {
         if (err) done(err);
         else {
           expect(res.statusCode).to.eql(200);
-          data = res.body.data;
+          data = res.body;
           done();
         }
       });
   });
 
-  it('logout jwt fail not access token', (done) => {
+  it('logout jwt fail header', (done) => {
     request.get('/api/auth/logout')
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(401);
+          expect(res.statusCode).to.eql(authentication.missingAuthorization.httpCode);
+          expect(res.body.resCode).to.eql(authentication.missingAuthorization.resCode);
           done();
         }
       });
   });
 
-  it('logout jwt fail invalid access token', (done) => {
+  it('logout jwt fail invalid header', (done) => {
     request.get('/api/auth/logout')
       .set('Authorization', 'Bearer 1234')
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(401);
+          expect(res.statusCode).to.eql(authentication.unAuthorized.httpCode);
+          expect(res.body.resCode).to.eql(authentication.unAuthorized.resCode);
           done();
         }
       });

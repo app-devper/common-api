@@ -16,7 +16,7 @@ export default class UserRepository {
   }
 
   removeUser(id) {
-    return this.userDao.removeUser()
+    return this.userDao.removeUser(id)
   }
 
   getUsers() {

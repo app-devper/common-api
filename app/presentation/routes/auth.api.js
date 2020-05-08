@@ -1,16 +1,18 @@
 import { before, GET, POST, route } from 'awilix-express'
 import AuthMapper from '../mapper/auth.mapper';
 import { authenticate, verifyAction } from '../api.handler';
+import UserMapper from "../mapper/user.mapper";
 
 @route('/auth')
 export default class AuthApi {
-  constructor({ loginUseCase, getChannelUseCase, verifyUserUseCase, verifyCodeUseCase, setPasswordUseCase, verifyPasswordUseCase }) {
+  constructor({ loginUseCase, getChannelUseCase, verifyUserUseCase, verifyCodeUseCase, setPasswordUseCase, verifyPasswordUseCase, logoutUseCase }) {
     this.loginUseCase = loginUseCase;
     this.getChannelUseCase = getChannelUseCase;
     this.verifyUserUseCase = verifyUserUseCase;
     this.verifyCodeUseCase = verifyCodeUseCase;
     this.setPasswordUseCase = setPasswordUseCase;
     this.verifyPasswordUseCase = verifyPasswordUseCase;
+    this.logoutUseCase = logoutUseCase;
   }
 
   @POST()
@@ -100,6 +102,20 @@ export default class AuthApi {
       const mapper = new AuthMapper()
       const param = mapper.verifyPassword(req.body, req.decoded.username)
       const result = await this.verifyPasswordUseCase.execute(param);
+      res.status(200).send(result)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  @route('/logout')
+  @GET()
+  @before([authenticate])
+  async logout(req, res, next) {
+    try {
+      const mapper = new UserMapper()
+      const param = mapper.getUserId(req.decoded._id)
+      const result = await this.logoutUseCase.execute(param);
       res.status(200).send(result)
     } catch (err) {
       next(err)

@@ -20,6 +20,19 @@ export default class UserMapper {
     return { id }
   }
 
+  removeUserId(removeId, userId) {
+    if (_.isEmpty(removeId)) {
+      throw new ApiError('Invalid id', general.invalidData)
+    }
+    if (!mongoose.Types.ObjectId.isValid(removeId)) {
+      throw new ApiError('Invalid id format', general.invalidData)
+    }
+    if (removeId === userId) {
+      throw new ApiError('Can not remove current user', general.invalidData)
+    }
+    return { id: removeId }
+  }
+
   getUserBody(body, id) {
     if (_.isEmpty(body.firstName)) {
       throw new ApiError('Invalid firstName', general.invalidData)
