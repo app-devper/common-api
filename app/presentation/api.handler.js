@@ -15,11 +15,9 @@ export const authenticate = async (req, res, next) => {
       req.decoded = decoded['data'];
       next()
     } catch (err) {
-      logger.error(err.message);
       next(new ApiError(err.message, authentication.unAuthorized))
     }
   } else {
-    logger.error('Missing Authorization');
     next(new ApiError('Missing Authorization', authentication.missingAuthorization))
   }
 };
@@ -38,17 +36,14 @@ export const verifyAction = async (req, res, next) => {
       next(new ApiError(err.message, authentication.unAuthorized))
     }
   } else {
-    logger.error('Missing Action Token');
     next(new ApiError('Missing Action Token', authentication.missingAuthorization))
   }
 };
 
 export const permission = (req, res, next) => {
-  const { logger } = req.container.cradle;
   if (req.decoded.role === ADMIN) {
     next()
   } else {
-    logger.error('Forbidden');
     next(new ApiError('Forbidden', authentication.forbidden))
   }
 };

@@ -19,24 +19,8 @@ export default class UserRepository {
     return this.userDao.removeUser(id)
   }
 
-  getUsers() {
-    return this.userDao.getUsers()
-  }
-
   getUserByUsername(username) {
     return this.userDao.getUserByUsername(username)
-  }
-
-  verifyUser(username, password) {
-    return this.userDao.verifyUser(username, password)
-  }
-
-  getUserByCriteria(criteria) {
-    return this.userDao.getUserByCriteria(criteria)
-  }
-
-  getUserListByCriteria(criteria) {
-    return this.userDao.getUserListByCriteria(criteria)
   }
 
   getUsersByPage(page, limit) {

@@ -25,4 +25,8 @@ export default class UserRefDao {
     return UserRefSchema.deleteMany({ userId: id })
   }
 
+  getCode(refCode) {
+    this.logger.info('mongoose getCode');
+    return UserRefSchema.findOne({ refCode: refCode }).lean();
+  }
 }

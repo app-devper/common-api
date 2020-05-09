@@ -11,7 +11,6 @@ export default class LogoutUsecase {
   async execute(param) {
     let user = await this.repository.getUserById(param.id);
     if (!user) {
-      this.logger.error('User not found');
       throw new ApiError('User not found', general.dataNotFound)
     }
     delete user.password

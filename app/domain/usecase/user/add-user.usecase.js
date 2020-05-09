@@ -10,7 +10,6 @@ export default class AddUserUsecase {
   async execute(param) {
     const user = await this.repository.getUserByUsername(param.user.username);
     if (user) {
-      this.logger.error('User duplicate');
       throw new ApiError('User duplicate', general.duplicateData)
     } else {
       return await this.repository.addUser(param.user)

@@ -11,6 +11,7 @@ const request = supertest.agent(server.express);
 
 describe('#Auth Service', () => {
   let data;
+  let action;
 
   it('login fail no body', (done) => {
     request.post('/api/auth')
@@ -110,6 +111,128 @@ describe('#Auth Service', () => {
         else {
           expect(res.statusCode).to.eql(200);
           data = res.body;
+          done();
+        }
+      });
+  });
+
+  it('verify-password fail header', (done) => {
+    request.post('/api/auth/verify-password')
+      .send({ password: '5f4dcc3b5aa765d61d8327deb882cf99' })
+      .end((err, res) => {
+        if (err) done(err);
+        else {
+          expect(res.statusCode).to.eql(authentication.missingAuthorization.httpCode);
+          expect(res.body.resCode).to.eql(authentication.missingAuthorization.resCode);
+          done();
+        }
+      });
+  });
+
+  it('verify-password fail invalid header', (done) => {
+    request.post('/api/auth/verify-password')
+      .set('Authorization', 'Bearer 123')
+      .send({ password: '5f4dcc3b5aa765d61d8327deb882cf99' })
+      .end((err, res) => {
+        if (err) done(err);
+        else {
+          expect(res.statusCode).to.eql(authentication.unAuthorized.httpCode);
+          expect(res.body.resCode).to.eql(authentication.unAuthorized.resCode);
+          done();
+        }
+      });
+  });
+
+  it('verify-password fail no password', (done) => {
+    request.post('/api/auth/verify-password')
+      .set('Authorization', 'Bearer ' + data.accessToken)
+      .end((err, res) => {
+        if (err) done(err);
+        else {
+          expect(res.statusCode).to.eql(general.invalidData.httpCode);
+          expect(res.body.resCode).to.eql(general.invalidData.resCode);
+          done();
+        }
+      });
+  })
+
+  it('verify-password invalid password', (done) => {
+    request.post('/api/auth/verify-password')
+      .set('Authorization', 'Bearer ' + data.accessToken)
+      .send({ password: '5f4dcc3b5aa765d61d8327deb882cf9' })
+      .end((err, res) => {
+        if (err) done(err);
+        else {
+          expect(res.statusCode).to.eql(authentication.incorrectUserPass.httpCode);
+          expect(res.body.resCode).to.eql(authentication.incorrectUserPass.resCode);
+          done();
+        }
+      });
+  });
+
+  it('verify-password', (done) => {
+    request.post('/api/auth/verify-password')
+      .set('Authorization', 'Bearer ' + data.accessToken)
+      .send({ password: '5f4dcc3b5aa765d61d8327deb882cf99' })
+      .end((err, res) => {
+        if (err) done(err);
+        else {
+          expect(res.statusCode).to.eql(200);
+          action = res.body
+          done();
+        }
+      });
+  });
+
+  it('set-password fail header', (done) => {
+    request.post('/api/auth/set-password')
+      .send({ password: '5f4dcc3b5aa765d61d8327deb882cf99' })
+      .end((err, res) => {
+        if (err) done(err);
+        else {
+          expect(res.statusCode).to.eql(authentication.missingAuthorization.httpCode);
+          expect(res.body.resCode).to.eql(authentication.missingAuthorization.resCode);
+          done();
+        }
+      });
+  });
+
+  it('set-password fail invalid header', (done) => {
+    request.post('/api/auth/set-password')
+      .set('x-action-token', "1233")
+      .send({ password: '5f4dcc3b5aa765d61d8327deb882cf99' })
+      .end((err, res) => {
+        if (err) done(err);
+        else {
+          expect(res.statusCode).to.eql(authentication.unAuthorized.httpCode);
+          expect(res.body.resCode).to.eql(authentication.unAuthorized.resCode);
+          done();
+        }
+      });
+  });
+
+  it('set-password fail no password', (done) => {
+    request.post('/api/auth/set-password')
+      .set('x-action-token', action.actionToken)
+      .end((err, res) => {
+        if (err) done(err);
+        else {
+          expect(res.statusCode).to.eql(general.invalidData.httpCode);
+          expect(res.body.resCode).to.eql(general.invalidData.resCode);
+          done();
+        }
+      });
+  });
+
+  it('set-password', (done) => {
+    request.post('/api/auth/set-password')
+      .set('x-action-token', action.actionToken)
+      .send({ password: '5f4dcc3b5aa765d61d8327deb882cf99' })
+      .end((err, res) => {
+        if (err) done(err);
+        else {
+          expect(res.statusCode).to.eql(200);
+          action = res.body
           done();
         }
       });

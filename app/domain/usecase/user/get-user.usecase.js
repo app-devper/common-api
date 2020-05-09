@@ -12,7 +12,6 @@ export default class GetUserUsecase {
     if (user) {
       return user
     } else {
-      this.logger.error('User not found');
       throw new ApiError('User not found', general.dataNotFound)
     }
   }

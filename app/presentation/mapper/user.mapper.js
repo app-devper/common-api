@@ -11,9 +11,6 @@ export default class UserMapper {
   }
 
   getUserId(id) {
-    if (_.isEmpty(id)) {
-      throw new ApiError('Invalid id', general.invalidData)
-    }
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new ApiError('Invalid id format', general.invalidData)
     }
@@ -21,9 +18,6 @@ export default class UserMapper {
   }
 
   removeUserId(removeId, userId) {
-    if (_.isEmpty(removeId)) {
-      throw new ApiError('Invalid id', general.invalidData)
-    }
     if (!mongoose.Types.ObjectId.isValid(removeId)) {
       throw new ApiError('Invalid id format', general.invalidData)
     }

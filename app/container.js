@@ -15,14 +15,15 @@ import DeviceRepository from './data/repository/device.repository';
 import AddDeviceUsecase from './domain/usecase/device/add-device.usecase';
 import UpdateUserUsecase from "./domain/usecase/user/update-user.usecase";
 import AddUserUsecase from "./domain/usecase/user/add-user.usecase";
-import GetChannelUsecase from "./domain/usecase/auth/get-channel.usecase";
-import VerifyUserUsecase from "./domain/usecase/auth/verify-user.usecase";
+import GetChannelUsecase from "./domain/usecase/otp/get-channel.usecase";
+import VerifyUserUsecase from "./domain/usecase/otp/verify-user.usecase";
 import UserRefRepository from "./data/repository/user-ref.repository";
-import VerifyCodeUsecase from "./domain/usecase/auth/verify-code.usecase";
+import VerifyCodeUsecase from "./domain/usecase/otp/verify-code.usecase";
 import SetPasswordUsecase from "./domain/usecase/auth/set-password.usecase";
 import VerifyPasswordUsecase from "./domain/usecase/auth/verify-password.usecase";
 import RemoveUserUsecase from "./domain/usecase/user/remove-user.usecase";
 import LogoutUsecase from "./domain/usecase/auth/logout.usecase";
+import GetCodeUsecase from "./domain/usecase/otp/get-code.usecase";
 
 const swaggerMiddleware = require('./swagger/swagger.middleware');
 
@@ -50,6 +51,7 @@ container.register({
   loginUseCase: asClass(LoginPasswordUsecase).singleton(),
   getChannelUseCase: asClass(GetChannelUsecase).singleton(),
   verifyUserUseCase: asClass(VerifyUserUsecase).singleton(),
+  getCodeUseCase: asClass(GetCodeUsecase).singleton(),
   verifyCodeUseCase: asClass(VerifyCodeUsecase).singleton(),
   verifyPasswordUseCase: asClass(VerifyPasswordUsecase).singleton(),
   setPasswordUseCase: asClass(SetPasswordUsecase).singleton(),

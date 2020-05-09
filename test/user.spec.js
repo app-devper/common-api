@@ -161,6 +161,19 @@ describe('#User Service', () => {
       });
   });
 
+  it('get user fail not found', (done) => {
+    request.get('/api/user/5d58280a341d17002363192a')
+      .set('Authorization', 'Bearer ' + data.accessToken)
+      .end((err, res) => {
+        if (err) done(err);
+        else {
+          expect(res.statusCode).to.eql(general.dataNotFound.httpCode);
+          expect(res.body.resCode).to.eql(general.dataNotFound.resCode);
+          done();
+        }
+      });
+  });
+
   it('get user id', (done) => {
     request.get('/api/user/' + user._id)
       .set('Authorization', 'Bearer ' + data.accessToken)

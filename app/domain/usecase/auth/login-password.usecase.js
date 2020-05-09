@@ -13,11 +13,9 @@ export default class LoginPasswordUsecase {
   async execute(param) {
     let user = await this.repository.getUserByUsername(param.username);
     if (!user) {
-      this.logger.error('Incorrect username');
-      throw new ApiError('Incorrect username or password', authentication.incorrectUserPass)
+      throw new ApiError('Incorrect username', authentication.incorrectUserPass)
     }
     if (user.status !== ACTIVE) {
-      this.logger.error('Unauthorized');
       throw new ApiError('Unauthorized', authentication.unAuthorized);
     }
     const isPass = param.password === user.password
@@ -25,7 +23,6 @@ export default class LoginPasswordUsecase {
       user = await this.repository.updateUser(user._id, { countLoginFailed: user.countLoginFailed + 1 });
     }
     if (user.countLoginFailed >= this.config.userLoginAttempt) {
-      this.logger.error('Max invalid attempts');
       throw new ApiError('Max invalid attempts', authentication.tooManyInvalidPass)
     }
     if (isPass) {
@@ -35,12 +32,10 @@ export default class LoginPasswordUsecase {
         const accessToken = await jwt.sign({ data: user }, this.config.secret, { expiresIn: this.config.accessTokenTime });
         return { accessToken }
       } catch (err) {
-        this.logger.error(err.message);
         throw new ApiError(err.message, general.error)
       }
     } else {
-      this.logger.error('Incorrect password');
-      throw new ApiError('Incorrect username or password', authentication.incorrectUserPass)
+      throw new ApiError('Incorrect password', authentication.incorrectUserPass)
     }
   }
 }

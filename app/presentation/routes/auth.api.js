@@ -5,11 +5,8 @@ import UserMapper from "../mapper/user.mapper";
 
 @route('/auth')
 export default class AuthApi {
-  constructor({ loginUseCase, getChannelUseCase, verifyUserUseCase, verifyCodeUseCase, setPasswordUseCase, verifyPasswordUseCase, logoutUseCase }) {
+  constructor({ loginUseCase, setPasswordUseCase, verifyPasswordUseCase, logoutUseCase }) {
     this.loginUseCase = loginUseCase;
-    this.getChannelUseCase = getChannelUseCase;
-    this.verifyUserUseCase = verifyUserUseCase;
-    this.verifyCodeUseCase = verifyCodeUseCase;
     this.setPasswordUseCase = setPasswordUseCase;
     this.verifyPasswordUseCase = verifyPasswordUseCase;
     this.logoutUseCase = logoutUseCase;
@@ -21,59 +18,6 @@ export default class AuthApi {
       const mapper = new AuthMapper()
       const param = mapper.getBody(req.body)
       const result = await this.loginUseCase.execute(param);
-      res.status(200).send(result)
-    } catch (err) {
-      next(err)
-    }
-  }
-
-  @route('/channel/:username')
-  @GET()
-  async getChannelUsername(req, res, next) {
-    try {
-      const mapper = new AuthMapper()
-      const param = mapper.getChannel(req.params)
-      const result = await this.getChannelUseCase.execute(param);
-      res.status(200).send(result)
-    } catch (err) {
-      next(err)
-    }
-  }
-
-  @route('/channel')
-  @GET()
-  @before([authenticate])
-  async getChannel(req, res, next) {
-    try {
-      const mapper = new AuthMapper()
-      const param = mapper.getChannel(req.decoded)
-      const result = await this.getChannelUseCase.execute(param);
-      res.status(200).send(result)
-    } catch (err) {
-      next(err)
-    }
-  }
-
-  @route('/verify-user')
-  @POST()
-  async verifyUser(req, res, next) {
-    try {
-      const mapper = new AuthMapper()
-      const param = mapper.verifyUser(req.body)
-      const result = await this.verifyUserUseCase.execute(param);
-      res.status(200).send(result)
-    } catch (err) {
-      next(err)
-    }
-  }
-
-  @route('/verify-code')
-  @POST()
-  async verifyCode(req, res, next) {
-    try {
-      const mapper = new AuthMapper()
-      const param = mapper.verifyCode(req.body)
-      const result = await this.verifyCodeUseCase.execute(param);
       res.status(200).send(result)
     } catch (err) {
       next(err)
