@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { authentication, general } from '../domain/core/message.properties';
+import { auth, general } from '../domain/core/message.properties';
 import ApiError from '../domain/core/api.error';
 import { ADMIN } from '../domain/constant/user.role';
 import { header } from '../domain/constant/constants';
@@ -15,10 +15,10 @@ export const authenticate = async (req, res, next) => {
       req.decoded = decoded['data'];
       next()
     } catch (err) {
-      next(new ApiError(err.message, authentication.unAuthorized))
+      next(new ApiError(err.message, auth.unAuthorized))
     }
   } else {
-    next(new ApiError('Missing Authorization', authentication.missingAuthorization))
+    next(new ApiError('Missing Authorization', auth.missingAuthorization))
   }
 };
 
@@ -33,10 +33,10 @@ export const verifyAction = async (req, res, next) => {
       next()
     } catch (err) {
       logger.error(err.message);
-      next(new ApiError(err.message, authentication.unAuthorized))
+      next(new ApiError(err.message, auth.unAuthorized))
     }
   } else {
-    next(new ApiError('Missing Action Token', authentication.missingAuthorization))
+    next(new ApiError('Missing Action Token', auth.missingAuthorization))
   }
 };
 
@@ -44,7 +44,7 @@ export const permission = (req, res, next) => {
   if (req.decoded.role === ADMIN) {
     next()
   } else {
-    next(new ApiError('Forbidden', authentication.forbidden))
+    next(new ApiError('Forbidden', auth.forbidden))
   }
 };
 

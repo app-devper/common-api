@@ -1,6 +1,6 @@
 import { ACTIVE } from '../../constant/user.status';
 import ApiError from '../../core/api.error';
-import { authentication, general } from '../../core/message.properties';
+import { auth, general } from '../../core/message.properties';
 import randomize from 'randomatic'
 
 export default class VerifyUserUsecase {
@@ -16,14 +16,14 @@ export default class VerifyUserUsecase {
       throw new ApiError('Ref not found', general.dataNotFound)
     }
     if (ref.active) {
-      throw new ApiError('Ref is active', authentication.activeCode);
+      throw new ApiError('Ref is active', auth.activeCode);
     }
     let user = await this.repository.getUserById(ref.userId);
     if (!user) {
       throw new ApiError('User not found', general.dataNotFound)
     }
     if (user.status !== ACTIVE) {
-      throw new ApiError('Unauthorized', authentication.unAuthorized);
+      throw new ApiError('Unauthorized', auth.unAuthorized);
     }
     const data = {}
     const refCode = randomize('A', 4)

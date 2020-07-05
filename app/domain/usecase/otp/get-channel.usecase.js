@@ -1,6 +1,6 @@
 import { ACTIVE } from '../../constant/user.status';
 import ApiError from '../../core/api.error';
-import { authentication, general } from '../../core/message.properties';
+import { auth, general } from '../../core/message.properties';
 
 export default class GetChannelUsecase {
   constructor({ userRefRepository, logger, config }) {
@@ -15,7 +15,7 @@ export default class GetChannelUsecase {
       throw new ApiError('Data not found', general.dataNotFound)
     }
     if (user.status !== ACTIVE) {
-      throw new ApiError('Unauthorized', authentication.unAuthorized);
+      throw new ApiError('Unauthorized', auth.unAuthorized);
     }
     await this.repository.removeByUserId(user._id);
     const data = {

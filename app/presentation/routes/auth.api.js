@@ -5,10 +5,10 @@ import UserMapper from "../mapper/user.mapper";
 
 @route('/auth')
 export default class AuthApi {
-  constructor({ loginUseCase, setPasswordUseCase, verifyPasswordUseCase, logoutUseCase }) {
-    this.loginUseCase = loginUseCase;
-    this.setPasswordUseCase = setPasswordUseCase;
+  constructor({verifyPasswordUseCase, verifyPinUseCase, setAuthUseCase, logoutUseCase}) {
     this.verifyPasswordUseCase = verifyPasswordUseCase;
+    this.setAuthUseCase = setAuthUseCase;
+    this.verifyPinUseCase = verifyPinUseCase;
     this.logoutUseCase = logoutUseCase;
   }
 
@@ -17,7 +17,7 @@ export default class AuthApi {
     try {
       const mapper = new AuthMapper()
       const param = mapper.getBody(req.body)
-      const result = await this.loginUseCase.execute(param);
+      const result = await this.verifyPasswordUseCase.execute(param);
       res.status(200).send(result)
     } catch (err) {
       next(err)
@@ -31,8 +31,8 @@ export default class AuthApi {
     try {
       const mapper = new AuthMapper()
       const param = mapper.setPassword(req.body, req.userRefId)
-      const result = await this.setPasswordUseCase.execute(param);
-      res.status(200).send(result)
+      await this.setAuthUseCase.execute(param);
+      res.status(201)
     } catch (err) {
       next(err)
     }
@@ -46,6 +46,47 @@ export default class AuthApi {
       const mapper = new AuthMapper()
       const param = mapper.verifyPassword(req.body, req.decoded.username)
       const result = await this.verifyPasswordUseCase.execute(param);
+      res.status(200).send(result)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  @route('/pin')
+  @POST()
+  async loginPin(req, res, next) {
+    try {
+      const mapper = new AuthMapper()
+      const param = mapper.getPinBody(req.body)
+      const result = await this.verifyPinUseCase.execute(param);
+      res.status(200).send(result)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  @route('/set-pin')
+  @POST()
+  @before([verifyAction])
+  async setPin(req, res, next) {
+    try {
+      const mapper = new AuthMapper()
+      const param = mapper.setPin(req.body, req.userRefId)
+      await this.setAuthUseCase.execute(param);
+      res.status(201)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  @route('/verify-pin')
+  @POST()
+  @before([authenticate])
+  async verifyPin(req, res, next) {
+    try {
+      const mapper = new AuthMapper()
+      const param = mapper.verifyPin(req.body, req.decoded.username)
+      const result = await this.verifyPinUseCase.execute(param);
       res.status(200).send(result)
     } catch (err) {
       next(err)

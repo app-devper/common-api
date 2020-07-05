@@ -3,7 +3,7 @@ import supertest from 'supertest'
 import chai from 'chai'
 import container from '../app/container';
 import { describe } from "mocha";
-import { authentication, general } from "../app/domain/core/message.properties";
+import { auth, general } from "../app/domain/core/message.properties";
 
 const server = container.resolve('server');
 const { expect } = chai;
@@ -70,8 +70,8 @@ describe('#Auth Service', () => {
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(authentication.incorrectUserPass.httpCode);
-          expect(res.body.resCode).to.eql(authentication.incorrectUserPass.resCode);
+          expect(res.statusCode).to.eql(auth.invalidData.httpCode);
+          expect(res.body.resCode).to.eql(auth.invalidData.resCode);
           done();
         }
       });
@@ -83,8 +83,8 @@ describe('#Auth Service', () => {
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(authentication.incorrectUserPass.httpCode);
-          expect(res.body.resCode).to.eql(authentication.incorrectUserPass.resCode);
+          expect(res.statusCode).to.eql(auth.invalidData.httpCode);
+          expect(res.body.resCode).to.eql(auth.invalidData.resCode);
           done();
         }
       });
@@ -96,8 +96,8 @@ describe('#Auth Service', () => {
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(authentication.incorrectUserPass.httpCode);
-          expect(res.body.resCode).to.eql(authentication.incorrectUserPass.resCode);
+          expect(res.statusCode).to.eql(auth.invalidData.httpCode);
+          expect(res.body.resCode).to.eql(auth.invalidData.resCode);
           done();
         }
       });
@@ -122,8 +122,8 @@ describe('#Auth Service', () => {
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(authentication.missingAuthorization.httpCode);
-          expect(res.body.resCode).to.eql(authentication.missingAuthorization.resCode);
+          expect(res.statusCode).to.eql(auth.missingAuthorization.httpCode);
+          expect(res.body.resCode).to.eql(auth.missingAuthorization.resCode);
           done();
         }
       });
@@ -136,8 +136,8 @@ describe('#Auth Service', () => {
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(authentication.unAuthorized.httpCode);
-          expect(res.body.resCode).to.eql(authentication.unAuthorized.resCode);
+          expect(res.statusCode).to.eql(auth.unAuthorized.httpCode);
+          expect(res.body.resCode).to.eql(auth.unAuthorized.resCode);
           done();
         }
       });
@@ -163,8 +163,8 @@ describe('#Auth Service', () => {
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(authentication.incorrectUserPass.httpCode);
-          expect(res.body.resCode).to.eql(authentication.incorrectUserPass.resCode);
+          expect(res.statusCode).to.eql(auth.invalidData.httpCode);
+          expect(res.body.resCode).to.eql(auth.invalidData.resCode);
           done();
         }
       });
@@ -190,8 +190,8 @@ describe('#Auth Service', () => {
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(authentication.missingAuthorization.httpCode);
-          expect(res.body.resCode).to.eql(authentication.missingAuthorization.resCode);
+          expect(res.statusCode).to.eql(auth.missingAuthorization.httpCode);
+          expect(res.body.resCode).to.eql(auth.missingAuthorization.resCode);
           done();
         }
       });
@@ -204,8 +204,8 @@ describe('#Auth Service', () => {
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(authentication.unAuthorized.httpCode);
-          expect(res.body.resCode).to.eql(authentication.unAuthorized.resCode);
+          expect(res.statusCode).to.eql(auth.unAuthorized.httpCode);
+          expect(res.body.resCode).to.eql(auth.unAuthorized.resCode);
           done();
         }
       });
@@ -243,8 +243,8 @@ describe('#Auth Service', () => {
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(authentication.missingAuthorization.httpCode);
-          expect(res.body.resCode).to.eql(authentication.missingAuthorization.resCode);
+          expect(res.statusCode).to.eql(auth.missingAuthorization.httpCode);
+          expect(res.body.resCode).to.eql(auth.missingAuthorization.resCode);
           done();
         }
       });
@@ -256,8 +256,8 @@ describe('#Auth Service', () => {
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(authentication.unAuthorized.httpCode);
-          expect(res.body.resCode).to.eql(authentication.unAuthorized.resCode);
+          expect(res.statusCode).to.eql(auth.unAuthorized.httpCode);
+          expect(res.body.resCode).to.eql(auth.unAuthorized.resCode);
           done();
         }
       });

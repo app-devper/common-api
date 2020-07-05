@@ -8,7 +8,6 @@ import { router } from './presentation/api.router'
 import { errorHandler } from './presentation/api.handler';
 import Database from './data/database/database';
 import UserRepository from './data/repository/user.repository';
-import LoginPasswordUsecase from './domain/usecase/auth/login-password.usecase';
 import GetUsersUsecase from './domain/usecase/user/get-users.usecase';
 import GetUserUsecase from './domain/usecase/user/get-user.usecase';
 import DeviceRepository from './data/repository/device.repository';
@@ -19,11 +18,12 @@ import GetChannelUsecase from "./domain/usecase/otp/get-channel.usecase";
 import VerifyUserUsecase from "./domain/usecase/otp/verify-user.usecase";
 import UserRefRepository from "./data/repository/user-ref.repository";
 import VerifyCodeUsecase from "./domain/usecase/otp/verify-code.usecase";
-import SetPasswordUsecase from "./domain/usecase/auth/set-password.usecase";
-import VerifyPasswordUsecase from "./domain/usecase/auth/verify-password.usecase";
+import SetAuthUseCase from "./domain/usecase/auth/set-auth.usecase";
+import VerifyPasswordUseCase from "./domain/usecase/auth/verify-password.usecase";
 import RemoveUserUsecase from "./domain/usecase/user/remove-user.usecase";
-import LogoutUsecase from "./domain/usecase/auth/logout.usecase";
+import LogoutUseCase from "./domain/usecase/auth/logout.usecase";
 import GetCodeUsecase from "./domain/usecase/otp/get-code.usecase";
+import VerifyPinUseCase from "./domain/usecase/auth/verify-pin.usecase";
 
 const swaggerMiddleware = require('./swagger/swagger.middleware');
 
@@ -48,20 +48,23 @@ container.register({
 
 // Domain Layer
 container.register({
-  loginUseCase: asClass(LoginPasswordUsecase).singleton(),
+  addDeviceUseCase: asClass(AddDeviceUsecase).singleton(),
+
+  verifyPasswordUseCase: asClass(VerifyPasswordUseCase).singleton(),
+  setAuthUseCase: asClass(SetAuthUseCase).singleton(),
+  verifyPinUseCase: asClass(VerifyPinUseCase).singleton(),
+  logoutUseCase: asClass(LogoutUseCase).singleton(),
+
   getChannelUseCase: asClass(GetChannelUsecase).singleton(),
   verifyUserUseCase: asClass(VerifyUserUsecase).singleton(),
   getCodeUseCase: asClass(GetCodeUsecase).singleton(),
   verifyCodeUseCase: asClass(VerifyCodeUsecase).singleton(),
-  verifyPasswordUseCase: asClass(VerifyPasswordUsecase).singleton(),
-  setPasswordUseCase: asClass(SetPasswordUsecase).singleton(),
+
   getUsersUseCase: asClass(GetUsersUsecase).singleton(),
   getUserUseCase: asClass(GetUserUsecase).singleton(),
-  addDeviceUseCase: asClass(AddDeviceUsecase).singleton(),
   addUserUseCase: asClass(AddUserUsecase).singleton(),
   updateUserUseCase: asClass(UpdateUserUsecase).singleton(),
   removeUserUseCase: asClass(RemoveUserUsecase).singleton(),
-  logoutUseCase: asClass(LogoutUsecase).singleton()
 });
 
 // Middle Wares

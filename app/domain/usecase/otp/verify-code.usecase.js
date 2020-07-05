@@ -1,5 +1,5 @@
 import ApiError from '../../core/api.error';
-import { authentication, general } from '../../core/message.properties';
+import { auth, general } from '../../core/message.properties';
 import jwt from "jsonwebtoken";
 
 export default class VerifyCodeUsecase {
@@ -15,7 +15,7 @@ export default class VerifyCodeUsecase {
       throw new ApiError('Ref code not found', general.dataNotFound)
     }
     if (ref.active) {
-      throw new ApiError('Ref code is active', authentication.activeCode);
+      throw new ApiError('Ref code is active', auth.activeCode);
     }
     if (ref.refCode !== param.refCode) {
       throw new ApiError('Invalid ref code', general.invalidData)
@@ -25,10 +25,10 @@ export default class VerifyCodeUsecase {
       ref = await this.repository.updateUserRef(ref._id, { countFailed: ref.countFailed + 1 });
     }
     if (ref.countFailed >= this.config.userCodeAttempt) {
-      throw new ApiError('Max invalid code', authentication.tooManyInvalidCode)
+      throw new ApiError('Max invalid code', auth.maxInvalidCode)
     }
     if (ref.expiredDate.getTime() < new Date().getTime()) {
-      throw new ApiError('Code expired', authentication.codeExpired)
+      throw new ApiError('Code expired', auth.codeExpired)
     }
     if (isPass) {
       try {
@@ -39,7 +39,7 @@ export default class VerifyCodeUsecase {
         throw new ApiError(err.message, general.error)
       }
     } else {
-      throw new ApiError('Incorrect code', authentication.incorrectCode)
+      throw new ApiError('Incorrect code', auth.invalidCode)
     }
   }
 }

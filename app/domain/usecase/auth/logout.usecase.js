@@ -1,7 +1,7 @@
 import ApiError from '../../core/api.error';
 import { general } from '../../core/message.properties';
 
-export default class LogoutUsecase {
+export default class LogoutUseCase {
   constructor({ userRepository, logger, config }) {
     this.config = config;
     this.repository = userRepository;
@@ -14,6 +14,7 @@ export default class LogoutUsecase {
       throw new ApiError('User not found', general.dataNotFound)
     }
     delete user.password
+    delete user.pin
     return user
   }
 }

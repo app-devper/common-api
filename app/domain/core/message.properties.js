@@ -37,7 +37,7 @@ export const general = {
   },
 };
 
-export const authentication = {
+export const auth = {
   unAuthorized: {
     en: 'Unauthorized.',
     th: 'คุณไม่มีสิทธิ์เข้าใช้งานระบบ',
@@ -68,15 +68,15 @@ export const authentication = {
     httpCode: 401,
     resCode: 'CM-401-104'
   },
-  tooManyInvalidPass: {
+  maxInvalidPassword: {
     en: 'Too max invalid attempts. Your account has been locked.',
     th: 'Password ของท่านไม่ถูกต้อง เกินจำนวนครั้งที่กำหนด',
     httpCode: 401,
     resCode: 'CM-401-105'
   },
-  incorrectUserPass: {
-    en: 'Incorrect username or password. Please try again.',
-    th: 'Username / Password ของท่านไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง',
+  invalidData: {
+    en: 'Invalid data. Please try again.',
+    th: 'ข้อมูลของท่านไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง',
     httpCode: 401,
     resCode: 'CM-401-106'
   },
@@ -86,14 +86,14 @@ export const authentication = {
     httpCode: 401,
     resCode: 'CM-401-107'
   },
-  tooManyInvalidCode: {
+  maxInvalidCode: {
     en: 'Too max invalid code.',
     th: 'รหัสของท่านไม่ถูกต้อง เกินจำนวนครั้งที่กำหนด',
     httpCode: 401,
     resCode: 'CM-401-108'
   },
-  incorrectCode: {
-    en: 'Incorrect code. Please try again.',
+  invalidCode: {
+    en: 'Invalid code. Please try again.',
     th: 'รหัสของท่านไม่ถูกต้อง กรุณาทำรายการใหม่อีกครั้ง',
     httpCode: 401,
     resCode: 'CM-401-109'
@@ -109,5 +109,17 @@ export const authentication = {
     th: 'Code expired',
     httpCode: 401,
     resCode: 'CM-401-111'
+  },
+  maxInvalidPin: {
+    en: 'Too max invalid attempts. Your account has been locked.',
+    th: 'PIN ของท่านไม่ถูกต้อง เกินจำนวนครั้งที่กำหนด',
+    httpCode: 401,
+    resCode: 'CM-401-112'
+  },
+  emptyPin: {
+    en: 'PIN not set',
+    th: 'PIN ของท่านยังไม่ได้ตั้งค่า',
+    httpCode: 401,
+    resCode: 'CM-401-113'
   },
 };
