@@ -231,8 +231,7 @@ describe('#Auth Service', () => {
       .end((err, res) => {
         if (err) done(err);
         else {
-          expect(res.statusCode).to.eql(200);
-          action = res.body
+          expect(res.statusCode).to.eql(201);
           done();
         }
       });

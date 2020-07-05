@@ -32,7 +32,7 @@ export default class AuthApi {
       const mapper = new AuthMapper()
       const param = mapper.setPassword(req.body, req.userRefId)
       await this.setAuthUseCase.execute(param);
-      res.status(201)
+      res.status(201).send()
     } catch (err) {
       next(err)
     }
@@ -73,7 +73,7 @@ export default class AuthApi {
       const mapper = new AuthMapper()
       const param = mapper.setPin(req.body, req.userRefId)
       await this.setAuthUseCase.execute(param);
-      res.status(201)
+      res.status(201).send()
     } catch (err) {
       next(err)
     }
