@@ -29,8 +29,10 @@ export default class SetAuthUseCase {
     const data = {}
     if (param.flow === "password") {
       data.password = param.password
+      data.countLoginFailed = 0
     } else if (param.flow === "pin") {
       data.pin = param.pin
+      data.countPinFailed = 0
     }
     data.updatedBy = user._id
     data.updatedDate = new Date()
