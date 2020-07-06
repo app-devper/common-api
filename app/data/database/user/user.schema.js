@@ -32,6 +32,7 @@ const UserSchema = new Schema({
     type: String, uppercase: true, trim: true
   }, // MALE, FEMALE
   countLoginFailed: { type: Number, default: 0 },
+  countPinFailed: { type: Number, default: 0 },
   timeToUnlock: { type: Date, default: Date.now },
   createdBy: { type: Schema.Types.ObjectId, ref: 'users' },
   createdDate: { type: Date, default: Date.now },

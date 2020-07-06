@@ -25,15 +25,15 @@ export default class VerifyPinUseCase {
     }
     const isPass = param.pin === user.pin
     if (!isPass) {
-      user = await this.repository.updateUser(user._id, {countLoginFailed: user.countLoginFailed + 1});
+      user = await this.repository.updateUser(user._id, {countPinFailed: user.countPinFailed + 1});
     }
-    if (user.countLoginFailed >= this.config.userLoginAttempt) {
+    if (user.countPinFailed >= this.config.userLoginAttempt) {
       throw new ApiError('Max invalid attempts', auth.maxInvalidPin)
     }
     if (!isPass) {
       throw new ApiError('Invalid PIN', auth.invalidData)
     } else {
-      user = await this.repository.updateUser(user._id, {countLoginFailed: 0});
+      user = await this.repository.updateUser(user._id, {countPinFailed: 0});
       try {
         if (param.flow === "login") {
           delete user.password;
