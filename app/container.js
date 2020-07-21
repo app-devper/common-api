@@ -31,6 +31,7 @@ import VerifyPinUseCase from "./domain/usecase/auth/verify-pin.usecase";
 import KeepAliveUseCase from "./domain/usecase/auth/keep-alive.usecase";
 import LogoutUseCase from "./domain/usecase/auth/logout.usecase";
 import GetInfoUseCase from "./domain/usecase/auth/get-info.usecase";
+import RegisterUseCase from "./domain/usecase/auth/register.usecase";
 
 const swaggerMiddleware = require('./swagger/swagger.middleware');
 
@@ -63,6 +64,7 @@ container.register({
   logoutUseCase: asClass(LogoutUseCase).singleton(),
   keepAliveUseCase: asClass(KeepAliveUseCase).singleton(),
   getInfoUseCase: asClass(GetInfoUseCase).singleton(),
+  registerUseCase: asClass(RegisterUseCase).singleton(),
 
   getChannelUseCase: asClass(GetChannelUsecase).singleton(),
   verifyUserUseCase: asClass(VerifyUserUsecase).singleton(),

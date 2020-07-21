@@ -5,13 +5,14 @@ import UserMapper from "../mapper/user.mapper";
 
 @route('/auth')
 export default class AuthApi {
-  constructor({verifyPasswordUseCase, verifyPinUseCase, setAuthUseCase, logoutUseCase, keepAliveUseCase, getInfoUseCase}) {
+  constructor({verifyPasswordUseCase, verifyPinUseCase, setAuthUseCase, logoutUseCase, keepAliveUseCase, getInfoUseCase, registerUseCase}) {
     this.verifyPasswordUseCase = verifyPasswordUseCase;
     this.setAuthUseCase = setAuthUseCase;
     this.verifyPinUseCase = verifyPinUseCase;
     this.logoutUseCase = logoutUseCase;
     this.keepAliveUseCase = keepAliveUseCase;
     this.getInfoUseCase = getInfoUseCase;
+    this.registerUseCase = registerUseCase;
   }
 
   @POST()
@@ -21,6 +22,19 @@ export default class AuthApi {
       const param = mapper.getBody(req.body)
       const result = await this.verifyPasswordUseCase.execute(param);
       res.status(200).send(result)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  @route('/register')
+  @POST()
+  async register(req, res, next) {
+    try {
+      const mapper = new AuthMapper()
+      const param = mapper.registerBody(req.body)
+      await this.registerUseCase.execute(param);
+      res.status(201).send()
     } catch (err) {
       next(err)
     }

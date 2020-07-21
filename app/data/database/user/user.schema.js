@@ -11,7 +11,7 @@ const UserSchema = new Schema({
     type: String, index: true, unique: true, lowercase: true, trim: true, required: true
   },
   password: {
-    type: String, trim: true, required: true, lowercase: true
+    type: String, trim: true, lowercase: true
   },
   pin: {
     type: String, trim: true, lowercase: true

@@ -122,4 +122,10 @@ export const auth = {
     httpCode: 401,
     resCode: 'CM-401-113'
   },
+  emptyPassword: {
+    en: 'Password not set.',
+    th: 'คุณไม่มีสิทธิ์เข้าใช้งานระบบ',
+    httpCode: 401,
+    resCode: 'CM-401-114'
+  },
 };

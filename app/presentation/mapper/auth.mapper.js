@@ -1,6 +1,8 @@
 import _ from 'lodash'
 import ApiError from "../../domain/core/api.error";
 import { general } from "../../domain/core/message.properties";
+import { USER } from "../../domain/constant/user.role";
+import { ACTIVE } from "../../domain/constant/user.status";
 
 export default class AuthMapper {
   constructor() {
@@ -52,6 +54,28 @@ export default class AuthMapper {
       throw new ApiError('Invalid pin', general.invalidData)
     }
     return {username, pin: param.pin}
+  }
+
+  registerBody(body) {
+    if (_.isEmpty(body.username)) {
+      throw new ApiError('Invalid username', general.invalidData)
+    }
+    if (_.isEmpty(body.phone)) {
+      throw new ApiError('Invalid phone', general.invalidData)
+    }
+    if (_.isEmpty(body.email)) {
+      throw new ApiError('Invalid email', general.invalidData)
+    }
+    let user = {}
+    user.username = body.username.toLowerCase()
+    user.firstName = body.firstName
+    user.lastName = body.lastName
+    user.phone = body.phone
+    user.email = body.email
+    user.role = USER
+    user.status = ACTIVE
+    user.createdDate = new Date()
+    return { user }
   }
 
 }

@@ -19,6 +19,9 @@ export default class VerifyPasswordUseCase {
     if (user.status !== ACTIVE) {
       throw new ApiError('Unauthorized', auth.unAuthorized);
     }
+    if (!user.password) {
+      throw new ApiError('Empty password', auth.emptyPassword);
+    }
     const isPass = param.password === user.password
     if (!isPass) {
       user = await this.repository.updateUser(user._id, {countLoginFailed: user.countLoginFailed + 1});
