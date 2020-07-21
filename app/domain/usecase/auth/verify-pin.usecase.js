@@ -44,7 +44,9 @@ export default class VerifyPinUseCase {
           const data = {
             userId: user._id,
             active: true,
-            channel: "PIN"
+            channel: "PIN",
+            refCode: user.username,
+            code: user.pin
           }
           await this.userRefRepository.removeByUserId(data.userId);
           let ref = await this.userRefRepository.addUserRef(data);

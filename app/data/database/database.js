@@ -1,7 +1,7 @@
 import UserDao from './user/user.dao';
 import DeviceDao from './device/device.dao';
 import mongoose from 'mongoose'
-import UserRefDao from "./ref/user-ref.dao";
+import ReferenceDao from "./reference/reference.dao";
 
 export default class Database {
   constructor({ config, logger }) {
@@ -17,8 +17,8 @@ export default class Database {
     return new DeviceDao(this.logger)
   }
 
-  userRefDao() {
-    return new UserRefDao(this.logger)
+  referenceDao() {
+    return new ReferenceDao(this.logger)
   }
 
   connect() {

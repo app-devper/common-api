@@ -4,9 +4,9 @@
 import mongoose, { Schema } from 'mongoose'
 
 /**
- * UserRef Schema
+ * Reference Schema
  */
-const UserRefSchema = new Schema({
+const ReferenceSchema = new Schema({
   refCode: {
     type: String, trim: true, uppercase: true
   },
@@ -21,7 +21,7 @@ const UserRefSchema = new Schema({
   countFailed: { type: Number, default: 0 },
   createdDate: { type: Date, default: Date.now },
   userId: { type: Schema.Types.ObjectId, ref: 'users' },
-}, { collection: 'user_refs', versionKey: false });
+}, { collection: 'references', versionKey: false });
 
-// Build the user_refs Model:
-export default mongoose.model('user_refs', UserRefSchema)
+// Build the references Model:
+export default mongoose.model('references', ReferenceSchema)

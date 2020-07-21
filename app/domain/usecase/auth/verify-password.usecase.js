@@ -41,7 +41,9 @@ export default class VerifyPasswordUseCase {
           const data = {
             userId: user._id,
             active: true,
-            channel: "PASSWORD"
+            channel: "PASSWORD",
+            refCode: user.username,
+            code: user.password
           }
           await this.userRefRepository.removeByUserId(data.userId);
           let ref = await this.userRefRepository.addUserRef(data);

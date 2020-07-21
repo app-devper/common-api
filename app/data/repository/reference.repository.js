@@ -1,6 +1,6 @@
-export default class UserRefRepository {
+export default class ReferenceRepository {
   constructor({ database }) {
-    this.userRefDao = database.userRefDao()
+    this.referenceDao = database.referenceDao()
     this.userDao = database.userDao()
   }
 
@@ -13,22 +13,22 @@ export default class UserRefRepository {
   }
 
   addUserRef(user) {
-    return this.userRefDao.addUserRef(user);
+    return this.referenceDao.addUserRef(user);
   }
 
   updateUserRef(id, data) {
-    return this.userRefDao.updateUserRef(id, data)
+    return this.referenceDao.updateUserRef(id, data)
   }
 
   getUserRefById(id) {
-    return this.userRefDao.getUserRefById(id)
+    return this.referenceDao.getUserRefById(id)
   }
 
   getCode(refCode) {
-    return this.userRefDao.getCode(refCode)
+    return this.referenceDao.getCode(refCode)
   }
 
   removeByUserId(id) {
-    return this.userRefDao.removeByUserId(id)
+    return this.referenceDao.removeByUserId(id)
   }
 }
