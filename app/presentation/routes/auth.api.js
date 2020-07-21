@@ -5,12 +5,13 @@ import UserMapper from "../mapper/user.mapper";
 
 @route('/auth')
 export default class AuthApi {
-  constructor({verifyPasswordUseCase, verifyPinUseCase, setAuthUseCase, logoutUseCase, keepAliveUseCase}) {
+  constructor({verifyPasswordUseCase, verifyPinUseCase, setAuthUseCase, logoutUseCase, keepAliveUseCase, getInfoUseCase}) {
     this.verifyPasswordUseCase = verifyPasswordUseCase;
     this.setAuthUseCase = setAuthUseCase;
     this.verifyPinUseCase = verifyPinUseCase;
     this.logoutUseCase = logoutUseCase;
     this.keepAliveUseCase = keepAliveUseCase;
+    this.getInfoUseCase = getInfoUseCase;
   }
 
   @POST()
@@ -34,6 +35,18 @@ export default class AuthApi {
       const param = mapper.setPassword(req.body, req.userRefId)
       await this.setAuthUseCase.execute(param);
       res.status(201).send()
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  @route('/action-info')
+  @GET()
+  @before([verifyAction])
+  async actionInfo(req, res, next) {
+    try {
+      const result = await this.getInfoUseCase.execute({userRefId: req.userRefId});
+      res.status(200).send(result)
     } catch (err) {
       next(err)
     }
