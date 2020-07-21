@@ -11,7 +11,7 @@ export const authenticate = async (req, res, next) => {
     token = token.slice(7, token.length);
     try {
       const decoded = await jwt.verify(token, config.secret);
-      // logger.info('Decoded Data: ' + JSON.stringify(decoded));
+      logger.info('Decoded Data: ' + JSON.stringify(decoded));
       req.decoded = decoded['data'];
       next()
     } catch (err) {
@@ -28,7 +28,7 @@ export const verifyAction = async (req, res, next) => {
   if (token) {
     try {
       const decoded = await jwt.verify(token, config.secret);
-      // logger.info('Decoded Data: ' + JSON.stringify(decoded));
+      logger.info('Decoded Data: ' + JSON.stringify(decoded));
       req.userRefId = decoded["data"];
       next()
     } catch (err) {
