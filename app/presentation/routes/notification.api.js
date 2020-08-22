@@ -16,8 +16,8 @@ export default class NotificationApi {
       const body = req.body;
       const mapper = new NotificationMapper()
       const param = mapper.getDevice(body, req.decoded._id)
-      const result = await this.addPushDeviceUseCase.execute(param);
-      res.status(200).send({result})
+      await this.addPushDeviceUseCase.execute(param);
+      res.status(200).send()
     } catch (err) {
       next(err)
     }
