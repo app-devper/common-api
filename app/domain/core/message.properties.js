@@ -52,13 +52,13 @@ export const auth = {
   },
   tokenExpired: {
     en: 'Your session has expired you need to login again.',
-    th: 'Username ของท่านหมดอายุการใช้งาน กรุณาล็อคอินใหม่',
+    th: 'ข้อมูลของท่านหมดอายุการใช้งาน กรุณาล็อคอินใหม่',
     httpCode: 401,
     resCode: 'CM-401-102'
   },
   tokenInvalid: {
     en: 'Your session has invalid you need to login again.',
-    th: 'Username ของท่านไม่พบการใช้งาน กรุณาล็อคอินใหม่',
+    th: 'ข้อมูลของท่านไม่ถูกต้อง กรุณาล็อคอินใหม่',
     httpCode: 401,
     resCode: 'CM-401-103'
   },
@@ -127,5 +127,17 @@ export const auth = {
     th: 'คุณไม่มีสิทธิ์เข้าใช้งานระบบ',
     httpCode: 401,
     resCode: 'CM-401-114'
+  },
+  actionTokenExpired: {
+    en: 'Your session has expired',
+    th: 'Username ของท่านหมดอายุการใช้งาน',
+    httpCode: 401,
+    resCode: 'CM-401-115'
+  },
+  actionTokenInvalid: {
+    en: 'Your session has invalid',
+    th: 'ข้อมูลของท่านไม่ถูกต้อง',
+    httpCode: 401,
+    resCode: 'CM-401-116'
   },
 };

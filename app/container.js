@@ -32,6 +32,8 @@ import KeepAliveUseCase from "./domain/usecase/auth/keep-alive.usecase";
 import LogoutUseCase from "./domain/usecase/auth/logout.usecase";
 import GetInfoUseCase from "./domain/usecase/auth/get-info.usecase";
 import RegisterUseCase from "./domain/usecase/auth/register.usecase";
+import AddPushDeviceUseCase from "./domain/usecase/pushdevice/add-push-device.usecase";
+import PushDeviceRepository from "./data/repository/push-device.repository";
 
 const swaggerMiddleware = require('./swagger/swagger.middleware');
 
@@ -51,7 +53,8 @@ container.register({
   database: asClass(Database).singleton(),
   userRepository: asClass(UserRepository).singleton(),
   deviceRepository: asClass(DeviceRepository).singleton(),
-  userRefRepository: asClass(ReferenceRepository).singleton()
+  userRefRepository: asClass(ReferenceRepository).singleton(),
+  pushDeviceRepository: asClass(PushDeviceRepository).singleton()
 });
 
 // Domain Layer
@@ -76,6 +79,8 @@ container.register({
   addUserUseCase: asClass(AddUserUsecase).singleton(),
   updateUserUseCase: asClass(UpdateUserUsecase).singleton(),
   removeUserUseCase: asClass(RemoveUserUsecase).singleton(),
+
+  addPushDeviceUseCase: asClass(AddPushDeviceUseCase).singleton(),
 });
 
 // Middle Wares

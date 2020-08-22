@@ -15,7 +15,8 @@ export const authenticate = async (req, res, next) => {
       req.decoded = decoded['data'];
       next()
     } catch (err) {
-      next(new ApiError(err.message, auth.unAuthorized))
+      logger.error(err);
+      next(new ApiError(err.message, auth.tokenInvalid))
     }
   } else {
     next(new ApiError('Missing Authorization', auth.missingAuthorization))
@@ -32,8 +33,8 @@ export const verifyAction = async (req, res, next) => {
       req.userRefId = decoded["data"];
       next()
     } catch (err) {
-      logger.error(err.message);
-      next(new ApiError(err.message, auth.unAuthorized))
+      logger.error(err);
+      next(new ApiError(err.message, auth.actionTokenInvalid))
     }
   } else {
     next(new ApiError('Missing Action Token', auth.missingAuthorization))
