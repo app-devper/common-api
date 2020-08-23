@@ -3,6 +3,7 @@ import UserDao from './user/user.dao';
 import DeviceDao from './device/device.dao';
 import ReferenceDao from "./reference/reference.dao";
 import PushDeviceDao from "./pushdevice/push-device.dao";
+import NotificationDao from "./notification/notification.dao";
 
 export default class Database {
   constructor({ config, logger }) {
@@ -24,6 +25,10 @@ export default class Database {
 
   pushDeviceDao() {
     return new PushDeviceDao(this.logger)
+  }
+
+  notificationDao() {
+    return new NotificationDao(this.logger)
   }
 
   connect() {

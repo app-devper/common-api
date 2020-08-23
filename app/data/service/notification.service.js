@@ -35,13 +35,13 @@ export default class NotificationService {
     })
   }
 
-  async sendNotification(deviceToken) {
+  async sendNotification(deviceToken, data) {
     const body = {
       message: {
-        data: {key: 'value'},
+        data: {"action": data.action},
         notification: {
-          title: 'Notification title',
-          body: 'Notification body'
+          title: data.title,
+          body: data.body
         },
         token: deviceToken
       }

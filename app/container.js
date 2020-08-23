@@ -32,8 +32,12 @@ import KeepAliveUseCase from "./domain/usecase/auth/keep-alive.usecase";
 import LogoutUseCase from "./domain/usecase/auth/logout.usecase";
 import GetInfoUseCase from "./domain/usecase/auth/get-info.usecase";
 import RegisterUseCase from "./domain/usecase/auth/register.usecase";
-import AddPushDeviceUseCase from "./domain/usecase/pushdevice/add-push-device.usecase";
-import PushDeviceRepository from "./data/repository/push-device.repository";
+import SubscriptionUseCase from "./domain/usecase/notification/subscription.usecase";
+import NotificationRepository from "./data/repository/notification.repository";
+import AddNotificationUseCase from "./domain/usecase/notification/add-notification.usecase";
+import GetNotificationsUseCase from "./domain/usecase/notification/get-notifications.usecase";
+import GetUnreadUseCase from "./domain/usecase/notification/get-unread.usecase";
+import MarkReadUseCase from "./domain/usecase/notification/mark-read.usecase";
 
 const swaggerMiddleware = require('./swagger/swagger.middleware');
 
@@ -54,7 +58,7 @@ container.register({
   userRepository: asClass(UserRepository).singleton(),
   deviceRepository: asClass(DeviceRepository).singleton(),
   userRefRepository: asClass(ReferenceRepository).singleton(),
-  pushDeviceRepository: asClass(PushDeviceRepository).singleton()
+  notificationRepository: asClass(NotificationRepository).singleton()
 });
 
 // Domain Layer
@@ -80,7 +84,11 @@ container.register({
   updateUserUseCase: asClass(UpdateUserUsecase).singleton(),
   removeUserUseCase: asClass(RemoveUserUsecase).singleton(),
 
-  addPushDeviceUseCase: asClass(AddPushDeviceUseCase).singleton(),
+  subscriptionUseCase: asClass(SubscriptionUseCase).singleton(),
+  addNotificationUseCase: asClass(AddNotificationUseCase).singleton(),
+  getNotificationsUseCase: asClass(GetNotificationsUseCase).singleton(),
+  getUnreadUseCase: asClass(GetUnreadUseCase).singleton(),
+  markReadUseCase: asClass(MarkReadUseCase).singleton(),
 });
 
 // Middle Wares
