@@ -19,7 +19,7 @@ export default class NotificationDao {
 
   getNotificationsByPage(receiver, page, limit) {
     this.logger.info('mongoose getNotificationsByPage');
-    return NotificationSchema.find({receiver}).limit(limit).skip((page - 1) * limit).lean();
+    return NotificationSchema.find({receiver}).sort({'createdDate': -1}).limit(limit).skip((page - 1) * limit).lean();
   }
 
   countNotification(receiver) {
