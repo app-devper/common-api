@@ -1,5 +1,5 @@
 import NotificationSchema from './notification.schema'
-import PushDeviceSchema from "../pushdevice/push-device.schema";
+import PushDeviceSchema from "../subscription/push-device.schema";
 
 export default class NotificationDao {
   constructor(logger) {

@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import UserDao from './user/user.dao';
 import DeviceDao from './device/device.dao';
 import ReferenceDao from "./reference/reference.dao";
-import PushDeviceDao from "./pushdevice/push-device.dao";
+import PushDeviceDao from "./subscription/push-device.dao";
 import NotificationDao from "./notification/notification.dao";
 
 export default class Database {
