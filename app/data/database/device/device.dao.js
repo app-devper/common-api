@@ -1,4 +1,3 @@
-
 import DeviceSchema from './device.schema'
 
 export default class DeviceDao {

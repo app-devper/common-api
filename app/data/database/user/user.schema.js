@@ -1,11 +1,5 @@
-/**
- * Module dependencies.
- */
 import mongoose, { Schema } from 'mongoose'
 
-/**
- * User Schema
- */
 const UserSchema = new Schema({
   username: {
     type: String, index: true, unique: true, lowercase: true, trim: true, required: true
@@ -40,5 +34,4 @@ const UserSchema = new Schema({
   updatedDate: { type: Date }
 }, { collection: 'users', versionKey: false });
 
-// Build the users Model:
 export default mongoose.model('users', UserSchema)

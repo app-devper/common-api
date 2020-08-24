@@ -1,11 +1,5 @@
-/**
- * Module dependencies.
- */
 import mongoose, { Schema } from 'mongoose'
 
-/**
- * Reference Schema
- */
 const ReferenceSchema = new Schema({
   refCode: {
     type: String, trim: true, uppercase: true
@@ -23,5 +17,4 @@ const ReferenceSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: 'users' },
 }, { collection: 'references', versionKey: false });
 
-// Build the references Model:
 export default mongoose.model('references', ReferenceSchema)

@@ -4,6 +4,7 @@ import DeviceDao from './device/device.dao';
 import ReferenceDao from "./reference/reference.dao";
 import PushDeviceDao from "./subscription/push-device.dao";
 import NotificationDao from "./notification/notification.dao";
+import TermConditionDao from "./termcodition/term-condition.dao";
 
 export default class Database {
   constructor({ config, logger }) {
@@ -29,6 +30,10 @@ export default class Database {
 
   notificationDao() {
     return new NotificationDao(this.logger)
+  }
+
+  termConditionDao() {
+    return new TermConditionDao(this.logger)
   }
 
   connect() {

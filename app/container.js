@@ -38,6 +38,10 @@ import AddNotificationUseCase from "./domain/usecase/notification/add-notificati
 import GetNotificationsUseCase from "./domain/usecase/notification/get-notifications.usecase";
 import GetUnreadUseCase from "./domain/usecase/notification/get-unread.usecase";
 import MarkReadUseCase from "./domain/usecase/notification/mark-read.usecase";
+import TermConditionRepository from "./data/repository/term-condition.repository";
+import GetTermConditionUseCase from "./domain/usecase/termcondition/get-term-condition.usecase";
+import AddTermConditionUseCase from "./domain/usecase/termcondition/add-term-condition.usecase";
+import UpdateTermConditionUseCase from "./domain/usecase/termcondition/update-term-condition.usecase";
 
 const swaggerMiddleware = require('./swagger/swagger.middleware');
 
@@ -58,7 +62,8 @@ container.register({
   userRepository: asClass(UserRepository).singleton(),
   deviceRepository: asClass(DeviceRepository).singleton(),
   userRefRepository: asClass(ReferenceRepository).singleton(),
-  notificationRepository: asClass(NotificationRepository).singleton()
+  notificationRepository: asClass(NotificationRepository).singleton(),
+  termConditionRepository: asClass(TermConditionRepository).singleton()
 });
 
 // Domain Layer
@@ -89,6 +94,11 @@ container.register({
   getNotificationsUseCase: asClass(GetNotificationsUseCase).singleton(),
   getUnreadUseCase: asClass(GetUnreadUseCase).singleton(),
   markReadUseCase: asClass(MarkReadUseCase).singleton(),
+
+  getTermConditionUseCase: asClass(GetTermConditionUseCase).singleton(),
+  addTermConditionUseCase: asClass(AddTermConditionUseCase).singleton(),
+  updateTermConditionUseCase: asClass(UpdateTermConditionUseCase).singleton(),
+
 });
 
 // Middle Wares

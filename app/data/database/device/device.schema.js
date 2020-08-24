@@ -1,11 +1,4 @@
-/**
- * Module dependencies.
- */
 import mongoose, { Schema } from 'mongoose'
-
-/**
- * Device Schema
- */
 
 const DeviceSchema = new Schema({
   deviceId: { type: String, trim: true, index: true },
