@@ -5,6 +5,6 @@ export default class AddTermConditionUseCase {
   }
 
   async execute(param) {
-    return await this.repository.addTermCondition(param);
+    return this.repository.addTermCondition(param.data);
   }
 }

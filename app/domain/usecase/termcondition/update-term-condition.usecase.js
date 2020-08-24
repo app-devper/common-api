@@ -5,6 +5,6 @@ export default class UpdateTermConditionUseCase {
   }
 
   async execute(param) {
-    return await this.repository.updateTermCondition(param.id, param.data);
+    return this.repository.updateTermCondition(param.id, param.data);
   }
 }
