@@ -23,11 +23,14 @@ export default class VerifyPinUseCase {
     if (_.isEmpty(user.pin)) {
       throw new ApiError('Not set PIN', auth.emptyPin);
     }
+    if (user.countLoginFailed >= this.config.userLoginAttempt) {
+      throw new ApiError('Max invalid attempts', auth.maxInvalidPassword)
+    }
     const isPass = param.pin === user.pin
     if (!isPass) {
       user = await this.repository.updateUser(user._id, {countPinFailed: user.countPinFailed + 1});
     }
-    if (user.countPinFailed >= this.config.userLoginAttempt) {
+    if (user.countPinFailed >= this.config.userPinAttempt) {
       throw new ApiError('Max invalid attempts', auth.maxInvalidPin)
     }
     if (!isPass) {
