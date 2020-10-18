@@ -1,4 +1,4 @@
-import container from './container'
+import container from './Container'
 
 const app = container.resolve('app');
 
