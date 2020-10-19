@@ -65,6 +65,24 @@ export default class RestaurantMenuController {
     }
   }
 
+  @PUT()
+  @route('/:id/out-of-order')
+  @before([authRestaurant])
+  async updateMenuOutOfOrder(req, res, next) {
+    try {
+      let param = {}
+      param.id = req.params.id
+      param.data = {}
+      param.data.outOfOrder = req.body.outOfOrder
+      param.data.updatedBy = req.decoded._id
+      param.data.updatedDate = new Date()
+      const result = await this.updateMenuItemUseCase.execute(param);
+      res.status(200).send(result)
+    } catch (err) {
+      next(err)
+    }
+  }
+
   @POST()
   @before([authRestaurant])
   async addMenuItem(req, res, next) {
