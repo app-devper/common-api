@@ -64,6 +64,19 @@ export default class NotificationController {
     }
   }
 
+  @route('/unread')
+  @GET()
+  @before([authenticate])
+  async getUnread(req, res, next) {
+    try {
+      const param = {userId: req.decoded._id}
+      const result = await this.getUnreadUseCase.execute(param);
+      res.status(200).send(result)
+    } catch (err) {
+      next(err)
+    }
+  }
+
   @route('/:id')
   @GET()
   @before([authenticate])
@@ -72,19 +85,6 @@ export default class NotificationController {
       const mapper = new NotificationMapper()
       let param = mapper.getNotificationId(req.params)
       const result = await this.getNotificationUseCase.execute(param);
-      res.status(200).send(result)
-    } catch (err) {
-      next(err)
-    }
-  }
-
-  @route('/unread')
-  @GET()
-  @before([authenticate])
-  async getUnread(req, res, next) {
-    try {
-      const param = {userId: req.decoded._id}
-      const result = await this.getUnreadUseCase.execute(param);
       res.status(200).send(result)
     } catch (err) {
       next(err)
