@@ -91,7 +91,6 @@ export default class RestaurantMenuController {
       param.restaurantId = req.decoded._id
       param.createdBy = req.decoded._id
       param.updatedBy = req.decoded._id
-      param.updatedDate = new Date()
       const result = await this.addMenuItemUseCase.execute(param);
       res.status(200).send(result)
     } catch (err) {
@@ -109,7 +108,6 @@ export default class RestaurantMenuController {
       param.menuItemId = req.params.id
       param.createdBy = req.decoded._id
       param.updatedBy = req.decoded._id
-      param.updatedDate = new Date()
       const result = await this.addMenuAddOnUseCase.execute(param);
       res.status(200).send(result)
     } catch (err) {

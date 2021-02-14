@@ -51,6 +51,8 @@ import UpdateMenuItemUseCase from "./domain/usecase/menu/UpdateMenuItemUseCase";
 import AddMenuAddOnUseCase from "./domain/usecase/menu/AddMenuAddOnUseCase";
 import UpdateMenuAddOnUseCase from "./domain/usecase/menu/UpdateMenuAddOnUseCase";
 
+import GetNotificationUseCase from "./domain/usecase/notification/GetNotificationUseCase";
+
 const swaggerMiddleware = require('./swagger/swagger.middleware');
 
 const container = createContainer();
@@ -95,6 +97,7 @@ container.register({
   subscriptionUseCase: asClass(SubscriptionUseCase).singleton(),
   addNotificationUseCase: asClass(AddNotificationUseCase).singleton(),
   getNotificationsUseCase: asClass(GetNotificationsUseCase).singleton(),
+  getNotificationUseCase: asClass(GetNotificationUseCase).singleton(),
   getUnreadUseCase: asClass(GetUnreadUseCase).singleton(),
   markReadUseCase: asClass(MarkReadUseCase).singleton(),
 

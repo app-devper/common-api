@@ -9,6 +9,7 @@ export default class NotificationController {
       subscriptionUseCase,
       addNotificationUseCase,
       getNotificationsUseCase,
+      getNotificationUseCase,
       getUnreadUseCase,
       markReadUseCase
     }
@@ -16,6 +17,7 @@ export default class NotificationController {
     this.subscriptionUseCase = subscriptionUseCase
     this.addNotificationUseCase = addNotificationUseCase
     this.getNotificationsUseCase = getNotificationsUseCase
+    this.getNotificationUseCase = getNotificationUseCase
     this.getUnreadUseCase = getUnreadUseCase
     this.markReadUseCase = markReadUseCase
   }
@@ -56,6 +58,20 @@ export default class NotificationController {
       const mapper = new NotificationMapper()
       const param = mapper.getPaging(req.query, req.decoded._id)
       const result = await this.getNotificationsUseCase.execute(param);
+      res.status(200).send(result)
+    } catch (err) {
+      next(err)
+    }
+  }
+
+  @route('/:id')
+  @GET()
+  @before([authenticate])
+  async getNotification(req, res, next) {
+    try {
+      const mapper = new NotificationMapper()
+      let param = mapper.getNotificationId(req.params)
+      const result = await this.getNotificationUseCase.execute(param);
       res.status(200).send(result)
     } catch (err) {
       next(err)

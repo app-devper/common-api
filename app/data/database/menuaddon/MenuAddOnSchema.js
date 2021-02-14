@@ -18,7 +18,7 @@ const MenuAddOnSchema = new Schema({
   createdBy: {type: String},
   createdDate: {type: Date, default: Date.now},
   updatedBy: {type: String},
-  updatedDate: {type: Date}
+  updatedDate: {type: Date, default: Date.now}
 }, {collection: 'menu_add_ons', versionKey: false});
 
 export default mongoose.model('menu_add_ons', MenuAddOnSchema)

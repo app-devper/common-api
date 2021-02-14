@@ -1,5 +1,4 @@
 import { before, GET, POST, PUT, route } from 'awilix-express'
-import { authenticate } from '../ApiController';
 
 @route('/user-menu')
 export default class UserMenuController {

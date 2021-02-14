@@ -44,4 +44,16 @@ export default class NotificationMapper {
     return notification
   }
 
+  getNotificationId(params) {
+    if (!mongoose.Types.ObjectId.isValid(params.id)) {
+      throw new ApiError('Invalid id format', general.invalidData)
+    }
+    if (_.isEmpty(params.id)) {
+      throw new ApiError('Invalid id', general.invalidData)
+    }
+    let param = {}
+    param.id = params.id
+    return param
+  }
+
 }

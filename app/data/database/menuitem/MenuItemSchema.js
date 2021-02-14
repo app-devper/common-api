@@ -24,7 +24,7 @@ const MenuItemSchema = new Schema({
   createdBy: {type: String},
   createdDate: {type: Date, default: Date.now},
   updatedBy: {type: String},
-  updatedDate: {type: Date}
+  updatedDate: {type: Date, default: Date.now}
 }, {collection: 'menu_items', versionKey: false});
 
 export default mongoose.model('menu_items', MenuItemSchema)
