@@ -24,9 +24,12 @@ export default class NotificationDao {
       .lean();
   }
 
-  getNotificationById(id) {
+  getNotificationById(id, userId) {
     this.logger.info('mongoose getNotificationById');
-    return NotificationSchema.findByIdAndUpdate({_id: id}, {$set: {status: "READ"}}, {new: true}).lean()
+    return NotificationSchema.findByIdAndUpdate({
+      _id: id,
+      receiver: userId
+    }, {$set: {status: "READ"}}, {new: true}).lean()
   }
 
   countNotification(receiver) {

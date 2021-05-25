@@ -1,6 +1,6 @@
 import { before, GET, POST, PUT, route } from 'awilix-express'
 import { authRestaurant } from '../ApiController';
-import RestaurantMapper from "../mapper/RestaurantMapper";
+import RestaurantMapper from "../feature/restaurant/RestaurantMapper";
 
 @route('/restaurant')
 export default class RestaurantController {

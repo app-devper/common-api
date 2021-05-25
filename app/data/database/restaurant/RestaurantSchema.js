@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose'
-import { INACTIVE } from "../../../domain/constant/Status";
+import { INACTIVE } from "../../../core/constant/Status";
 
 const RestaurantSchema = new Schema({
   restaurantName: {

@@ -1,5 +1,5 @@
 import RestaurantSchema from './RestaurantSchema';
-import { ACTIVE } from "../../../domain/constant/Status";
+import { ACTIVE } from "../../../core/constant/Status";
 
 export default class RestaurantDao {
   constructor(logger) {

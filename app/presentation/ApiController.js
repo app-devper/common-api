@@ -6,32 +6,31 @@ import methodOverride from 'method-override';
 import { loadControllers } from 'awilix-express'
 import jwt from "jsonwebtoken";
 import ApiError from "./ApiError";
-import { auth, general } from "../core/MessageProperties";
-import { ADMIN } from "../domain/constant/Role";
-import { header } from "../domain/constant/Constants";
+import { general } from "./core/error/MessageProperties";
+import { ADMIN } from "../core/constant/Role";
+import { header } from "../core/constant/Constants";
 
-export const router = ({ containerMiddleware, swaggerMiddleware }) => {
+export const router = ({containerMiddleware, swaggerMiddleware}) => {
   const router = Router();
   const apiRouter = Router();
 
-  apiRouter
-    .use(methodOverride('X-HTTP-Method-Override'))
-    .use(cors())
-    .use(bodyParser.json())
-    .use(compression())
-    .use(containerMiddleware)
-    .use('/docs', swaggerMiddleware);
-
-  apiRouter.use(loadControllers('routes/*.js', { cwd: __dirname }));
+  apiRouter.use(methodOverride('X-HTTP-Method-Override'))
+  apiRouter.use(cors())
+  apiRouter.use(bodyParser.json())
+  apiRouter.use(compression())
+  apiRouter.use(containerMiddleware)
+  apiRouter.use('/docs', swaggerMiddleware);
+  apiRouter.use(loadControllers('routes/*.js', {cwd: __dirname}));
 
   router.use('/api', apiRouter);
-  router.use(errorHandler);
+  router.use(handlerError);
+  router.use(serviceNotFound);
 
   return router;
 };
 
 export const authenticate = async (req, res, next) => {
-  const { logger, config } = req.container.cradle;
+  const {logger, config} = req.container.cradle;
   let token = req.headers.authorization;
   if (token && token.startsWith('Bearer ')) {
     token = token.slice(7, token.length);
@@ -42,15 +41,15 @@ export const authenticate = async (req, res, next) => {
       next()
     } catch (err) {
       logger.error(err);
-      next(new ApiError(err.message, auth.tokenInvalid))
+      next(new ApiError(err.message, general.tokenInvalid))
     }
   } else {
-    next(new ApiError('Missing Authorization', auth.missingAuthorization))
+    next(new ApiError('Missing Authorization', general.missingAuthorization))
   }
 };
 
 export const authRestaurant = async (req, res, next) => {
-  const { logger, config } = req.container.cradle;
+  const {logger, config} = req.container.cradle;
   let token = req.headers.authorization;
   if (token && token.startsWith('Bearer ')) {
     token = token.slice(7, token.length);
@@ -61,15 +60,15 @@ export const authRestaurant = async (req, res, next) => {
       next()
     } catch (err) {
       logger.error(err);
-      next(new ApiError(err.message, auth.tokenInvalid))
+      next(new ApiError(err.message, general.tokenInvalid))
     }
   } else {
-    next(new ApiError('Missing Authorization', auth.missingAuthorization))
+    next(new ApiError('Missing Authorization', general.missingAuthorization))
   }
 };
 
 export const verifyAction = async (req, res, next) => {
-  const { logger, config } = req.container.cradle;
+  const {logger, config} = req.container.cradle;
   let token = req.headers['x-action-token'];
   if (token) {
     try {
@@ -79,10 +78,10 @@ export const verifyAction = async (req, res, next) => {
       next()
     } catch (err) {
       logger.error(err);
-      next(new ApiError(err.message, auth.actionTokenInvalid))
+      next(new ApiError(err.message, general.actionTokenInvalid))
     }
   } else {
-    next(new ApiError('Missing Action Token', auth.missingAuthorization))
+    next(new ApiError('Missing Action Token', general.missingAuthorization))
   }
 };
 
@@ -90,17 +89,17 @@ export const permission = (req, res, next) => {
   if (req.decoded.role === ADMIN) {
     next()
   } else {
-    next(new ApiError('Forbidden', auth.forbidden))
+    next(new ApiError('Forbidden', general.forbidden))
   }
 };
 
-const errorHandler = (err, req, res, next) => {
-  const { logger } = req.container.cradle;
-  let response = err.response;
+const handlerError = (err, req, res, next) => {
+  const {logger} = req.container.cradle;
   const language = req.headers[header.language] || 'en';
+  let response = err.response;
   if (!response) {
     logger.error(err);
-    response = general.error;
+    response = general.internalError;
   }
   logger.error(err.message);
   res.status(response.httpCode).send({
@@ -110,4 +109,17 @@ const errorHandler = (err, req, res, next) => {
     devMessage: err.message,
     stack: err.stack
   });
+};
+
+const serviceNotFound = (req, res) => {
+  let serviceNotFound = general.serviceNotFound
+  const language = req.headers[header.language] || 'en';
+  const {logger} = req.container.cradle;
+  logger.info('Service Not found.');
+  res.status(serviceNotFound.httpCode).send({
+    type: "ApiError",
+    resCode: serviceNotFound.resCode,
+    resMessage: serviceNotFound[language],
+    devMessage: "Service Not found."
+  })
 };

@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose'
-import { INACTIVE } from "../../../domain/constant/Status";
+import { INACTIVE } from "../../../core/constant/Status";
 
 const MenuItemSchema = new Schema({
   restaurantId: {type: Schema.Types.ObjectId, index: true, ref: 'restaurants'},

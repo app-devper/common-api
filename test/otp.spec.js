@@ -3,7 +3,7 @@ import supertest from 'supertest'
 import chai from 'chai'
 import container from '../app/Container';
 import { describe } from "mocha";
-import { auth, general } from "../app/core/MessageProperties";
+import { auth, general } from "../app/presentation/core/error/MessageProperties";
 
 const server = container.resolve('server');
 const { expect } = chai;

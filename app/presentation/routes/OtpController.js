@@ -1,6 +1,6 @@
 import { before, GET, POST, route } from 'awilix-express'
 import { authenticate } from '../ApiController';
-import OtpMapper from "../mapper/OtpMapper";
+import OtpMapper from "../feature/auth/mapper/OtpMapper";
 
 @route('/otp')
 export default class OtpController {

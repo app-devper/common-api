@@ -1,6 +1,6 @@
 import { before, DELETE, GET, POST, PUT, route } from 'awilix-express'
 import { authenticate, permission } from '../ApiController';
-import UserMapper from "../mapper/UserMapper";
+import UserMapper from "../feature/user/UserMapper";
 
 @route('/user')
 export default class UserController {

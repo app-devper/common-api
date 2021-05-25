@@ -1,7 +1,6 @@
 import { before, GET, POST, route } from 'awilix-express'
 import { authenticate, verifyAction } from '../ApiController';
-import UserMapper from "../mapper/UserMapper";
-import AuthMapper from '../mapper/AuthMapper';
+import AuthMapper from '../feature/auth/mapper/AuthMapper';
 
 @route('/auth')
 export default class AuthController {
@@ -90,7 +89,6 @@ export default class AuthController {
     }
   }
 
-
   @route('/keep-alive')
   @GET()
   @before([authenticate])
@@ -149,7 +147,7 @@ export default class AuthController {
   @before([authenticate])
   async logout(req, res, next) {
     try {
-      const mapper = new UserMapper()
+      const mapper = new AuthMapper()
       const param = mapper.getUserId(req.decoded._id)
       const result = await this.logoutUseCase.execute(param);
       res.status(200).send(result)

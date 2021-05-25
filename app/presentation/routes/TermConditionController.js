@@ -1,6 +1,6 @@
 import { before, GET, POST, PUT, route } from 'awilix-express'
 import { authenticate, permission } from "../ApiController";
-import TermConditionMapper from "../mapper/TermConditionMapper";
+import TermConditionMapper from "../feature/termcondition/TermConditionMapper";
 
 @route('/term-condition')
 export default class TermConditionController {

@@ -8,50 +8,50 @@ import { router } from './presentation/ApiController'
 
 import Database from './data/database/Database';
 
-import GetUsersUseCase from './domain/usecase/user/GetUsersUseCase';
-import GetUserUseCase from './domain/usecase/user/GetUserUseCase';
-import RemoveUserUseCase from "./domain/usecase/user/RemoveUserUseCase";
-import UpdateUserUseCase from "./domain/usecase/user/UpdateUserUseCase";
-import AddUserUseCase from "./domain/usecase/user/AddUserUseCase";
+import GetUsersUseCase from './presentation/feature/user/GetUsersUseCase';
+import GetUserUseCase from './presentation/feature/user/GetUserUseCase';
+import RemoveUserUseCase from "./presentation/feature/user/RemoveUserUseCase";
+import UpdateUserUseCase from "./presentation/feature/user/UpdateUserUseCase";
+import AddUserUseCase from "./presentation/feature/user/AddUserUseCase";
 
-import AddDeviceUseCase from './domain/usecase/device/AddDeviceUseCase';
+import AddDeviceUseCase from './presentation/feature/device/AddDeviceUseCase';
 
-import GetChannelUseCase from "./domain/usecase/otp/GetChannelUseCase";
-import VerifyUserUseCase from "./domain/usecase/otp/VerifyUserUseCase";
-import VerifyCodeUseCase from "./domain/usecase/otp/VerifyCodeUseCase";
-import GetCodeUseCase from "./domain/usecase/otp/GetCodeUseCase";
+import GetChannelUseCase from "./presentation/feature/auth/GetChannelUseCase";
+import VerifyUserUseCase from "./presentation/feature/auth/VerifyUserUseCase";
+import VerifyCodeUseCase from "./presentation/feature/auth/VerifyCodeUseCase";
+import GetCodeUseCase from "./presentation/feature/auth/GetCodeUseCase";
 
-import SetAuthUseCase from "./domain/usecase/auth/SetAuthUseCase";
-import VerifyPasswordUseCase from "./domain/usecase/auth/VerifyPasswordUseCase";
-import VerifyPinUseCase from "./domain/usecase/auth/VerifyPinUseCase";
-import KeepAliveUseCase from "./domain/usecase/auth/KeepAliveUseCase";
-import LogoutUseCase from "./domain/usecase/auth/LogoutUseCase";
-import ActionInfoUseCase from "./domain/usecase/auth/ActionInfoUseCase";
-import RegisterUseCase from "./domain/usecase/auth/RegisterUseCase";
-import SubscriptionUseCase from "./domain/usecase/notification/SubscriptionUseCase";
-import AddNotificationUseCase from "./domain/usecase/notification/AddNotificationUseCase";
-import GetNotificationsUseCase from "./domain/usecase/notification/GetNotificationsUseCase";
-import GetUnreadUseCase from "./domain/usecase/notification/GetUnreadUseCase";
-import MarkReadUseCase from "./domain/usecase/notification/MarkReadUseCase";
+import SetAuthUseCase from "./presentation/feature/auth/SetAuthUseCase";
+import VerifyPasswordUseCase from "./presentation/feature/auth/VerifyPasswordUseCase";
+import VerifyPinUseCase from "./presentation/feature/auth/VerifyPinUseCase";
+import KeepAliveUseCase from "./presentation/feature/auth/KeepAliveUseCase";
+import LogoutUseCase from "./presentation/feature/auth/LogoutUseCase";
+import ActionInfoUseCase from "./presentation/feature/auth/ActionInfoUseCase";
+import RegisterUseCase from "./presentation/feature/auth/RegisterUseCase";
+import SubscriptionUseCase from "./presentation/feature/notification/SubscriptionUseCase";
+import AddNotificationUseCase from "./presentation/feature/notification/AddNotificationUseCase";
+import GetNotificationsUseCase from "./presentation/feature/notification/GetNotificationsUseCase";
+import GetUnreadUseCase from "./presentation/feature/notification/GetUnreadUseCase";
+import MarkReadUseCase from "./presentation/feature/notification/MarkReadUseCase";
 
-import GetTermConditionUseCase from "./domain/usecase/termcondition/GetTermConditionUseCase";
-import AddTermConditionUseCase from "./domain/usecase/termcondition/AddTermConditionUseCase";
-import UpdateTermConditionUseCase from "./domain/usecase/termcondition/UpdateTermConditionUseCase";
+import GetTermConditionUseCase from "./presentation/feature/termcondition/GetTermConditionUseCase";
+import AddTermConditionUseCase from "./presentation/feature/termcondition/AddTermConditionUseCase";
+import UpdateTermConditionUseCase from "./presentation/feature/termcondition/UpdateTermConditionUseCase";
 
-import LogInRestaurantUseCase from "./domain/usecase/restaurant/LogInRestaurantUseCase";
-import GetRestaurantsUseCase from "./domain/usecase/restaurant/GetRestaurantsUseCase";
-import GetRestaurantUseCase from "./domain/usecase/restaurant/GetRestaurantUseCase";
-import AddRestaurantUseCase from "./domain/usecase/restaurant/AddRestaurantUseCase";
-import UpdateRestaurantUseCase from "./domain/usecase/restaurant/UpdateRestaurantUseCase";
+import LogInRestaurantUseCase from "./presentation/feature/restaurant/LogInRestaurantUseCase";
+import GetRestaurantsUseCase from "./presentation/feature/restaurant/GetRestaurantsUseCase";
+import GetRestaurantUseCase from "./presentation/feature/restaurant/GetRestaurantUseCase";
+import AddRestaurantUseCase from "./presentation/feature/restaurant/AddRestaurantUseCase";
+import UpdateRestaurantUseCase from "./presentation/feature/restaurant/UpdateRestaurantUseCase";
 
-import AddMenuItemUseCase from "./domain/usecase/menu/AddMenuItemUseCase";
-import GetMenuItemUseCase from "./domain/usecase/menu/GetMenuItemUseCase";
-import GetMenuItemsUseCase from "./domain/usecase/menu/GetMenuItemsUseCase";
-import UpdateMenuItemUseCase from "./domain/usecase/menu/UpdateMenuItemUseCase";
-import AddMenuAddOnUseCase from "./domain/usecase/menu/AddMenuAddOnUseCase";
-import UpdateMenuAddOnUseCase from "./domain/usecase/menu/UpdateMenuAddOnUseCase";
+import AddMenuItemUseCase from "./presentation/feature/menu/AddMenuItemUseCase";
+import GetMenuItemUseCase from "./presentation/feature/menu/GetMenuItemUseCase";
+import GetMenuItemsUseCase from "./presentation/feature/menu/GetMenuItemsUseCase";
+import UpdateMenuItemUseCase from "./presentation/feature/menu/UpdateMenuItemUseCase";
+import AddMenuAddOnUseCase from "./presentation/feature/menu/AddMenuAddOnUseCase";
+import UpdateMenuAddOnUseCase from "./presentation/feature/menu/UpdateMenuAddOnUseCase";
 
-import GetNotificationUseCase from "./domain/usecase/notification/GetNotificationUseCase";
+import GetNotificationUseCase from "./presentation/feature/notification/GetNotificationUseCase";
 
 const swaggerMiddleware = require('./swagger/swagger.middleware');
 
@@ -120,7 +120,7 @@ container.register({
 
 });
 
-// Middle Wares
+// Middlewares
 container.register({
   containerMiddleware: asValue(scopePerRequest(container)),
   swaggerMiddleware: asValue([swaggerMiddleware]),

@@ -1,5 +1,5 @@
 import { before, GET, POST, PUT, route } from 'awilix-express'
-import RestaurantMapper from "../mapper/RestaurantMapper";
+import RestaurantMapper from "../feature/restaurant/RestaurantMapper";
 
 @route('/user-restaurant')
 export default class UserRestaurantController {

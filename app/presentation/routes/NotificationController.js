@@ -1,5 +1,5 @@
 import { before, GET, POST, PUT, route } from 'awilix-express'
-import NotificationMapper from "../mapper/NotificationMapper";
+import NotificationMapper from "../feature/notification/NotificationMapper";
 import { authenticate } from "../ApiController";
 
 @route('/notification')
@@ -83,7 +83,7 @@ export default class NotificationController {
   async getNotification(req, res, next) {
     try {
       const mapper = new NotificationMapper()
-      let param = mapper.getNotificationId(req.params)
+      let param = mapper.getNotificationId(req.params, req.decoded._id)
       const result = await this.getNotificationUseCase.execute(param);
       res.status(200).send(result)
     } catch (err) {
