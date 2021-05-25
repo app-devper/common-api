@@ -1,5 +1,6 @@
 import { ACTIVE } from '../../../core/constant/Status';
 import ApiError from '../../ApiError';
+import { auth } from '../../core/error/MessageProperties';
 
 export default class GetChannelUseCase {
   constructor({ database, logger, config }) {

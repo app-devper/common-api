@@ -2,6 +2,7 @@ import { ACTIVE } from '../../../core/constant/Status';
 import ApiError from '../../ApiError';
 import jwt from 'jsonwebtoken';
 import _ from 'lodash'
+import { auth } from '../../core/error/MessageProperties';
 
 export default class VerifyPinUseCase {
   constructor({database, logger, config}) {

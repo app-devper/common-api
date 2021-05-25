@@ -1,4 +1,5 @@
 import ApiError from '../../ApiError';
+import { auth } from '../../core/error/MessageProperties';
 
 export default class RegisterUseCase {
   constructor({database, logger}) {

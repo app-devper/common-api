@@ -1,6 +1,7 @@
 import { ACTIVE } from '../../../core/constant/Status';
 import ApiError from '../../ApiError';
 import randomize from 'randomatic'
+import { auth } from '../../core/error/MessageProperties';
 
 export default class VerifyUserUseCase {
   constructor({database, logger, config}) {

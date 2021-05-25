@@ -1,5 +1,6 @@
 import ApiError from '../../ApiError';
 import jwt from "jsonwebtoken";
+import { auth } from '../../core/error/MessageProperties';
 
 export default class VerifyCodeUseCase {
   constructor({ database, logger, config }) {

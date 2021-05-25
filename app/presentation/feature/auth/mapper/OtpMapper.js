@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import ApiError from "../../../ApiError";
+import { auth } from '../../../core/error/MessageProperties';
 
 export default class OtpMapper {
   constructor() {

@@ -2,6 +2,7 @@ import _ from 'lodash'
 import ApiError from "../../../ApiError";
 import { USER } from "../../../../core/constant/Role";
 import { ACTIVE } from "../../../../core/constant/Status";
+import { auth } from '../../../core/error/MessageProperties';
 import mongoose from "mongoose";
 
 export default class AuthMapper {
@@ -12,7 +13,7 @@ export default class AuthMapper {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       throw new ApiError('Invalid id format', auth.invalidData)
     }
-    return { id }
+    return {id}
   }
 
   getBody(body) {
@@ -82,7 +83,7 @@ export default class AuthMapper {
     user.role = USER
     user.status = ACTIVE
     user.createdDate = new Date()
-    return { user }
+    return {user}
   }
 
 }
